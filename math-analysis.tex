@@ -86,22 +86,6 @@
 \newcommand{\powerset}[1]{2^{#1}}
 \newcommand{\frakL}{\mathfrak{L}}
 
-% Categories
-\newcommand{\cat}[1]{\mathcal{#1}}
-\newcommand{\scat}[1]{\mathbf{#1}} % category supposed to be small
-\newcommand{\ncat}[1]{\mathbf{#1}} % named categories like Set, Top
-
-\newcommand{\catSet}{\ncat{Set}} % Category of sets
-\newcommand{\catGrp}{\ncat{Grp}} % Category of groups
-\newcommand{\catTop}{\ncat{Top}} % Category of topological spaces
-\newcommand{\catMble}{\ncat{Mble}} % Category of measurable spaces
-\newcommand{\catPos}{\ncat{Pos}} % Category of posets
-\newcommand{\catCLat}{\ncat{CLat}} % Category of complete lattices
-\newcommand{\catCJoinLat}{\ncat{CsLat}^{\join}} % Category of complete join-semilattices
-\newcommand{\catCMeetLat}{\ncat{CsLat}^{\meet}} % Category of complete meet-semilattices
-\newcommand{\catStruc}[1]{\ncat{Str}_{#1}} % Category of structured sets
-\newcommand{\catStrucS}{\catStruc{\strucS}} % Category of \strucS-structured sets
-
 
 % Section style -- add to section style .sty?
 \setsubsecheadstyle{\normalfont\itshape}
@@ -238,6 +222,87 @@ We recall that a topological space $X$ is \emph{sequentially compact} if every s
 
     Finally, let $K \subseteq \reals^d$ be closed and bounded. Since it is bounded it is contained in some cube $[-a,a]^d$. But this cube is a product of compact sets and hence compact, so $K$ is a closed subset of a compact set. The claim follows.
 \end{proof}
+
+
+If $A$ is a subset of a metric space $S$, recall that $A$ is \emph{totally bounded} if, for every $\epsilon > 0$, $A$ can be covered by finitely many open balls of radius $\epsilon$.
+
+\begin{theorem}
+    If $A$ is a subset of a metric space $(S,\rho)$, then the following are equivalent:
+    %
+    \begin{enumthm}
+        \item \label{enum:complete-totally-bounded} $A$ is complete and totally bounded.
+        \item \label{enum:sequentially-compact} $A$ is sequentially compact.
+        \item \label{enum:compact} $A$ is compact.
+    \end{enumthm}
+\end{theorem}
+
+% Add to framedtheorems.sty
+\newcommand{\mylistlabelfont}[1]{{\normalfont\color{linkcolor}\textit{#1}:}}
+\newlist{proofsec}{description}{1}
+\setlist[proofsec]{leftmargin=0pt, parsep=0pt, listparindent=\parindent, font=\mylistlabelfont}
+
+\begin{proof}
+\begin{proofsec}
+    \item[\subcref{enum:complete-totally-bounded} $\implies$ \subcref{enum:sequentially-compact}]
+    Assume that $A$ is complete and totally bounded, and let $(x_n)_{n\in\naturals}$ be a sequence in $A$. Now $A$ can be covered by finitely many balls of radius $1$, at least one of which, say $B_1$, contains $x_n$ for infinitely many $n$, say for $n \in N_1 \subseteq \naturals$. Similarly, $A \intersect B_1$ may be covered by finitely many balls of radius $1/2$, and again there is a ball $B_2$ containing $x_n$ for infinitely many $n \in N_1$, say for $n \in N_2$. Continuing recursively we obtain a sequence of balls $B_i$ of radius $1/i$ and a decreasing sequence $(N_i)_{i\in\naturals}$ of infinite subsets of $\naturals$ such that $x_n \in B_i$ for $n \in N_i$.
+
+    Next, choose a strictly increasing sequence $(n_i)_{i\in\naturals}$ of naturals numbers such that $n_i \in N_i$. Then $\rho(x_{n_i}, x_{n_j}) < 2/i$ for $i \leq j$, so $(x_{n_i})_{i\in\naturals}$ is a Cauchy sequence., and since $A$ is complete it has a limit in $A$.
+
+    \item[\subcref{enum:sequentially-compact} $\implies$ \subcref{enum:complete-totally-bounded}]
+    Assume that $A$ is sequentially compact. We first show that $A$ is complete, so let $(x_n)_{n\in\naturals}$ be a Cauchy sequence in $A$. This has a subsequence that converges to a point $x$ in $A$, so [lemma] implies that $(x_n)$ also converges to $x$.
+    
+    Now suppose that $A$ is not totally bounded, and let $\epsilon > 0$ be such that $A$ cannot be covered by finitely many $\epsilon$-balls. We construct a sequence $(x_n)_{n\in\naturals}$ in $A$ as follows: Choose any $x_1 \in A$, and given $x_1, \ldots, x_n$ choose $x_{n+1} \in A \setminus \bigunion_{i=1}^n B(x_i,\epsilon)$. Then $\rho(x_m,x_n) > \epsilon$ for all $m,n \in \naturals$ with $m \neq n$, so $(x_n)$ has no convergent subsequence.
+    
+    \item[\subcref{enum:complete-totally-bounded} \& \subcref{enum:sequentially-compact} $\implies$ \subcref{enum:compact}]
+    Suppose that $A$ is complete, totally bounded and sequentially compact, and let $\calU$ be an open cover of $A$. It suffices to show that there some $\epsilon > 0$ such that any $\epsilon$-ball intersecting $A$ is contained in some $U \in \calU$, since $A$ can be covered by finitely many such balls.
+
+    Assume towards a contradiction that for every $n \in \naturals$ there is a ball $B_n$ of radius $1/n$ intersecting $A$ such that $B_n$ is contained in no $U \in \calU$. Picking $x_n \in B_n$ for $n \in \naturals$, we may assume that the sequence $(x_n)_{n\in\naturals}$ converges to some $x \in A$ by passing to an appropriate subsequence. Then $x \in U$ for some $U \in \calU$, and since $U$ is open there is an $\epsilon > 0$ such that $B(x,\epsilon) \subseteq U$. Choosing $n \in \naturals$ large enough that $\rho(x_n,x) < \epsilon/2$ and $1/n < \epsilon/2$, we have $B_n \subseteq B(x,\epsilon) \subseteq U$, which is a contradiction.
+
+    \item[\subcref{enum:compact} $\implies$ \subcref{enum:sequentially-compact}]
+    We prove the contrapositive, so assume that $A$ is not sequentially compact, and let $(x_n)_{n\in\naturals}$ be a sequence in $A$ with no convergent subsequence. Every $x \in A$ is then contained in an open ball $B_x$ containing $x_n$ for only finitely many $n$. Thus $\{B_x\}_{x \in A}$ is an open cover of $A$ with no finite subcover, and $A$ is not compact.
+\end{proofsec}
+\end{proof}
+
+
+% \chapter{Differentiation}
+
+% \begin{definition}[Derivatives]
+%     Let $I$ be an interval, and let $f \colon I \to \reals$. We say that $f$ is \emph{differentiable} at a point $a \in I$ if the limit
+%     %
+%     \begin{equation*}
+%         \lim_{x \to a} \frac{f(x) - f(a)}{x-a}
+%     \end{equation*}
+%     %
+%     exists. If so, the limit is called the \emph{derivative} of $f$ at $a$ and is denoted $f'(a)$ or $Df(a)$.
+% \end{definition}
+
+% \begin{lemma}
+%     Let $f \colon I \to \reals$ and $a \in I$. Then the following are equivalent:
+%     %
+%     \begin{enumlem}
+%         \item $f$ is differentiable at $a$.
+        
+%         \item There exists a function $\phi_a \colon I \to \reals$, continuous at $a$, such that
+%         %
+%         \begin{equation*}
+%             f(x)
+%                 = f(a) + \phi_a(x) (x-a)
+%         \end{equation*}
+%         %
+%         for all $x \in I$.
+        
+%         \item There exists a number $A \in \reals$ and a function $\epsilon_a \colon U \to \reals$, where $U \subseteq \reals$ is an open neighbourhood of $0$, such that, for all $h \in \reals$ with $a + h \in I$,
+%         %
+%         \begin{equation*}
+%             f(a+h)
+%                 = f(a) + Ah + \epsilon_a(h),
+%             \quad \text{and} \quad
+%             \lim_{h \to 0} \frac{\epsilon_a(h)}{h} = 0. 
+%         \end{equation*}
+%     \end{enumlem}
+%     %
+%     In this case we have
+% \end{lemma}
 
 
 
@@ -529,11 +594,6 @@ It follows immediately from the definition and \eqref{eq:upper-lower-sum-inequal
             = \upint_a^b f \dif\alpha.
     \end{equation*}
 \end{theorem}
-
-% Add to framedtheorems.sty
-\newcommand{\mylistlabelfont}[1]{{\normalfont\color{linkcolor}\textit{#1}:}}
-\newlist{proofsec}{description}{1}
-\setlist[proofsec]{leftmargin=0pt, parsep=0pt, listparindent=\parindent, font=\mylistlabelfont}
 
 \begin{proof}
 \begin{proofsec}
