@@ -1,0 +1,1088 @@
+% Document setup
+\documentclass[article, a4paper, 11pt, oneside]{memoir}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[UKenglish]{babel}
+
+% Document info
+\newcommand\doctitle{Mathematical analysis notes}
+\newcommand\docauthor{Danny Nygård Hansen}
+
+% Formatting and layout
+\usepackage[autostyle]{csquotes}
+\usepackage[final]{microtype}
+\usepackage{xcolor}
+\frenchspacing
+\usepackage{latex-sty/articlepagestyle}
+\usepackage{latex-sty/articlesectionstyle}
+
+% Fonts
+\usepackage[largesmallcaps]{kpfonts}
+\DeclareSymbolFontAlphabet{\mathrm}{operators} % https://tex.stackexchange.com/questions/40874/kpfonts-siunitx-and-math-alphabets
+\linespread{1.06}
+\let\mathfrak\undefined
+\usepackage{eufrak}
+\usepackage{inconsolata}
+\usepackage{amssymb}
+
+% Hyperlinks
+\usepackage{hyperref}
+\definecolor{linkcolor}{HTML}{4f4fa3}
+\hypersetup{%
+	pdftitle=\doctitle,
+	pdfauthor=\docauthor,
+	colorlinks,
+	linkcolor=linkcolor,
+	citecolor=linkcolor,
+	urlcolor=linkcolor,
+	bookmarksnumbered=true
+}
+
+% Equation numbering
+\numberwithin{equation}{chapter}
+
+% Footnotes
+\footmarkstyle{\textsuperscript{#1}\hspace{0.25em}}
+
+% Mathematics
+\usepackage{latex-sty/basicmathcommands}
+\usepackage{latex-sty/framedtheorems}
+\usepackage{latex-sty/topologycommands}
+\usepackage{tikz-cd}
+\usetikzlibrary{babel}
+
+% Lists
+\usepackage{enumitem}
+\setenumerate[0]{label=\normalfont(\arabic*)}
+
+% Bibliography
+\usepackage[backend=biber, style=authoryear, maxcitenames=2, useprefix]{biblatex}
+\addbibresource{references.bib}
+
+% Title
+\title{\doctitle}
+\author{\docauthor}
+
+\newcommand{\setF}{\mathbb{F}}
+\newcommand{\ev}{\mathrm{ev}}
+\newcommand{\calT}{\mathcal{T}}
+\newcommand{\calU}{\mathcal{U}}
+\newcommand{\calB}{\mathcal{B}}
+\newcommand{\calE}{\mathcal{E}}
+\newcommand{\calC}{\mathcal{C}}
+\newcommand{\calD}{\mathcal{D}}
+\newcommand{\calF}{\mathcal{F}}
+\newcommand{\calG}{\mathcal{G}}
+\newcommand{\calM}{\mathcal{M}}
+\newcommand{\calA}{\mathcal{A}}
+\newcommand{\calP}{\mathcal{P}}
+\newcommand{\calR}{\mathcal{R}}
+\newcommand{\borel}{\mathcal{B}}
+\newcommand{\measurable}{\mathcal{M}}
+\newcommand{\wto}{\Rightarrow}
+\DeclarePairedDelimiter{\net}{\langle}{\rangle}
+\newcommand{\strucS}{\mathfrak{S}}
+\DeclarePairedDelimiter{\gen}{\langle}{\rangle} % Generating set
+\newcommand{\powerset}[1]{2^{#1}}
+\newcommand{\frakL}{\mathfrak{L}}
+
+% Categories
+\newcommand{\cat}[1]{\mathcal{#1}}
+\newcommand{\scat}[1]{\mathbf{#1}} % category supposed to be small
+\newcommand{\ncat}[1]{\mathbf{#1}} % named categories like Set, Top
+
+\newcommand{\catSet}{\ncat{Set}} % Category of sets
+\newcommand{\catGrp}{\ncat{Grp}} % Category of groups
+\newcommand{\catTop}{\ncat{Top}} % Category of topological spaces
+\newcommand{\catMble}{\ncat{Mble}} % Category of measurable spaces
+\newcommand{\catPos}{\ncat{Pos}} % Category of posets
+\newcommand{\catCLat}{\ncat{CLat}} % Category of complete lattices
+\newcommand{\catCJoinLat}{\ncat{CsLat}^{\join}} % Category of complete join-semilattices
+\newcommand{\catCMeetLat}{\ncat{CsLat}^{\meet}} % Category of complete meet-semilattices
+\newcommand{\catStruc}[1]{\ncat{Str}_{#1}} % Category of structured sets
+\newcommand{\catStrucS}{\catStruc{\strucS}} % Category of \strucS-structured sets
+
+
+% Section style -- add to section style .sty?
+\setsubsecheadstyle{\normalfont\itshape}
+
+
+% Preimage -- to be added to mathcommands .sty
+\newcommand{\preim}{^{-1}}
+
+
+\begin{document}
+
+\maketitle
+
+\chapter{Introduction}
+
+\begin{definition}
+    Let $X$ be a set. A \emph{sequence} in $X$ is a map $a \colon \naturals \to X$. For $n \in \naturals$, we usually write $a_n$ for $a(n)$ and denote $a$ by $(a_n)_{n\in\naturals}$ or simply $(a_n)$.
+\end{definition}
+
+
+\begin{definition}
+    Let $(S,\rho)$ be a metric space, and let $(a_n)_{n\in\naturals}$ be a sequence in $S$. We say that $(a_n)$ \emph{converges} to a point $a \in S$ if for every $\epsilon > 0$ there exists an $N \in \naturals$ such that $n \geq N$ implies that $\rho(a_n,a) < \epsilon$. In this case we call $a$ the \emph{limit} of $(a_n)$ and write $a_n \to a$ as $n \to \infty$, and we say that $(a_n)$ is \emph{convergent}.
+
+    Furthermore, $(a_n)$ is called a \emph{Cauchy sequence} if for every $\epsilon > 0$ there exists an $N \in \naturals$ such that $m,n \geq N$ implies that $\rho(a_m,a_n) < \epsilon$. If every Cauchy sequence in $S$ is convergent, then $S$ is said to be \emph{complete}.
+\end{definition}
+%
+Notice that limits of sequences in metric spaces are unique. It is also clear that convergent sequences are Cauchy, and that Cauchy sequences are bounded: We say that a sequence $(a_n)_{n\in\naturals}$ in a metric space is \emph{bounded} if the set $\set{a_n}{n\in\naturals}$ is bounded.
+
+If $(X,\leq)$ is a poset, a sequence $(a_n)_{n\in\naturals}$ in $X$ is \emph{increasing} (\emph{decreasing}) if $m \leq n$ implies $a_m \leq a_n$ ($a_m \geq a_n$) for all $m,n \in \naturals$. If $m < n$ implies $a_m < a_n$ ($a_m > a_n$), then $(a_n)$ is \emph{strictly} increasing (decreasing). A sequence that is either (strictly) increasing or (strictly) decreasing is called \emph{(strictly) monotonic}.
+
+Given a sequence $(a_n)_{n\in\naturals}$ in a set $X$ and a strictly increasing sequence $(n_k)_{k\in\naturals}$ in $\naturals$, the sequence $(a_{n_k})_{k\in\naturals}$ is called a \emph{subsequence} of $(a_n)$. In particular, every sequence is a subsequence of itself.
+
+\begin{lemma}
+    Let $(a_n)_{n\in\naturals}$ be a sequence in a metric space $(S,\rho)$. If $(a_n)$ is both Cauchy and has a convergent subsequence, then $(a_n)$ itself is convergent.
+\end{lemma}
+
+\begin{proof}
+    Let $(a_{n_k})_{k\in\naturals}$ be a convergent subsequence of $(a_n)$, and let $\epsilon > 0$. Choose $N_1, N_2 \in \naturals$ such that
+    %
+    \begin{equation*}
+        m,n \geq N_1
+        \quad \implies \quad
+        \rho(a_m, a_n) < \frac{\epsilon}{2}
+    \end{equation*}
+    %
+    and
+    %
+    \begin{equation*}
+        k \geq N_2
+        \quad \implies \quad
+        \rho(a_{n_k}, a) < \frac{\epsilon}{2},
+    \end{equation*}
+    %
+    where $a \in S$ is the limit of $(a_{n_k})$. For $n \geq N_1 \join N_2$ we thus have
+    %
+    \begin{equation*}
+        \rho(a_n, a)
+            \leq \rho(a_n, a_m) + \rho(a_m, a)
+            < \frac{\epsilon}{2} + \frac{\epsilon}{2}
+            = \epsilon,
+    \end{equation*}
+    %
+    showing that $a_n \to a$ as $n \to \infty$.
+\end{proof}
+
+
+\section{Sequences of real numbers}
+
+\begin{proposition}
+    Let $(a_n)_{n\in\naturals}$ be a monotonic sequence in $\reals$. Then $(a_n)$ is convergent if and only if it is bounded, in which case it converges to $\sup_{n\in\naturals} a_n$ if it is increasing and $\inf_{n\in\naturals} a_n$ if it is decreasing.
+\end{proposition}
+
+\begin{proof}
+    If $(a_n)$ is convergent then it is bounded, so assume that it is bounded and let $\epsilon > 0$. For definiteness we assume that it is increasing and let $s = \sup_{n\in\naturals} a_n$. By definition of $s$ there exists an $N \in \naturals$ such that $s - a_N < \epsilon$. Since $(a_n)$ is increasing and $s$ is an upper bound of the sequence, we thus have
+    %
+    \begin{equation*}
+        0 \leq s - a_n < \epsilon
+    \end{equation*}
+    %
+    for all $n \geq N$, proving that $a_n \to s$.
+\end{proof}
+
+\begin{lemma}
+    Every sequence in $\reals$ has a monotonic subsequence.
+\end{lemma}
+
+\begin{proof}
+    Let $(a_n)_{n\in\naturals}$ be a sequence in $\reals$. We say that $n \in \naturals$ is a \emph{peak} if $a_n \geq a_m$ for all $m \geq n$. If $(a_n)$ has infinitely many peaks, the subsequence consisting of these constitute a decreasing subsequence.
+
+    Hence we assume that $(a_n)$ only has finitely many peaks. We construct an increasing sequence $(n_k)_{n\in\naturals}$ in $\naturals$ as follows: Let $n_1 \in \naturals$ be such that all peaks are strictly less than $n_1$, and assume that $n_1, \ldots, n_{k-1}$ have been chosen such that $a_1 \leq \cdots \leq a_{n_{k-1}}$. Since $a_{n_{k-1}}$ is not a peak there is an $n' > n_{k-1}$ such that $a_{n_{k-1}} < a_{n'}$. Letting $n_k = n'$ we obtain an increasing subsequence $(a_{n_k})$ of $(a_n)$, proving the claim.
+\end{proof}
+
+\begin{theorem}[The Bolzano--Weierstrass theorem]
+    Every subset of $\reals^d$ sequentially compact if and only if it is closed and bounded.
+\end{theorem}
+%
+We recall that a topological space $X$ is \emph{sequentially compact} if every sequence in $X$ has a convergent subsequence.
+
+\begin{proof}
+    We begin with the case $d = 1$. Let $A \subseteq \reals$ be closed and bounded, and let $(a_n)_{n\in\naturals}$ be a sequence in $A$. Let $(a_{n_k})$ be a monotonic subsequence of $(a_n)$, and notice that $(a_{n_k})$ is convergent since it is bounded.
+
+    The case for general $d$ follows by induction in $d$, by noticing that a sequence in $\reals^d$ converges if and only if each coordinate sequence converges.
+
+    For the converse, let $A \subseteq \reals^d$ be sequentially compact. If $A$ were not bounded we could choose $a_n \in A \intersect B(0,n)$ for all $n \in \naturals$, yielding a sequence $(a_n)$ with no convergent subsequence. Furthermore, if $(a_n)$ is a sequence in $A$ converging to a point $a \in \reals^d$, it is in particular a Cauchy sequence. Since it has a subsequence converging to a point $a' \in A$, and by [lemma] we must have $a = a'$. Thus $A$ is also closed.
+\end{proof}
+
+
+\begin{theorem}[Completeness of $\reals^d$]
+    The Euclidean space $\reals^d$ is complete.
+\end{theorem}
+
+\begin{proof}
+    Let $(a_n)_{n\in\naturals}$ be a Cauchy sequence in $\reals^d$. Hence it is bounded, and so it has a convergent subsequence by the Bolzano--Weierstrass theorem. But then $(a_n)$ itself converges by [lemma], so $\reals^d$ is complete.
+\end{proof}
+
+
+\begin{theorem}[The Heine--Borel theorem]
+    Every subset of $\reals^d$ is compact if and only if it is closed and bounded.
+\end{theorem}
+
+\begin{proof}
+    Of course every compact set is closed in any Hausdorff space and bounded in any metric space, so we only consider the other implication.
+    
+    We first show that closed and bounded intervals are compact. Consider the interval $[a,b]$, and let $\calU$ be an open cover of $[a,b]$. Define the set
+    %
+    \begin{equation*}
+        A
+            = \set[\big]{x \in [a,b]}{\text{$[a,x]$ has a finite subcover in $\calU$}}.
+    \end{equation*}
+    %
+    We clearly have $a \in A$ since a point is covered by a single set in $\calU$. If $s = \sup A$ then $a \leq s \leq b$. Suppose that $s < b$ and choose a set $U \in \calU$ with $s \in U$. There exist $r,t \in U$ such that $r < s < t$, and so $r \in A$. Let $\calU'$ denote a finite subcover of $[a,r]$ in $\calU$. Then $\calU' \union \{U\}$ is a finite subcover of $[a,t]$, contradicting the assumption that $s < b$. Hence $s = b$.
+
+    Next, choose $V \in U$ with $b \in V$, and let $c \in V$ with $c < b$. Then $c \in A$, and adjoining $V$ to a finite subcover of $[a,c]$ yields a finite subcover of $[a,b]$, so $b \in A$. Thus $[a,b]$ is compact.
+
+    Finally, let $K \subseteq \reals^d$ be closed and bounded. Since it is bounded it is contained in some cube $[-a,a]^d$. But this cube is a product of compact sets and hence compact, so $K$ is a closed subset of a compact set. The claim follows.
+\end{proof}
+
+
+
+\chapter{Integration}
+
+\section{Functions of bounded variation}
+
+A \emph{partition} of an interval $[a,b]$ is a collection $P = \{x_0, \ldots, x_n \}$ of real numbers such that
+%
+\begin{equation*}
+    a = x_0 < \cdots < x_n = b.
+\end{equation*}
+%
+In turn, a \emph{tagged partition} of $[a,b]$ is a pair $(P,T)$ where $P$ is a partition of $[a,b]$ and $T = \{t_1, \ldots, t_n\}$ is a multiset of numbers such that $t_i \in [x_{i-1}, x_i]$ for all $i = 1, \ldots, n$. Let $\calP'[a,b]$ denote the set of tagged partitions of $[a,b]$. We define a direction on $\calP'[a,b]$ by $(P,T) \preceq (P',T')$ if $P \subseteq P'$. Notice that $T$ and $T'$ do not appear in this definition. This also induces a direction on the set $\calP[a,b]$ of all (non-tagged) partitions of $[a,b]$.
+
+Given a partition $P = \{x_0, \ldots, x_n \}$ of $[a,b]$ and a function $f \colon [a,b] \to \reals$ we write $\Delta f_i = f(x_i) - f(x_{i-1})$ for $i = 1, \ldots, n$. If $f$ is the identity function we simply write $\Delta x_i = x_i - x_{i-1}$.
+
+\begin{definition}[Total variation]
+    Consider a function $f \colon [a,b] \to \reals$. The \emph{total variation} of $f$ on $[a,b]$ is the number
+    %
+    \begin{equation*}
+        V_f(a,b)
+            = \sup_{P \in \calP[a,b]} \sum_{i=1}^n \abs{ \Delta f_i }.
+    \end{equation*}
+    %
+    If $V_f(a,b) < \infty$, then we say that $f$ is of \emph{bounded variation} on $[a,b]$.
+\end{definition}
+%
+If $f$ is of bounded variation on $[a,b]$, then it is clear that $f$ is also of bounded variation on any subinterval of $[a,b]$. If $c \in (a,b)$ it is also easy to show that
+%
+\begin{equation}
+    \label{eq:total-variation-additive}
+    V_f(a,b)
+        = V_f(a,c) + V_f(c,b).
+\end{equation}
+%
+If $g \colon [a,b] \to \reals$ is another function of bounded variation on $[a,b]$, then it is clear from the definition that $f + g$ is also of bounded variation.
+
+Also note that monotonic functions are of bounded variation on any compact interval.
+
+\begin{lemma}
+    Let $f \colon [a,b] \to \reals$ be of bounded variation, and let $V(x) = V_f(a,x)$ for $x \in (a, b]$ and $V(a) = 0$. Then the functions $V$ and $V - f$ are increasing on $[a,b]$.
+\end{lemma}
+
+\begin{proof}
+    The function $V$ is clearly increasing, so consider the function $D = V-f$. Let $x,y \in [a,b]$ with $x < y$, and notice that $f(y) - f(x) \leq V_f(x,y)$. Recalling \eqref{eq:total-variation-additive} it follows that
+    %
+    \begin{equation*}
+        D(y) - D(x)
+            = V(y) - V(x) - (f(y) - f(x))
+            = V_f(y,x) - (f(y) - f(x))
+            \geq 0.
+    \end{equation*}
+\end{proof}
+
+
+\begin{proposition}
+    A function $f \colon [a,b] \to \reals$ is of bounded variation if and only if it is the difference of two (strictly) increasing functions.
+\end{proposition}
+
+\begin{proof}
+    By the lemma we can write $f$ as the difference of two increasing functions as $f = V - (V - f)$. Adding a strictly increasing function to both $V$ and $V - f$ yields the claim.
+\end{proof}
+
+
+\section{Integration}
+
+Next consider bounded functions $f, \alpha \colon [a,b] \to \reals$. For each tagged partition $(P,T)$ of $[a,b]$ we define the \emph{Riemann--Stieltjes sum}
+%
+\begin{equation*}
+    S_{f,\alpha}(P,T)
+        = \sum_{i=1}^n f(t_i) \Delta\alpha_i.
+\end{equation*}
+%
+This induces a net $S_{f,\alpha} \colon \calP'[a,b] \to \reals$.
+
+
+\begin{definition}[Riemann--Stieltjes integral]
+    Let $f,\alpha \colon [a,b] \to \reals$ be bounded functions. We say that $f$ is \emph{Riemann-integrable} with respect to $\alpha$ (or simply \emph{$\alpha$-integrable}) on $[a,b]$ if the net $S_{f,\alpha}$ has a limit $A$. In this case $A$ is called the \emph{Riemann--Stieltjes integral} of $f$ with respect to $\alpha$ on $[a,b]$ and is denoted
+    %
+    \begin{equation*}
+        \int_a^b f \dif \alpha
+        \quad \text{or} \quad
+        \int_a^b f(x) \dif \alpha(x).
+    \end{equation*}
+    %
+    We denote the set of $\alpha$-integrable functions on $[a,b]$ by $\calR_\alpha[a,b]$.
+\end{definition}
+%
+We call $f$ the \emph{integrand} and $\alpha$ the \emph{integrator}. In the case where $\alpha(x) = x$, we use the notations
+%
+\begin{equation*}
+    S_f,
+    \quad
+    \int_a^b f
+    \quad \text{and} \quad
+    \int_a^b f(x) \dif x.
+\end{equation*}
+%
+The sums $S_f$ are then simply called \emph{Riemann sums} and the integral the \emph{Riemann integral} of $f$ on $[a,b]$. With this choice of $\alpha$, an $\alpha$-integrable function is called \emph{Riemann integrable} on $[a,b]$, and the set of such functions is denoted $\calR[a,b]$.
+
+Below we fix an interval $[a,b]$ and (bounded) integrators $\alpha$ and $\beta$ on it.
+
+\begin{proposition}[Linearity of the integral]
+    Let $f,g \in \calR_\alpha[a,b]$ and $c_1, c_2 \in \reals$. Then:
+    %
+    \begin{enumprop}
+        \item $c_1 f + c_2 g$ is $\alpha$-integrable on $[a,b]$ and
+        %
+        \begin{equation*}
+            \int_a^b (c_1 f + c_2 g) \dif\alpha
+                = c_1 \int_a^b f \dif\alpha + c_2 \int_a^b g \dif\alpha.
+        \end{equation*}
+        %
+        In particular, $\calR_\alpha[a,b]$ is a vector space.
+
+        \item $f$ is $(c_1 \alpha + c_2 \beta)$-integrable on $[a,b]$ and
+        %
+        \begin{equation*}
+            \int_a^b f \dif(c_1 \alpha + c_2 \beta)
+                = c_1 \int_a^b f \dif\alpha + c_2 \int_a^b f \dif\beta.
+        \end{equation*}
+    \end{enumprop}
+\end{proposition}
+
+\begin{proof}
+    This follows immediately from the bilinearity of the map $(f,\alpha) \mapsto S_{f,\alpha}$ along with basic properties of nets.
+\end{proof}
+
+
+\begin{proposition}[Integration by parts]
+    Given functions $f,\alpha \colon [a,b] \to \reals$, assume that $f$ is $\alpha$-integrable on $[a,b]$. Then $\alpha$ is $f$-integrable on $[a,b]$ and
+    %
+    \begin{equation*}
+        \int_a^b f \dif\alpha + \int_a^b \alpha \dif f
+            = f(b)\alpha(b) - f(a)\alpha(a).
+    \end{equation*}
+\end{proposition}
+
+\begin{proof}
+    Let $(P,T)$ be a tagged partition of $[a,b]$. Then an easy calculation shows that
+    %
+    \begin{equation*}
+        f(b)\alpha(b) - f(a)\alpha(a) - S_{\alpha,f}(P,T)
+            = S_{f,\alpha}(P \union T, P'),
+    \end{equation*}
+    %
+    where $P'$ is obtained from $P$ by duplicating appropriate elements such that each subinterval of $P \union T$ contains the corresponding element from $P'$. Since $P \union T$ is finer than $P$, the claim follows by taking the limit of $S_{\alpha,f}$.
+\end{proof}
+
+
+\begin{proposition}
+    Let $\alpha \in C^1[a,b]$ and $f \in \calR_\alpha[a,b]$. Then $f \alpha' \in \calR[a,b]$, and
+    %
+    \begin{equation*}
+        \int_a^b f \dif\alpha
+            = \int_a^b f \alpha'.
+    \end{equation*}
+\end{proposition}
+
+\begin{proof}
+    Consider the Riemann(--Stieltjes) sums
+    %
+    \begin{equation*}
+        S_{f\alpha'}(P,T)
+            = \sum_{i=1}^n f(t_i) \alpha'(t_i) \Delta x_i
+        \quad \text{and} \quad
+        S_{f,\alpha}(P,T)
+            = \sum_{i=1}^n f(t_i) \Delta \alpha_i.
+    \end{equation*}
+    %
+    By the mean value theorem we can write $\Delta \alpha_i = \alpha'(s_i) \Delta x_i$ for appropriate $s_i \in (x_{i-1}, x_i)$. It follows that
+    %
+    \begin{equation*}
+        S_{f,\alpha}(P,T) - S_{f\alpha'}(P,T)
+            = \sum_{i=1}^n f(t_i) (\alpha'(s_i) - \alpha'(t_i)) \Delta x_i.
+    \end{equation*}
+    %
+    By uniform continuity of $\alpha'$, given $\epsilon > 0$ there exists a $\delta > 0$ such that $\abs{x-y} < \delta$ implies $\abs{\alpha'(x) - \alpha'(y)} < \epsilon$ for all $x,y \in [a,b]$. If $\norm{P} < \delta$ we thus have
+    %
+    \begin{equation*}
+        \abs{S_{f,\alpha}(P,T) - S_{f\alpha'}(P,T)}
+            \leq \norm{f}_\infty \epsilon (b-a).
+    \end{equation*}
+    %
+    But $S_{f,\alpha}(P,T)$ approaches the $\alpha$-integral of $f$ for finer and finer partitions, which proves the claim.
+\end{proof}
+
+
+\section{Increasing integrators}
+
+\begin{definition}
+    Let $f, \alpha \colon [a,b] \to \reals$ be bounded functions, and assume that $\alpha$ is increasing. Let $P = \{x_0, \ldots, x_n\}$ be a partition of $[a,b]$, and let
+    %
+    \begin{align*}
+        M_i(f)
+            &= \sup \set[\big]{f(x)}{x \in [x_{i-1}, x_i]}, \\
+        m_i(f)
+            &= \inf \set[\big]{f(x)}{x \in [x_{i-1}, x_i]}.
+    \end{align*}
+    %
+    The numbers
+    %
+    \begin{equation*}
+        U_{f,\alpha}(P)
+            = \sum_{i=1}^n M_i(f) \Delta \alpha_i
+        \quad \text{and} \quad
+        L_{f,\alpha}(P)
+            = \sum_{i=1}^n m_i(f) \Delta \alpha_i
+    \end{equation*}
+    %
+    are called the \emph{upper and lower Stieltjes sums} of $f$ with respect to $\alpha$ for the partition $P$.
+\end{definition}
+%
+It is immediate that
+%
+\begin{equation*}
+    L_{f,\alpha}(P)
+        \leq S_{f,\alpha}(P,T)
+        \leq U_{f,\alpha}(P)
+\end{equation*}
+%
+for any tagged partition $(P,T)$ of $[a,b]$. It is also obvious that, if $P \subseteq P'$, then
+%
+\begin{equation*}
+    U_{f,\alpha}(P) \geq U_{f,\alpha}(P')
+    \quad \text{and} \quad
+    L_{f,\alpha}(P) \leq L_{f,\alpha}(P'),
+\end{equation*}
+%
+and that for any pair of partitions $P_1$ and $P_2$ we have
+%
+\begin{equation}
+    \label{eq:upper-lower-sum-inequality}
+    L_{f,\alpha}(P_1) \leq U_{f,\alpha}(P_2).
+\end{equation}
+
+
+% https://tex.stackexchange.com/questions/44237/lower-and-upper-riemann-integrals
+% Have changed lowint and the first one in upint -- need to adjust the rest in upint if I want to use them, also make versions of lowint if I want to use those
+\def\upint{\mathchoice%
+    {\mkern10mu\overline{\vphantom{\intop}\mkern10mu}\mkern-20mu}%
+    {\mkern7mu\overline{\vphantom{\intop}\mkern7mu}\mkern-14mu}%
+    {\mkern7mu\overline{\vphantom{\intop}\mkern7mu}\mkern-14mu}%
+    {\mkern7mu\overline{\vphantom{\intop}\mkern7mu}\mkern-14mu}%
+  \int}
+\def\lowint{\mkern2mu\underline{\vphantom{\intop}\mkern10mu}\mkern-12mu\int}
+
+\begin{definition}
+    Let $f, \alpha \colon [a,b] \to \reals$ be bounded functions with $\alpha$ increasing. Then the numbers
+    %
+    \begin{equation*}
+        \upint_a^b f \dif\alpha
+            = \inf \set[\big]{U_{f,\alpha}(P)}{P \in \calP[a,b]}
+    \end{equation*}
+    %
+    and
+    %
+    \begin{equation*}
+        \lowint_a^b f \dif\alpha
+            = \sup \set[\big]{L_{f,\alpha}(P)}{P \in \calP[a,b]}
+    \end{equation*}
+    %
+    are called the \emph{upper and lower Stieltjes integrals} of $f$ with respect to $\alpha$ on $[a,b]$.
+\end{definition}
+%
+It follows immediately from the definition and \eqref{eq:upper-lower-sum-inequality} that the upper integral is always greater than the lower integral. We also use the notations $\overline{I}(f,\alpha)$ and $\underline{I}(f,\alpha)$ for the upper and lower integrals, respectively, when the interval $[a,b]$ is understood.
+
+
+\begin{theorem}[Riemann's condition]
+    Let $f,\alpha \colon [a,b] \to \reals$ be bounded functions with $\alpha$ increasing. Then the following conditions are equivalent:
+    %
+    \begin{enumthm}
+        \item \label{enum:integrability} $f \in \calR_\alpha[a,b]$.
+        \item \label{enum:Riemanns-condition} $f$ satisfies \emph{Riemann's condition} with respect to $\alpha$ on $[a,b]$: For every $\epsilon > 0$ there exists a partition $P$ of $[a,b]$ such that
+        %
+        \begin{equation}
+            \label{eq:Riemanns-condition}
+            U_{f,\alpha}(P) - L_{f,\alpha}(P) < \epsilon.
+        \end{equation}
+        \item \label{enum:upper-lower-integrals-equal} $\underline{I}(f,\alpha) = \overline{I}(f,\alpha)$.
+    \end{enumthm}
+    %
+    In this case we have
+    %
+    \begin{equation*}
+        \lowint_a^b f \dif\alpha
+            = \int_a^b f \dif\alpha
+            = \upint_a^b f \dif\alpha.
+    \end{equation*}
+\end{theorem}
+
+% Add to framedtheorems.sty
+\newcommand{\mylistlabelfont}[1]{{\normalfont\color{linkcolor}\textit{#1}:}}
+\newlist{proofsec}{description}{1}
+\setlist[proofsec]{leftmargin=0pt, parsep=0pt, listparindent=\parindent, font=\mylistlabelfont}
+
+\begin{proof}
+\begin{proofsec}
+    \item[\subcref{enum:integrability} $\implies$ \subcref{enum:Riemanns-condition}]
+    Let $\epsilon > 0$, and choose a partition $P = \{x_0, \ldots, x_n\}$ of $[a,b]$ such that
+    %
+    \begin{equation*}
+        \abs[\bigg]{ \sum_{i=1}^n f(t_i) \Delta\alpha_i - \int_a^b f \dif\alpha }
+        < \epsilon
+    \end{equation*}
+    %
+    for all $t_i \in [x_{i-1},x_i]$. It follows that
+    %
+    \begin{equation*}
+        \abs[\bigg]{ \sum_{i=1}^n (f(t_i) - f(t_i')) \Delta\alpha_i }
+        < 2 \epsilon
+    \end{equation*}
+    %
+    for all $t_i, t_i' \in [x_{i-1},x_i]$. For any $\delta > 0$ there exist $t_i, t_i'$ such that
+    %
+    \begin{equation*}
+        f(t_i) - f(t_i')
+        > M_i(f) - m_i(f) - \delta.
+    \end{equation*}
+    %
+    From this it follows that
+    %
+    \begin{align*}
+        U_{f,\alpha}(P) - L_{f,\alpha}(P)
+        &= \sum_{i=1}^n (M_i(f) - m_i(f)) \Delta\alpha_i \\
+        &< \sum_{i=1}^n (f(t_i) - f(t_i')) \Delta\alpha_i + \delta (\alpha(b) - \alpha(a)) \\
+        &< 3\epsilon
+    \end{align*}
+    %
+    for an appropriate choice of $\delta$. Since $\epsilon$ was arbitrary, this proves \subcref{enum:Riemanns-condition}.
+    
+    \item[\subcref{enum:Riemanns-condition} $\implies$ \subcref{enum:upper-lower-integrals-equal}]
+    If $P$ is any partition of $[a,b]$ we have
+    %
+    \begin{equation*}
+        L_{f,\alpha}(P)
+        \leq \lowint_a^b f \dif\alpha
+        \leq \upint_a^b f \dif\alpha
+        \leq U_{f,\alpha}(P).
+    \end{equation*}
+    %
+    Thus \eqref{eq:Riemanns-condition} implies that $0 \leq \overline{I}(f,\alpha) - \underline{I}(f,\alpha) < \epsilon$ for every $\epsilon > 0$, proving \subcref{enum:upper-lower-integrals-equal}.
+    
+    \item[\subcref{enum:upper-lower-integrals-equal} $\implies$ \subcref{enum:integrability}]
+    Let $\epsilon > 0$. There exists a partition $P$ of $[a,b]$ such that
+    %
+    \begin{equation*}
+        \underline{I}(f,\alpha) - \epsilon
+        < L_{f,\alpha}(P)
+        \leq S_{f,\alpha}(P,T)
+        \leq U_{f,\alpha}(P)
+        < \overline{I}(f,\alpha) + \epsilon
+    \end{equation*}
+    %
+    for any choice of points $T$ such that $(P,T)$ is a tagged partition. Denoting the common value of $\underline{I}(f,\alpha)$ and $\overline{I}(f,\alpha)$ by $A$, this shows that $\abs{S_{f,\alpha}(P',T') - A} < \epsilon$ for all tagged partitions $(P',T')$ with $P \subseteq P'$. Hence $f \in \calR_\alpha[a,b]$, and the integral of $f$ with respect to $\alpha$ equals $A$.
+\end{proofsec}
+\end{proof}
+
+
+\section{Integrators of bounded variation}
+
+\begin{theorem}
+    Let $\alpha \colon [a,b] \to \reals$ be of bounded variation, and let $V(x) = V_\alpha(a,x)$ for $x \in (a,b]$ and $V(a) = 0$. Then $\calR_\alpha[a,b] \subseteq \calR_V[a,b]$.
+\end{theorem}
+
+\begin{proof}
+    Let $f \in \calR_\alpha[a,b]$, and choose $M > 0$ such that $\abs{f} \leq M$. Choose a partition $P = \{x_0, \ldots, x_n\}$ of $[a,b]$ such that $V(b) < \sum_{i=1}^n \abs{\Delta\alpha_i} + \epsilon$. Then
+    %
+    \begin{align*}
+        \sum_{i=1}^n (M_i(f) - m_i(f)) ( \Delta V_i - \abs{\Delta\alpha_i})
+            &\leq 2M \sum_{i=1}^n (\Delta V_i - \abs{\Delta\alpha_i}) \\
+            &= 2M \biggl( V(b) - \sum_{i=1}^n \abs{\Delta\alpha_i} \biggr) \\
+            &< 2M \epsilon.
+    \end{align*}
+    %
+    Also choose $P$ such that $\abs{ \sum_{i=1}^n (f(t_i) - f(t_i')) \Delta\alpha_i } < \epsilon$ for all $t_i, t_i' \in [x_{i-1}, x_i]$. Next let $\delta > 0$. For $i = 1, \ldots, n$, if $\Delta\alpha_i \geq 0$ choose $t_i, t_i'$ such that
+    %
+    \begin{equation*}
+        f(t_i) - f(t_i')
+            > M_i(f) - m_i(f) - \delta.
+    \end{equation*}
+    %
+    If instead $\Delta\alpha_i < 0$, choose $t_i, t_i'$ such that
+    %
+    \begin{equation*}
+        f(t_i') - f(t_i)
+            > M_i(f) - m_i(f) - \delta.
+    \end{equation*}
+    %
+    It follows that
+    %
+    \begin{equation*}
+        \sum_{i=1}^n (M_i(f) - m_i(f)) \abs{\Delta\alpha_i}
+            < \sum_{i=1}^n (f(t_i) - f(t_i')) \Delta\alpha_i
+              + \delta V(b)
+            < 2 \epsilon
+    \end{equation*}
+    %
+    for an appropriate choice of $\delta$. Combining these inequalities yields
+    %
+    \begin{equation*}
+        U_{f,V}(P) - L_{f,V}(P)
+            = \sum_{i=1}^n (M_i(f) - m_i(f)) \Delta V_i
+            < 2(M+1)\epsilon,
+    \end{equation*}
+    %
+    and since $\epsilon$ was arbitrary, this shows that $f \in \calR_V[a,b]$.
+\end{proof}
+%
+Since $\alpha = V - (V - \alpha)$ and both $V$ and $V - \alpha$ are increasing, this allows us to reduce questions about integrators of bounded variation to questions about monotonic integrators. In particular it lets us use Riemann's condition to prove integrability with respect to integrators of bounded variation. 
+
+
+\begin{proposition}
+    Let $\alpha \colon [a,b] \to \reals$ be of bounded variation, and let $f \in \calR_\alpha[a,b]$. Choose $m,M \in \reals$ such that $m \leq f \leq M$. If $\phi \colon [m,M] \to \reals$ is continuous, then $\phi \circ f \in \calR_\alpha[a,b]$.
+\end{proposition}
+
+\begin{proof}
+    We may assume that $\alpha$ is increasing. Put $g = \phi \circ f$ and let $\epsilon > 0$. Uniform continuity of $\phi$ yields a $\delta > 0$ such that $\abs{s-t} < \delta$ implies $\abs{\phi(s) - \phi(t)} < \epsilon$ for $s,t \in [m,M]$. Also choose $\delta$ such that $\delta < \epsilon$. Let $P = \{x_0, \ldots, x_n\}$ be a partition of $[a,b]$ such that
+    %
+    \begin{equation*}
+        U_{f,\alpha}(P) - L_{f,\alpha}(P) < \delta^2.
+    \end{equation*}
+    %
+    Let $A$ consist of those numbers $i \in \{1, \ldots, n\}$ such that $M_i(f) - m_i(f) < \delta$, and let $B$ consist of the remaining $i$. For $i \in A$ we then have $M_i(g) - m_i(g) \leq \epsilon$.
+
+    Let $K > 0$ be such that $\abs{\phi} \leq K$. For $i \in B$ we then have $M_i(g) - m_i(g) \leq 2K$. Furthermore, we have
+    %
+    \begin{equation*}
+        \sum_{i \in B} \Delta\alpha_i
+            \leq \frac{1}{\delta} \sum_{i \in B} (M_i(f) - m_i(f)) \Delta\alpha_i
+            < \delta.
+    \end{equation*}
+    %
+    It thus follows that
+    %
+    \begin{align*}
+        U_{g, \alpha}(P) - L_{g, \alpha}(P)
+            &= \sum_{i \in A} (M_i(g) - m_i(g)) \Delta\alpha_i
+               + \sum_{i \in B} (M_i(g) - m_i(g)) \Delta\alpha_i \\
+            &\leq \epsilon (\alpha(b) - \alpha(a))
+               + 2K \delta \\
+            &\leq (\alpha(b) - \alpha(a) + 2K) \epsilon.
+    \end{align*}
+    %
+    Since $\epsilon$ was arbitrary, it follows that $g \in \calR_\alpha[a,b]$.
+\end{proof}
+
+
+\begin{corollary}
+    Let $\alpha \colon [a,b] \to \reals$ be of bounded variation, and let $f,g \in \calR_\alpha[a,b]$. Then the functions $\abs{f}$ and $fg$ are also $\alpha$-integrable. If $\alpha$ is increasing we also have
+    %
+    \begin{equation}
+        \label{eq:integral-triangle-inequality}
+        \abs[\bigg]{ \int_a^b f \dif\alpha }
+            \leq \int_a^b \abs{f}\dif\alpha.
+    \end{equation}
+\end{corollary}
+
+\begin{proof}
+    Integrability of $\abs{f}$ follows since $x \mapsto \abs{x}$ is continuous. The inequality \eqref{eq:integral-triangle-inequality} follows since $f \leq \abs{f}$, and since the $\alpha$-integral is increasing when $\alpha$ is.
+
+    For the product $fg$, notice that
+    %
+    \begin{equation*}
+        2fg = (f+g)^2 - f^2 + g^2,
+    \end{equation*}
+    %
+    and that the function $x \mapsto x^2$ is continuous.
+\end{proof}
+
+
+\begin{proposition}
+    Let $f,\alpha \colon [a,b] \to \reals$ be functions with $f$ continuous and $\alpha$ of bounded variation. Then $f$ is $\alpha$-integrable.
+\end{proposition}
+
+\begin{proof}
+    We may assume that $\alpha$ is increasing. Let $\epsilon > 0$. Uniform continuity of $f$ furnishes a $\delta < 0$ such that $\abs{x-y} < \delta$ implies $\abs{f(x)-f(y)} < \epsilon$ for $x,y \in [a,b]$. Let $P = \{x_0,\ldots,x_n\}$ be a partition with $\norm{P} < \delta$. Then $M_i(f) - m_i(f) < \epsilon$, implying that
+    %
+    \begin{equation*}
+        U_{f,\alpha}(P) - L_{f,\alpha}(P)
+            = \sum_{i=1}^n (M_i(f) - m_i(f)) \Delta\alpha_i
+            \leq \epsilon (\alpha(b) - \alpha(a)),
+    \end{equation*}
+    %
+    and since $\epsilon$ was arbitrary, it follows from Riemann's condition that $f \in \calR_\alpha[a,b]$.
+\end{proof}
+
+
+\section{The fundamental theorems of calculus}
+
+\begin{theorem}[The first fundamental theorem of calculus]
+    Let $\alpha \colon [a,b] \to \reals$ be of bounded variation, and let $f \in \calR_\alpha[a,b]$. Define a function $F \colon [a,b] \to \reals$ by
+    %
+    \begin{equation*}
+        F(x)
+            = \int_a^x f \dif\alpha.
+    \end{equation*}
+    %
+    Then the following hold:
+    %
+    \begin{enumthm}
+        \item $F$ is of bounded variation.
+        \item Every point of continuity of $\alpha$ is also a point of continuity of $F$.
+        \item Assume that $\alpha$ is increasing. If $f$ is continuous and $\alpha$ differentiable at $x \in (a,b)$, then $F$ is differentiable at $x$ with $F'(x) = f(x) \alpha'(x)$.
+    \end{enumthm}
+\end{theorem}
+%
+[We need that $f$ is also integrable on the subintervals!]
+
+\begin{proof}
+    We may assume that $\alpha$ is increasing. Let $x,y \in [a,b]$ with $x \neq y$, and let $I$ denote the closed interval between $x$ and $y$. If $m = \inf_{t \in I} f(t)$ and $M = \sup_{t \in I} f(t)$, we claim that there exists a $c \in \reals$ with $m \leq c \leq M$ such that
+    %
+    \begin{equation}
+        \label{eq:fundamental-theorem-difference}
+        F(y) - F(x)
+            = \int_x^y f \dif\alpha
+            = c (\alpha(y) - \alpha(x)).
+    \end{equation}
+    %
+    If $\alpha(x) = \alpha(y)$ this is trivial, so assume otherwise. If $x < y$ we clearly have
+    %
+    \begin{equation*}
+        m (\alpha(y) - \alpha(x))
+            \leq \int_x^y f \dif\alpha
+            \leq M (\alpha(y) - \alpha(x)),
+    \end{equation*}
+    %
+    and dividing by $\alpha(y) - \alpha(x)$ proves the above claim for $x < y$. If $y < x$, then exchanging $x$ and $y$ yields a sign change which cancels on each side of \eqref{eq:fundamental-theorem-difference}. From this (i) and (ii) follow immediately.
+
+    Now assume that $f$ is continuous at $x \in (a,b)$ and that $\alpha$ is differentiable at $x$. We claim that $c \to f(x)$ as $y \to x$. Let $\epsilon > 0$. By continuity of $f$ at $x$ there is a $\delta > 0$ such that $\abs{x-x'} < \delta$ implies $\abs{f(x) - f(x')} < \epsilon$. Thus if $\abs{x-y} < \delta$ we must have $f(x) - m \leq \epsilon$ and $M - f(x) \leq \epsilon$. Since $m \leq c \leq M$ it follows that $\abs{c - f(x)} \leq \epsilon$. Dividing by $y-x$ and letting $y \to x$ in \eqref{eq:fundamental-theorem-difference} proves (iii).
+\end{proof}
+
+
+\begin{remark}
+    In the case $\alpha(x) = x$, (iii) has an easier proof: Simply note that
+    %
+    \begin{equation*}
+        \frac{F(y)-F(x)}{y-x} - f(x)
+            = \frac{1}{y-x} \int_x^y (f(t) - f(x)) \dif t,
+    \end{equation*}
+    %
+    and notice that the integrand can be made less than any $\epsilon > 0$ if $\abs{t-x} < \delta$ for an appropriate $\delta > 0$. I am not sure that this proof can be generalised.
+\end{remark}
+
+
+\begin{theorem}[The second fundamental theorem of calculus]
+    Let $f \in \calR[a,b]$. If there exists a continuous function $F \colon [a,b] \to \reals$ that differentiable on $(a,b)$ with $F' = f$, then
+    %
+    \begin{equation*}
+        \int_a^b f
+            = F(b) - F(a).
+    \end{equation*}
+\end{theorem}
+
+\begin{proof}
+    Let $P = \{x_0, \ldots, x_n\}$ be a partition of $[a,b]$. The mean value theorem furnishes points $t_i \in (x_{i-1}, x_i)$ such that $\Delta F_i = F'(t_i) \Delta x_i = f(t_i) \Delta x_i$. It follows that
+    %
+    \begin{equation*}
+        \abs[\bigg]{ F(b) - F(a) - \int_a^b f }
+            = \abs[\bigg]{ \sum_{i=1}^n f(t_i)\Delta x_i - \int_a^b f }
+            < \epsilon
+    \end{equation*}
+    %
+    if $P$ is fine enough. Since $\epsilon$ was arbitrary, this proves the theorem.
+\end{proof}
+
+
+\section{Limit and continuity theorems}
+
+
+\begin{proposition}
+    \label{thm:integral-continuity}
+    Let $f \colon [a,b] \times [c,d] \to \reals$ be continuous, and let $\alpha \colon [a,b] \to \reals$ be of bounded variation. Then the function $F \colon [c,d] \to \reals$ given by
+    %
+    \begin{equation*}
+        F(y)
+            = \int_a^b f(x,y) \dif\alpha(x)
+    \end{equation*}
+    %
+    is continuous.
+\end{proposition}
+
+\begin{proof}
+    We may assume that $\alpha$ is increasing. By uniform continuity of $f$, given $\epsilon > 0$ there is a $\delta > 0$ such that $\norm{z - z'} < \delta$ implies $\abs{f(z) - f(z')} < \epsilon$ for $z,z' \in [a,b] \times [c,d]$. Given $y,y' \in [c,d]$ with $\abs{y - y'} < \delta$ we thus have
+    %
+    \begin{equation*}
+        \abs{F(y) - F(y')}
+            \leq \int_a^b \abs{f(x,y) - f(x,y')} \dif\alpha(x)
+            \leq \epsilon(\alpha(b) - \alpha(a)).
+    \end{equation*}
+    %
+    Since $\epsilon$ was arbitrary, this shows that $F$ is continuous.
+\end{proof}
+
+
+\begin{proposition}
+    Let $f \colon [a,b] \times [c,d] \to \reals$ be bounded, and let $\alpha \colon [a,b] \to \reals$ be of bounded variation. Assume that $f(\,\cdot\,,y) \in \calR_\alpha[a,b]$ for all $y \in [c,d]$, that $f(x,\,\cdot\,)$ is continuous on $[c,d]$ and differentiable on $(c,d)$ for all $x \in [a,b]$, and that $D_2 f$ is continuous on $[a,b] \times (c,d)$. Then the function $F \colon [c,d] \to \reals$ given by
+    %
+    \begin{equation*}
+        F(y)
+            = \int_a^b f(x,y) \dif\alpha(x)
+    \end{equation*}
+    %
+    is differentiable on $(c,d)$ and
+    %
+    \begin{equation*}
+        F'(y)
+            = \int_a^b D_2 f(x,y) \dif\alpha(x).
+    \end{equation*}
+\end{proposition}
+
+\begin{proof}
+    We may assume that $\alpha$ is increasing. Let $y,y_0 \in (c,d)$ with $y \neq y_0$. By the mean value theorem we have
+    %
+    \begin{equation*}
+        \frac{F(y) - F(y_0)}{y - y_0}
+            = \int_a^b \frac{f(x,y) - f(x,y_0)}{y - y_0} \dif\alpha(x)
+            = \int_a^b D_2 f(x, y_x) \dif\alpha(x)
+    \end{equation*}
+    %
+    for some $y_x \in (c,d)$ lying between $y$ and $y_0$, depending on $x$. Let $I \subseteq (c,d)$ be a non-trivial compact interval containing $y$. Then $D_2 f$ is uniformly continuous on $[a,b] \times I$, so given $\epsilon > 0$ there is a $\delta > 0$ such that $\norm{z-z'} < \delta$ implies $\abs{D_2 f(z) - D_2 f(z')} < \epsilon$ for $z,z' \in [a,b] \times I$. For $y,y_0 \in I$ with $\abs{y-y_0} < \delta$ we also have $\abs{y_x-y_0} < \delta$ for all $x \in [a,b]$, and so
+    %
+    \begin{align*}
+        \abs[\bigg]{ \int_a^b D_2 f(x, y_x) \dif\alpha(x)
+            - \int_a^b D_2 f(x, y_0) \dif\alpha(x) }
+            &\leq \int_a^b \abs{ D_2 f(x, y_x) - D_2 f(x, y_0) } \dif\alpha(x) \\
+            &\leq \epsilon (\alpha(b) - \alpha(a)).
+    \end{align*}
+    %
+    Since $\epsilon$ was arbitrary, this shows that $F$ is differentiable at $y_0$ with derivative as claimed.
+\end{proof}
+
+
+\begin{proposition}
+    Let $\alpha$ be of bounded variation on $[a,b]$, and let $(f_n)_{n\in\naturals}$ be a sequence of $\alpha$-integrable functions on $[a,b]$ that converge uniformly to a function $f$. Then $f$ is also $\alpha$-integrable on $[a,b]$, and
+    %
+    \begin{equation*}
+        \int_a^b f \dif\alpha
+            = \lim_{n\to\infty} \int_a^b f_n \dif\alpha.
+    \end{equation*}
+    %
+    In particular, $\calR_\alpha[a,b]$ is a closed subspace of $C[a,b]$ equipped with the uniform norm.
+\end{proposition}
+
+\begin{proof}
+    We may assume that $\alpha$ is increasing. Let $\epsilon_n = \norm{f_n - f}_\infty$ such that
+    %
+    \begin{equation*}
+        f_n - \epsilon_n
+            \leq f
+            \leq f_n + \epsilon_n
+    \end{equation*}
+    %
+    for $n \in \naturals$. It follows that
+    %
+    \begin{equation*}
+        \int_a^b (f_n - \epsilon_n) \dif\alpha
+            \leq \lowint_a^b f \dif\alpha
+            \leq \upint_a^b f \dif\alpha
+            \leq \int_a^b (f_n + \epsilon_n) \dif\alpha,
+    \end{equation*}
+    %
+    and hence,
+    %
+    \begin{equation*}
+        0
+            \leq \upint_a^b f \dif\alpha - \lowint_a^b f \dif\alpha
+            \leq 2 \epsilon_n (\alpha(b) - \alpha(a)).
+    \end{equation*}
+    %
+    Thus the upper and lower integrals of $f$ are equal, so $f$ is $\alpha$-integrable. Finally we have
+    %
+    \begin{equation*}
+        \abs[\bigg]{ \int_a^b f_n \dif\alpha - \int_a^b f \dif\alpha }
+            \leq \int_a^b \abs{f_n - f} \dif\alpha
+            \leq \epsilon_n (\alpha(b) - \alpha(a)),
+    \end{equation*}
+    %
+    proving the claim.
+\end{proof}
+
+
+\section{Line integrals}
+
+\newcommand{\partition}{\mathcal{P}}
+\newcommand{\grad}{\nabla}
+
+\noindent Recall that a \emph{path} in a topological space $X$ is a continuous map $\gamma \colon [a,b] \to X$. A subset $\Gamma \subseteq X$ is called a \emph{curve} in $X$ if there is a path $\alpha$ in $X$ whose image is $\Gamma$. The image of a path $\gamma$ is called its \emph{trace} and is denoted $\gamma^*$.
+
+\begin{definition}[Equivalence of paths]
+	Let $\alpha \colon [a,b] \to X$ and $\beta \colon [c,d] \to X$ be paths in a topological space $X$. If there is an increasing homeomorphism $\phi \colon [c,d] \to [a,b]$ such that $\beta = \alpha \circ \phi$, then $\alpha$ and $\beta$ are said to be \emph{properly equivalent}.
+
+	If $\alpha$ and $\beta$ are closed paths with $\alpha(a) \neq \beta(c)$, then we also say that they are properly equivalent if there is a point $e \in (c,d)$ such that $\alpha$ and $\gamma$ are properly equivalent in the above sense, where $\gamma \colon [e, d-c+e] \to X$ is given by
+	%
+	\begin{equation*}
+		\gamma(t) =
+		\begin{cases}
+			\beta(t), & t \in [e,d], \\
+			\beta(t-d+c), & t \in [d,d-c+e].
+		\end{cases}
+	\end{equation*}
+	
+	If the map $\phi$ above is decreasing, then we say that $\alpha$ and $\beta$ are \emph{improperly equivalent}. The paths $\alpha$ and $\beta$ are \emph{equivalent} if they are either properly or improperly equivalent.
+\end{definition}
+%
+Note that the condition that $\phi$ be an increasing (decreasing) homeomorphism is equivalent to it being continuous, strictly increasing (decreasing) and surjective. Also note that equivalent paths trace out the same curve in $X$.
+
+\begin{definition}[Line integrals]
+	Let $\gamma \colon [a,b] \to \setR^d$ be a path, and let $f \colon \gamma^* \to \setR^d$ be a vector field. Given a tagged partition $(P,T)$ of $[a,b]$ then, with notation as above, we form the sums
+    %
+    \begin{equation*}
+        S_{f,\gamma}(P,T)
+            = \sum_{i=1}^n f(\gamma(t_i)) \cdot (\gamma(x_i) - \gamma(x_{i-1})).
+    \end{equation*}
+    %
+    Define the \emph{line integral} of $f$ with respect to $\gamma$ as the limit of the net $S_f$, if the limit exists. We denote this integral by $\int f \cdot \dif\gamma$.
+\end{definition}
+%
+Notice that if $\alpha$ and $\beta$ are properly equivalent paths, then
+%
+\begin{equation*}
+	\int f \cdot \dif\alpha = \int f \cdot \dif\beta.
+\end{equation*}
+%
+If $\alpha$ and $\beta$ are instead improperly equivalent, then the two integrals are equal but with opposite signs.
+
+
+\begin{proposition}
+	Let $\gamma \colon [a,b] \to \setR^d$ be a path, and let $f \colon \gamma^* \to \setR^d$ be a bounded function. Then
+	%
+	\begin{equation*}
+		\int f \cdot \dif\gamma
+			= \sum_{k=1}^d \int_a^b f_k \circ \gamma \dif\gamma_k
+	\end{equation*}
+	%
+	whenever each Riemann--Stieltjes integral on the right exists. If in addition $\gamma$ is piecewise $C^1$, then
+	%
+	\begin{equation*}
+		\int f \cdot \dif\gamma
+			= \int_a^b f(\gamma(t)) \cdot \gamma'(t) \dif t.
+	\end{equation*}
+\end{proposition}
+
+\begin{proof}
+	Notice that
+	%
+	\begin{equation*}
+		S_{f,\gamma}(P,T)
+			= \sum_{k=1}^d \sum_{i=1}^n f_k(\gamma(t_i)) (\gamma_k(t_i) - \gamma_k(t_{i-1})).
+	\end{equation*}
+	%
+	Since the inner sums on the right-hand side approximate the Riemann--Stieltjes integrals $\int_a^b f_k \circ \gamma \dif\gamma_k$, the first claim follows by taking limits. The second claim follows by [reference].
+\end{proof}
+
+
+\begin{theorem}[Integral of a gradient]
+	Let $U \subseteq \setR^d$ be open, and let $\phi \in C^1(U)$. For every pair of points $x,y \in U$ and every piecewise $C^1$ path $\gamma \colon [a,b] \to U$ with $\gamma(a) = x$ and $\gamma(b) = y$ we have
+	%
+	\begin{equation*}
+		\int \grad\phi \cdot \dif\gamma
+			= \phi(y) - \phi(x).
+	\end{equation*}
+\end{theorem}
+%
+If $f = \grad\phi$, then $\phi$ is called a \emph{potential function} for $f$.
+
+\begin{proof}
+	Let $a = t_0 < \cdots < t_n = b$ be a partition of $[a,b]$ such that $\gamma'$ is continuous on each subinterval. By the chain rule,
+	%
+	\begin{equation*}
+		(\phi \circ \gamma)'(t)
+			= \grad\phi(\gamma(t)) \cdot \gamma'(t)
+	\end{equation*}
+	%
+	on each open subinterval $(t_{i-1}, t_i)$. By [reference],
+	%
+	\begin{align*}
+		\int \grad\phi \cdot \dif\gamma
+			&= \sum_{i=1}^n \int_{t_{i-1}}^{t_i} \grad\phi(\gamma(t)) \cdot \gamma'(t) \dif t
+			= \sum_{i=1}^n \int_{t_{i-1}}^{t_i} (\phi \circ \gamma)'(t) \dif t \\
+			&= \phi(\gamma(b)) - \phi(\gamma(a))
+			= \phi(y) - \phi(x),
+	\end{align*}
+	%
+	as desired.
+\end{proof}
+
+
+
+\begin{theorem}
+	Let $U \subseteq \setR^d$ be an open, connected set, and let $f \colon U \to \setR^d$ be a continuous function. Fix a point $x_0 \in U$. For each $x \in U$ and each pair of polygonal paths $\alpha, \beta \colon [a,b] \to U$ joining $x_0$ and $x$, assume that
+	%
+	\begin{equation*}
+		\int f \cdot \dif\alpha
+			= \int f \cdot \dif\beta.
+	\end{equation*}
+	%
+	Then there exists a function $\phi \in C^1(U)$ such that $f = \grad\phi$.
+\end{theorem}
+%
+Notice that since $U$ is connected, such polygonal paths exist between any pair of points.
+
+\begin{proof}
+	Let $x \in U$, and let $\alpha \colon [a,b] \to U$ be a polygonal curve joining $x_0$ and $x$. Define
+	%
+	\begin{equation*}
+		\phi(x) = \int f \cdot \dif\alpha.
+	\end{equation*}
+	%
+	By hypothesis, the number $\phi(x)$ does not depend on the particular choice of $\alpha$. We show that each partial derivative $D_k \phi(x)$ exists and equals $f_k(x)$.
+
+	Let $B(x,\delta) \subseteq U$ for some $\delta > 0$, and let $\lambda \in [-\delta/2, \delta/2]$. Define a path $\gamma \colon [0,1] \to B(x,\delta)$ by $\gamma(t) = (1-t)x + t(x + \lambda e_k)$, where $e_k$ is the $k$th standard basis vector. Then
+	%
+	\begin{equation*}
+		\phi(x + \lambda e_k) - \phi(x)
+			= \int f \cdot \dif\gamma.
+	\end{equation*}
+	%
+	Furthermore, $\gamma_k'(t) = \lambda$ and $\gamma_i'(t) = 0$ for $i \neq k$. Thus $\gamma$ is $C^1$, and so
+	%
+	\begin{align*}
+		\phi(x + \lambda e_k) - \phi(x)
+			&= \sum_{i=1}^d \int_0^1 f_i(\gamma(t)) \gamma_i'(t) \dif t \\
+			&= \lambda \int_0^1 f_k(\gamma(t)) \dif t
+			 = \lambda \int_0^1 g(t,\lambda) \dif t,
+	\end{align*}
+	%
+	where $g(t,\lambda) = f_k((1-t)x + t(x + \lambda e_k))$. Since $g$ is continuous on $[0,1] \times [-\delta/2, \delta/2]$, \cref{thm:integral-continuity} implies that
+	%
+	\begin{equation*}
+		\lim_{\lambda \to 0} \int_0^1 g(t,\lambda) \dif t
+			= \int_0^1 g(t,0) \dif t
+			= \int_0^1 f_k(x) \dif t
+			= f_k(x),
+	\end{equation*}
+	%
+	proving that $D_k \phi(x) = f_k(x)$. Thus $\grad\phi(x) = f(x)$ for all $x \in U$, and $\phi \in C^1(U)$ since $f$ is continuous.
+\end{proof}
+
+
+
+\nocite{*}
+
+\printbibliography
+
+
+\end{document}
