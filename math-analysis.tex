@@ -5,7 +5,7 @@
 \usepackage[UKenglish]{babel}
 
 % Document info
-\newcommand\doctitle{Mathematical analysis notes}
+\newcommand\doctitle{Miscellaneous analysis notes}
 \newcommand\docauthor{Danny Nygård Hansen}
 
 % Formatting and layout
@@ -17,7 +17,7 @@
 \usepackage{latex-sty/articlesectionstyle}
 
 % Fonts
-\usepackage[largesmallcaps]{kpfonts}
+\usepackage[largesmallcaps,partialup]{kpfonts}
 \DeclareSymbolFontAlphabet{\mathrm}{operators} % https://tex.stackexchange.com/questions/40874/kpfonts-siunitx-and-math-alphabets
 \linespread{1.06}
 \let\mathfrak\undefined
@@ -77,22 +77,14 @@
 \newcommand{\calA}{\mathcal{A}}
 \newcommand{\calP}{\mathcal{P}}
 \newcommand{\calR}{\mathcal{R}}
+\newcommand{\calL}{\mathcal{L}}
 \newcommand{\borel}{\mathcal{B}}
 \newcommand{\measurable}{\mathcal{M}}
 \newcommand{\wto}{\Rightarrow}
 \DeclarePairedDelimiter{\net}{\langle}{\rangle}
 \newcommand{\strucS}{\mathfrak{S}}
 \DeclarePairedDelimiter{\gen}{\langle}{\rangle} % Generating set
-\newcommand{\powerset}[1]{2^{#1}}
 \newcommand{\frakL}{\mathfrak{L}}
-
-
-% Section style -- add to section style .sty?
-\setsubsecheadstyle{\normalfont\itshape}
-
-
-% Preimage -- to be added to mathcommands .sty
-\newcommand{\preim}{^{-1}}
 
 
 \begin{document}
@@ -179,7 +171,7 @@ Given a sequence $(a_n)_{n\in\naturals}$ in a set $X$ and a strictly increasing 
 \end{proof}
 
 \begin{theorem}[The Bolzano--Weierstrass theorem]
-    Every subset of $\reals^d$ sequentially compact if and only if it is closed and bounded.
+    Every subset of $\reals^d$ is sequentially compact if and only if it is closed and bounded.
 \end{theorem}
 %
 We recall that a topological space $X$ is \emph{sequentially compact} if every sequence in $X$ has a convergent subsequence.
@@ -236,11 +228,6 @@ If $A$ is a subset of a metric space $S$, recall that $A$ is \emph{totally bound
     \end{enumthm}
 \end{theorem}
 
-% Add to framedtheorems.sty
-\newcommand{\mylistlabelfont}[1]{{\normalfont\color{linkcolor}\textit{#1}:}}
-\newlist{proofsec}{description}{1}
-\setlist[proofsec]{leftmargin=0pt, parsep=0pt, listparindent=\parindent, font=\mylistlabelfont}
-
 \begin{proof}
 \begin{proofsec}
     \item[\subcref{enum:complete-totally-bounded} $\implies$ \subcref{enum:sequentially-compact}]
@@ -251,7 +238,7 @@ If $A$ is a subset of a metric space $S$, recall that $A$ is \emph{totally bound
     \item[\subcref{enum:sequentially-compact} $\implies$ \subcref{enum:complete-totally-bounded}]
     Assume that $A$ is sequentially compact. We first show that $A$ is complete, so let $(x_n)_{n\in\naturals}$ be a Cauchy sequence in $A$. This has a subsequence that converges to a point $x$ in $A$, so [lemma] implies that $(x_n)$ also converges to $x$.
     
-    Now suppose that $A$ is not totally bounded, and let $\epsilon > 0$ be such that $A$ cannot be covered by finitely many $\epsilon$-balls. We construct a sequence $(x_n)_{n\in\naturals}$ in $A$ as follows: Choose any $x_1 \in A$, and given $x_1, \ldots, x_n$ choose $x_{n+1} \in A \setminus \bigunion_{i=1}^n B(x_i,\epsilon)$. Then $\rho(x_m,x_n) > \epsilon$ for all $m,n \in \naturals$ with $m \neq n$, so $(x_n)$ has no convergent subsequence.
+    Now suppose that $A$ is not totally bounded, and let $\epsilon > 0$ be such that $A$ cannot be covered by finitely many $\epsilon$-balls. We construct a sequence $(x_n)_{n\in\naturals}$ in $A$ as follows: Choose any $x_1 \in A$, and given $x_1, \ldots, x_n$ choose $x_{n+1} \in A \setminus \bigunion_{i=1}^n B(x_i,\epsilon)$. Then $\rho(x_m,x_n) \geq \epsilon$ for all $m,n \in \naturals$ with $m \neq n$, so $(x_n)$ has no convergent subsequence.
     
     \item[\subcref{enum:complete-totally-bounded} \& \subcref{enum:sequentially-compact} $\implies$ \subcref{enum:compact}]
     Suppose that $A$ is complete, totally bounded and sequentially compact, and let $\calU$ be an open cover of $A$. It suffices to show that there some $\epsilon > 0$ such that any $\epsilon$-ball intersecting $A$ is contained in some $U \in \calU$, since $A$ can be covered by finitely many such balls.
@@ -318,14 +305,19 @@ A \emph{partition} of an interval $[a,b]$ is a collection $P = \{x_0, \ldots, x_
 %
 In turn, a \emph{tagged partition} of $[a,b]$ is a pair $(P,T)$ where $P$ is a partition of $[a,b]$ and $T = \{t_1, \ldots, t_n\}$ is a multiset of numbers such that $t_i \in [x_{i-1}, x_i]$ for all $i = 1, \ldots, n$. Let $\calP'[a,b]$ denote the set of tagged partitions of $[a,b]$. We define a direction on $\calP'[a,b]$ by $(P,T) \preceq (P',T')$ if $P \subseteq P'$. Notice that $T$ and $T'$ do not appear in this definition. This also induces a direction on the set $\calP[a,b]$ of all (non-tagged) partitions of $[a,b]$.
 
-Given a partition $P = \{x_0, \ldots, x_n \}$ of $[a,b]$ and a function $f \colon [a,b] \to \reals$ we write $\Delta f_i = f(x_i) - f(x_{i-1})$ for $i = 1, \ldots, n$. If $f$ is the identity function we simply write $\Delta x_i = x_i - x_{i-1}$.
+Given a partition $P = \{x_0, \ldots, x_n \}$ of $[a,b]$ and a function $f \colon [a,b] \to \reals$ we write $\Delta f_i = f(x_i) - f(x_{i-1})$ for $i = 1, \ldots, n$. If $f$ is the identity function we simply write $\Delta x_i = x_i - x_{i-1}$. Furthermore, we write
+%
+\begin{equation*}
+    \Sigma_f(P)
+        = \sum_{i=1}^n \abs{\Delta f_i}.
+\end{equation*}
 
 \begin{definition}[Total variation]
     Consider a function $f \colon [a,b] \to \reals$. The \emph{total variation} of $f$ on $[a,b]$ is the number
     %
     \begin{equation*}
         V_f(a,b)
-            = \sup_{P \in \calP[a,b]} \sum_{i=1}^n \abs{ \Delta f_i }.
+            = \sup_{P \in \calP[a,b]} \Sigma_f(P).
     \end{equation*}
     %
     If $V_f(a,b) < \infty$, then we say that $f$ is of \emph{bounded variation} on $[a,b]$.
@@ -845,7 +837,7 @@ Since $\alpha = V - (V - \alpha)$ and both $V$ and $V - \alpha$ are increasing, 
 
 
 \begin{theorem}[The second fundamental theorem of calculus]
-    Let $f \in \calR[a,b]$. If there exists a continuous function $F \colon [a,b] \to \reals$ that differentiable on $(a,b)$ with $F' = f$, then
+    Let $f \in \calR[a,b]$. If there exists a continuous function $F \colon [a,b] \to \reals$ that is differentiable on $(a,b)$ with $F' = f$, then
     %
     \begin{equation*}
         \int_a^b f
@@ -1138,6 +1130,330 @@ Notice that since $U$ is connected, such polygonal paths exist between any pair 
 	proving that $D_k \phi(x) = f_k(x)$. Thus $\grad\phi(x) = f(x)$ for all $x \in U$, and $\phi \in C^1(U)$ since $f$ is continuous.
 \end{proof}
 
+
+\chapter{Convergence}
+
+\begin{definition}[Convergence in measure]
+    Let $(X,\calE,\mu)$ be a measure space. Let $(f_n)_{n\in\naturals}$ be a sequence in $\measurable(\calE)$, and let further $f \in \measurable(\calE)$. We say that $(f_n)$ \emph{converges to $f$ in $\mu$-measure} if for every $\epsilon > 0$,
+    %
+    \begin{equation*}
+        \lim_{n\to\infty} \mu\bigl( \{ \abs{f_n - f} > \epsilon \}\bigr) = 0.
+    \end{equation*}
+    %
+    Furthermore, $(f_n)$ is called a \emph{Cauchy sequence in $\mu$-measure} if, for every $\epsilon > 0$,
+    %
+    \begin{equation*}
+        \lim_{m,n\to\infty} \mu\bigl( \{ \abs{f_m - f_n} > \epsilon \} \bigr) = 0.
+    \end{equation*}
+\end{definition}
+
+We prove that convergence in $\mu$-measure is complete.
+
+\begin{lemma}
+    Let $(X,\calE,\mu)$ be a measure space, and let $(f_n)_{n\in\naturals}$ be a sequence in $\measurable(\calE)$. If there exists a sequence $(\epsilon_n)_{n\in\naturals}$ of strictly positive numbers such that
+    %
+    \begin{equation}
+        \label{eq:convergence-in-measure-complete-lemma}
+        \sum_{n=1}^\infty \epsilon_n < \infty
+        \quad \text{and} \quad
+        \sum_{n=1}^\infty \mu \bigl( \{ \abs{f_{n+1} - f_n} > \epsilon_n \} \bigr) < \infty,
+    \end{equation}
+    %
+    then there exists a function $f \in \measurable(\calE)$ such that $(f_n)$ converges to $f$ both $\mu$-a.e. and in $\mu$-measure.
+\end{lemma}
+
+\begin{proof}
+    For $n \in \naturals$, denote the set $\{ \abs{f_{n+1} - f_n} > \epsilon_n \}$ by $E_n$, and define sets $F_k = \bigunion_{n=k}^\infty E_n$ and $F = \bigintersect_{k\in\naturals} F_k$. Notice that $F = \limsup_{n\to\infty} E_n$, so the first Borel--Cantelli lemma implies that $\mu(F) = 0$.
+    
+    For $m \geq n$ we find that
+    %
+    \begin{equation}
+        \label{eq:convergence-in-measure-Cauchy}
+        \abs{ f_m - f_n }
+            \leq \sum_{i=n}^{m-1} \abs{f_{i+1} - f_i}
+            \leq \sum_{i=n}^\infty \abs{f_{i+1} - f_i}.
+    \end{equation}
+    %
+    If furthermore $x \in F_k^c$ and $m \geq n \geq k$, then
+    %
+    \begin{equation*}
+        \abs{ f_m(x) - f_n(x) }
+            \leq \sum_{i=n}^\infty \epsilon_i.
+    \end{equation*}
+    %
+    The right-hand side converges to zero as $n \to \infty$, which shows that $(f_n(x))$ is a Cauchy sequence in $\reals$ for $x \in F_k^c$, hence for $x \in F^c$. Letting $f = \lim_{n\to\infty} f_n \indicator{F^c}$ we thus find that $(f_n)$ converges to $f \in \measurable(\calE)$ $\mu$-a.e.
+
+    Next we show that $f_n \to f$ in $\mu$-measure as $n \to \infty$. Letting $m \to \infty$ in \eqref{eq:convergence-in-measure-Cauchy} we find that
+    %
+    \begin{equation*}
+        \abs{ f_n - f }
+        \leq \sum_{i=n}^\infty \abs{f_{i+1} - f_i}
+    \end{equation*}
+    %
+    $\mu$-a.e. Now let $\epsilon > 0$, and choose an $N \in \naturals$ such that $\sum_{i=N}^\infty \epsilon_i \leq \epsilon$. For $n \geq N$, $\abs{f_n - f} > \epsilon$ then implies that
+    %
+    \begin{equation*}
+        \sum_{i=n}^\infty \epsilon_i
+            \leq \epsilon
+            < \abs{f_n - f}
+            \leq \sum_{i=n}^\infty \abs{f_{i+1} - f_i}
+    \end{equation*}
+    %
+    $\mu$-a.e., which in turn implies that $\epsilon_i < \abs{f_{i+1} - f_i}$ $\mu$-a.e. for some $i \geq n$. Hence it follows that
+    %
+    \begin{equation*}
+        \mu\bigl( \{ \abs{f_n - f} > \epsilon \}\bigr)
+            \leq \mu \Bigl( \bigunion_{i=n}^\infty E_i \Bigr)
+            \leq \sum_{i=n}^\infty \mu(E_i),
+    \end{equation*}
+    %
+    which converges to zero by \eqref{eq:convergence-in-measure-complete-lemma}.
+\end{proof}
+
+
+\begin{theorem}[Completeness of convergence in measure]
+    Let $(X,\calE,\mu)$ be a measure space, and let $(f_n)_{n\in\naturals}$ be a sequence in $\measurable(\calE)$ that is Cauchy in $\mu$-measure. Then there exists a function $f \in \measurable(\calE)$ such that $f_n \to f$ in $\mu$-measure. Furthermore, $(f_n)$ has a subsequence that converges to $f$ $\mu$-a.e.
+\end{theorem}
+
+\begin{proof}
+    Choose a subsequence $(g_k) = (f_{n_k})$ such that
+    %
+    \begin{equation*}
+        \mu \bigl( \{ \abs{g_{k+1} - g_k} > 2^{-k} \} \bigr)
+            \leq 2^{-k}.
+    \end{equation*}
+    %
+    [Lemma] then implies the existence of a function $f \in \measurable(\calE)$ such that $g_k \to f$ both $\mu$-a.e. and in $\mu$-measure.
+
+    It remains to be shown that $(f_n)$ also converges to $f$ in $\mu$-measure. But this follows since, for $\epsilon > 0$,
+    %
+    \begin{equation*}
+        \{ \abs{f_n - f} > \epsilon \}
+            \subseteq \{ \abs{f_n - g_k} > \epsilon/2 \} \union \{ \abs{g_k - f} > \epsilon/2 \},
+    \end{equation*}
+    %
+    and the measures of the sets on the right-hand side go to zero as $n,k \to \infty$.
+\end{proof}
+
+
+\begin{definition}[Convergence in $\calL^p(\mu)$]
+    Let $(X,\calE,\mu)$ be a measure space. Let $(f_n)_{n\in\naturals}$ be a sequence in $\measurable(\calE)$, and let further $f \in \measurable(\calE)$. If $p \in (0,\infty)$ we say that $(f_n)$ \emph{converges to $f$ in $\calL^p(\mu)$} if
+    %
+    \begin{equation*}
+        \lim_{n\to\infty} \int_X \abs{f_n - f}^p \dif\mu = 0.
+    \end{equation*}
+    %
+    Furthermore, $(f_n)$ is called a \emph{Cauchy sequence in $\calL^p(\mu)$} if
+    %
+    \begin{equation*}
+        \lim_{m,n\to\infty} \int_X \abs{f_m - f_n}^p \dif\mu = 0.
+    \end{equation*}
+\end{definition}
+
+\begin{theorem}[Completeness of convergence in $\calL^p(\mu)$]
+    Let $(X,\calE,\mu)$ be a measure space, let $(f_n)_{n\in\naturals}$ be a sequence in $\measurable(\calE)$ that is Cauchy in $\calL^p(\mu)$, and let $p \in (0,\infty)$. Then there exists a function $f \in \measurable(\calE)$ such that $f_n \to f$ in $\calL^p(\mu)$. Furthermore, $(f_n)$ has a subsequence that converges to $f$ $\mu$-a.e.
+\end{theorem}
+
+\begin{proof}
+    Markov's inequality implies that $(f_n)$ is also a Cauchy sequence in $\mu$-measure, so [reference] yields a function $f \in \measurable(\calE)$ such that $f_n \to f$ in $\mu$-measure, and such that $(f_n)$ has a subsequence $(f_{n_k})_{k\in\naturals}$ that converges to $f$ $\mu$-a.e. We show that $(f_n)$ also converges to $f$ in $\calL^p(\mu)$.
+
+    For $n \in \naturals$, Fatou's lemma implies that
+    %
+    \begin{align*}
+        \int_X \abs{f_n - f}^p \dif\mu
+            &= \int_X \liminf_{k\to\infty} \abs{f_n - f_{n_k}}^p \dif\mu
+             \leq \liminf_{k\to\infty} \int_X \abs{f_n - f_{n_k}}^p \dif\mu \\
+            &\leq \sup_{m \geq n} \int_X \abs{f_n - f_m}^p \dif\mu,
+    \end{align*}
+    %
+    which converges to zero as $n \to \infty$ as desired.
+\end{proof}
+
+
+\chapter{Portmanteau theorems}
+
+\newcommand{\lip}{\mathrm{Lip}}
+\newcommand{\lipbounded}{\lip_b}
+
+Recall that a map $f \colon (S,\rho) \to (T,\delta)$ between metric spaces is called \emph{Lipschitz} if there is a real number $K > 0$ such that
+%
+\begin{equation*}
+    \delta(f(x), f(y)) \leq K \rho(x,y)
+\end{equation*}
+%
+for all $x,y \in S$. The space of Lipschitz functions $(S,\rho) \to \reals$ is denoted $\lip(S,\rho)$, and the subspace of bounded functions $\lipbounded(S,\rho)$.
+
+If $P$ is a Borel probability measure on a topological space $X$, then a subset $A \subseteq X$ is called a \emph{$P$-continuity set} if $P(\boundary A) = 0$.
+
+\begin{theorem}
+    Let $(P_n)_{n\in\naturals}$ and $P$ be probability measures on a metrisable space $S$. Then the following conditions are equivalent:
+    %
+    \begin{enumthm}
+        \item \label{enum:portmanteau-weak-convergence} $P_n \wto P$.
+        \item \label{enum:portmanteau-uniformly-continuous} $\int_S f \dif P_n \to \int_S f \dif P_n$ for all bounded, uniformly continuous $f \colon S \to \reals$. (metric?)
+        \item \label{enum:portmanteau-lipschitz} There is a metric $\rho$ on $S$ such that $\int_S f \dif P_n \to \int_S f \dif P$ for all $f \in \lipbounded(S,\rho)$.
+        \item \label{enum:portmanteau-closed} $\limsup_{n\to\infty} P_n(F) \leq P(F)$ for all closed $F \subseteq S$.
+        \item \label{enum:portmanteau-open} $\liminf_{n\to\infty} P_n(G) \geq P(G)$ for all open $F \subseteq S$.
+        \item \label{enum:portmanteau-continuity-sets} $P_n(A) \to P(A)$ for all $P$-continuity sets $A \subseteq S$.
+    \end{enumthm}
+\end{theorem}
+
+\begin{proof}
+The first condition clearly implies the second, and the second the third.
+
+\begin{proofsec}
+    \item[\subcref{enum:portmanteau-lipschitz} $\implies$ \subcref{enum:portmanteau-closed}]
+    Let $g_k(x) = (1 - k\rho(x,F)) \join 0$ and $F_k = \set{x \in S}{\rho(x,F) < 1/k}$ for $k \in \naturals$. First notice that $g_k$ is Lipschitz, since
+    %
+    \begin{align*}
+        \abs{ g_k(x) - g_k(y) }
+            &= \abs[\big]{ (1 - k\rho(x,F)) \join 0 - (1 - k\rho(y,F)) \join 0 } \\
+            &\leq \abs{ k\rho(x,F) - k\rho(y,F) }
+             \leq k \rho(x,y).
+    \end{align*}
+    %
+    Furthermore, $\indicator{F} \leq g_k \leq \indicator{F_k}$ so
+    %
+    \begin{equation*}
+        \limsup_{n\to\infty} P_n(F)
+            \leq \limsup_{n\to\infty} \int_S g_k \dif P_n
+            = \int_S g_k \dif P
+            \leq P(F_k).
+    \end{equation*}
+    %
+    Since $F_k \downarrow F$ as $k \to \infty$, continuity of $P$ implies the claim.
+
+    \item[\subcref{enum:portmanteau-closed} $\Leftrightarrow$ \subcref{enum:portmanteau-open}]
+    This follows easily by taking complements.
+
+    \item[\subcref{enum:portmanteau-closed} \& \subcref{enum:portmanteau-open} $\implies$ \subcref{enum:portmanteau-continuity-sets}]
+    For $A \subseteq S$ we have
+    %
+    \begin{align*}
+        P(\interior{A})
+            &\leq \liminf_{n\to\infty} P_n(\interior{A})
+             \leq \liminf_{n\to\infty} P_n(A) \\
+            &\leq \limsup_{n\to\infty} P_n(A)
+             \leq \limsup_{n\to\infty} P_n(\closure{A})
+             \leq P(\closure{A}).
+    \end{align*}
+    %
+    If $A$ is a $P$-continuity set then $P(\interior{A}) = P(\closure{A})$, which implies \subcref{enum:portmanteau-continuity-sets}.
+
+    \item[\subcref{enum:portmanteau-continuity-sets} $\implies$ \subcref{enum:portmanteau-weak-convergence}]
+    Given $f \in C_b(S)$, by linearity we may assume that $0 \leq f \leq 1$. Then
+    %
+    \begin{equation*}
+        \int_S f \dif P
+            = \int_0^\infty P(\{ f > t \}) \dif t
+            = \int_0^1 P(\{ f > t \}) \dif t,
+    \end{equation*}
+    %
+    and similarly for $P_n$. Since $f$ is continuous, we have $\boundary \{ f > t \} \subseteq \{ f = t \}$. Now notice that $\{ f = t \}$ a $P$-null set except for countably many $t \in (0,1)$, since $P$ is a finite measure. Hence $\{ f > t \}$ is a $P$-continuity set for all but countably many $t$. It then follows from \subcref{enum:portmanteau-continuity-sets} and the dominated convergence theorem that
+    %
+    \begin{equation*}
+        \int_S f \dif P_n
+            = \int_0^1 P_n(\{ f > t \}) \dif t
+            \to \int_0^1 P(\{ f > t \}) \dif t
+            = \int_S f \dif P
+    \end{equation*}
+    %
+    as claimed.
+\end{proofsec}
+\end{proof}
+
+
+\chapter{Complex analysis}
+
+[Should it be here?]
+
+\newcommand{\diam}{\operatorname{diam}}
+\newcommand{\hol}{\mathcal{H}}
+
+If $V \subseteq \complex$ is open and $f \colon V \to \complex$ is differentiable at every point in $V$, then we say that $f$ is \emph{holomorphic} on $V$. The set of functions holomorphic on $V$ is denoted $\hol(V)$.
+
+\begin{theorem}[The Cauchy--Goursat Lemma]
+    If $f \in \hol(V)$, then
+    %
+    \begin{equation*}
+        \int_{\boundary T} f(x) \dif z = 0
+    \end{equation*}
+    %
+    for every triangle $T \subseteq V$.
+\end{theorem}
+
+\begin{proof}
+    Notice that any triangle $T$ can be subdivided into four smaller triangles $T^1, \ldots, T^4$ whose corners are the corners and midpoints of the sides of $T$. We then clearly have
+    %
+    \begin{equation*}
+        \int_{\boundary T} g(z) \dif z
+            = \sum_{i=1}^4 \int_{\boundary T^i} g(z) \dif z
+    \end{equation*}
+    %
+    for all $g \in C(T)$.
+
+    Let $T_0 \subseteq V$ be a triangle, and consider the integral
+    %
+    \begin{equation*}
+        I
+            = \int_{\boundary T_0} f(z) \dif z.
+    \end{equation*}
+    %
+    By the above considerations we have
+    %
+    \begin{equation*}
+        \abs{I}
+            \leq 4 \abs[\bigg]{ \int_{\boundary T_0^i} f(z) \dif z }
+    \end{equation*}
+    %
+    for at least one value of $i$. For this value of $i$ let $T_1 = T_0^i$. Continuing this process yields a sequence $(T_n)_{n\in\naturals}$ of triangles such that
+    %
+    \begin{equation*}
+        \abs{I}
+            \leq 4^n \abs[\bigg]{ \int_{\boundary T_n} f(z) \dif z }
+    \end{equation*}
+    %
+    for $n \in \naturals_0$.
+
+    Furthermore, each of the four triangles in a subdivision of a triangle $T$ have side lengths half of those of $T$, so
+    %
+    \begin{equation*}
+        \diam T_n
+            = 2^{-n} \diam T_0
+    \end{equation*}
+    %
+    for $n \in \naturals_0$. Thus there exists a point $z_0 \in \complex$ such that $\bigintersect_{n\in\naturals_0} T_n = \{ z_0 \}$ since $(T_n)$ is a sequence of closed sets whose diameters tend to zero. It follows that
+    %
+    \begin{equation*}
+        \sup_{z \in \boundary T_n} \abs{z - z_0}
+            \leq 2^{-n} \diam T_0.
+    \end{equation*}
+    %
+    Given $\epsilon > 0$ there exists an $r > 0$ such that
+    %
+    \begin{equation*}
+        \abs{ f(z) - f(z_0) - f'(z_0)(z - z_0) }
+            \leq \epsilon \abs{z - z_0}
+    \end{equation*}
+    %
+    for $z \in B(z_0,r)$, and there further exists an $N \in \naturals$ such that $n \geq N$ implies $T_n \subseteq B(z_0,r)$. Now notice that the function $z \mapsto f(z_0) + f'(z_0)(z - z_0)$ has an antiderivative, so its integral along $\boundary T_n$ is zero. Denoting the length of the curve $\boundary T_n$ by $L_n$ we have $L_n \leq 2 \diam T_n$. Hence,
+    %
+    \begin{align*}
+        \abs[\bigg]{ \int_{\boundary T_n} f(z) \dif z }
+            &\leq \int_{\boundary T_n} \abs{ f(z) - f(z_0) - f'(z_0)(z - z_0) } \dif z \\
+            &\leq L_n \epsilon \sup_{z \in \boundary T_n} \abs{z - z_0} \\
+            &\leq 2^{-2n+1} \epsilon (\diam T_0)^2
+    \end{align*}
+    %
+    for $n \geq N$, and so
+    %
+    \begin{equation*}
+        \abs{I}
+            \leq 2 \epsilon (\diam T_0)^2.
+    \end{equation*}
+    %
+    Since $\epsilon$ was arbitrary, it follows that $I = 0$ as desired.
+\end{proof}
 
 
 \nocite{*}
