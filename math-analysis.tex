@@ -17,13 +17,16 @@
 \usepackage{latex-sty/articlesectionstyle}
 
 % Fonts
+\usepackage{amssymb}
 \usepackage[largesmallcaps,partialup]{kpfonts}
 \DeclareSymbolFontAlphabet{\mathrm}{operators} % https://tex.stackexchange.com/questions/40874/kpfonts-siunitx-and-math-alphabets
 \linespread{1.06}
-\let\mathfrak\undefined
-\usepackage{eufrak}
+% \let\mathfrak\undefined
+% \usepackage{eufrak}
+\DeclareMathAlphabet\mathfrak{U}{euf}{m}{n}
+\SetMathAlphabet\mathfrak{bold}{U}{euf}{b}{n}
+% https://tex.stackexchange.com/questions/13815/kpfonts-with-eufrak
 \usepackage{inconsolata}
-\usepackage{amssymb}
 
 % Hyperlinks
 \usepackage{hyperref}
@@ -78,6 +81,7 @@
 \newcommand{\calP}{\mathcal{P}}
 \newcommand{\calR}{\mathcal{R}}
 \newcommand{\calL}{\mathcal{L}}
+\newcommand{\calS}{\mathcal{S}}
 \newcommand{\borel}{\mathcal{B}}
 \newcommand{\measurable}{\mathcal{M}}
 \newcommand{\wto}{\Rightarrow}
@@ -87,9 +91,124 @@
 \newcommand{\frakL}{\mathfrak{L}}
 
 
+\usepackage{graphicx}
+\newcommand*{\flip}[1]{\scalebox{-1}[1]{\rotatebox[origin = c]{180}{#1}}}
+\DeclareRobustCommand{\Lambdabb}{\flip{\ensuremath{\mathbb{V}}}}
+% https://tex.stackexchange.com/questions/297680/how-can-i-rotate-pi-by-180-degrees/297742
+
 \begin{document}
 
 \maketitle
+
+\chapter{The exponential function}
+
+\begin{theorem}
+    Given $b > 0$ there exists a unique continuous function $E_b \colon \reals \to \reals$ such that $E_b(m/n) = (b^m)^{1/n}$ for all $m,n \in \ints$ with $n > 0$.
+\end{theorem}
+
+\begin{proof}
+    We first assume that $b > 1$. The proof of the theorem in this case is by the following stages:
+    %
+    \begin{enumerate}
+        \item Given $m,n,p,q \in \ints$ with $n,q > 0$ and $r = m/n = p/q$, then
+        %
+        \begin{equation*}
+            (b^m)^{1/n}
+                = (b^p)^{1/q}.
+        \end{equation*}
+        %
+        Thus defining $E_b(r) = (b^m)^{1/n}$ makes sense.
+
+        \item If $r,s \in \rationals$, then $E_b(r+s) = E_b(r) E_b(s)$. In particular, $E_b$ is increasing on $\rationals$.
+        
+        \item The map $E_b$ is continuous on $\rationals$.
+        
+        \item For $x \in \reals$, let
+        %
+        \begin{equation*}
+            L_x
+                = \set{E_b(r)}{t \in \rationals, t \leq x}.
+        \end{equation*}
+        %
+        Then $E_b(r) = \sup L_r$ for $r \in \rationals$, so it makes sense to define $E_b(x) = \sup L_x$ for all $x \in \reals$. Hence $E_b$ is increasing and therefore continuous on $\reals$.
+
+        \item For $x,y \in \reals$ we have $E_b(x+y) = E_b(x) E_b(y)$.
+    \end{enumerate}
+    %
+    (1) Notice that $mq = pn$, so
+    %
+    \begin{equation*}
+        \bigl[ (b^m)^{1/n} \bigr]^{pn}
+            = (b^m)^p
+            = (b^p)^m
+            = \bigl[ (b^p)^{1/q} \bigr]^{mq}
+            = \bigl[ (b^p)^{1/q} \bigr]^{pn}.
+    \end{equation*}
+    %
+    The (positive) $pn$th root of this number is unique, so $(b^m)^{1/n} = (b^p)^{1/q}$.
+
+    (2) Write $r = m/n$ and $s = p/q$ for appropriate $m,n,p,q \in \ints$ with $n,q > 0$. Then
+    %
+    \begin{equation*}
+        [ (b^m)^{1/n} (b^p)^{1/q} ]^{nq}
+            = b^{mq} b^{pn}
+            = b^{mq + pn}.
+    \end{equation*}
+    %
+    Taking the $nq$th root implies that
+    %
+    \begin{equation*}
+        E_b(r) E_b(s)
+            = (b^m)^{1/n} (b^p)^{1/q}
+            = (b^{mq+pn})^{1/nq}
+            = E_b(r + s),
+    \end{equation*}
+    %
+    where we in the last equality use that
+    %
+    \begin{equation*}
+        r + s
+            = \frac{m}{n} + \frac{p}{q}
+            = \frac{mq + pn}{nq}.
+    \end{equation*}
+    %
+    To see that $E_b$ is increasing on $\rationals$, notice that the assumption that $b > 1$ implies that $E_b(s) > 1$ for $s > 0$. If also $r \in \rationals$, then
+    %
+    \begin{equation*}
+        E_b(r + s)
+            = E_b(r) E_b(s)
+            \geq E_b(r),
+    \end{equation*}
+    %
+    so $E_b$ is increasing.
+    
+    (3) We begin by showing that $E_b$ is continuous from above at $0$. Since $E_b$ is monotonic and $E_b(0) = 1$, it suffices to show that $\lim_{n\to\infty} E_b(r_n) = 1$ for some sequence $(r_n)_{n\in\naturals}$ in $\rationals$ that decreases to $0$. We claim that the sequence given by $r_n = 1/n$ has this property. Clearly $1/n \downarrow 0$, so assume that $E_b(1/n)$ did not converge to $1$. Then there would be some $\epsilon > 0$ such that $E_b(1/n) \geq 1 + \epsilon$, i.e. $b \geq (1 + \epsilon)^n$, for all $n \in \naturals$. But by [Bernoulli's inequality] this is impossible, so we must have $E_b(1/n) \to 1$. A similar argument shows that $E_b$ is continuous from below at $0$, using the fact that $E_b(-1/n) = (1/b)^n$.
+
+    Finally let $r,h \in \rationals$, and notice that
+    %
+    \begin{equation*}
+        E_b(r+h)
+            = E_b(r) E_b(h)
+            \to E_b(r) E_b(0)
+            = E_b(r)
+    \end{equation*}
+    %
+    as $n \to \infty$. Thus $E_b$ is also continuous at $r$.
+
+    (4) We clearly have $E_b(r) \leq \sup L_r$. For the opposite inequality, notice that $E_b(r)$ is an upper bound for $L_r$ since $E_b$ is increasing on $\rationals$. Hence also $\sup L_r \leq E_b(r)$.
+
+    If $x \leq y$ then $L_x \subseteq L_y$, and hence $E_b(x) \leq E_b(y)$. Thus $E_b$ is monotonic on $\reals$. But then since $E_b$ continuous on a dense subset of $\reals$, it is clearly also continuous on $\reals$.
+
+    (5) Let $(r_n)$ and $(s_n)$ be sequences in $\rationals$ with limits $x$ and $y$ respectively. Then $r_n+s_n$ converges to $x+y$, so
+    %
+    \begin{equation*}
+        E_b(x+y)
+            = \lim_{n\to\infty} E_b(r_n + s_n)
+            = \lim_{n\to\infty} E_b(r_n) E_b(s_n)
+            = E_b(x) E_b(y).
+    \end{equation*}
+\end{proof}
+
 
 \chapter{Introduction}
 
@@ -340,7 +459,7 @@ Also note that monotonic functions are of bounded variation on any compact inter
 \end{lemma}
 
 \begin{proof}
-    The function $V$ is clearly increasing, so consider the function $D = V-f$. Let $x,y \in [a,b]$ with $x < y$, and notice that $f(y) - f(x) \leq V_f(x,y)$. Recalling \eqref{eq:total-variation-additive} it follows that
+    The function $V$ is clearly increasing, so consider the function $D = V-f$. Let $x,y \in [a,b]$ with $x < y$, and notice that $f(y) - f(x) \leq V_f(x,y)$. Recalling \cref{eq:total-variation-additive} it follows that
     %
     \begin{equation*}
         D(y) - D(x)
@@ -561,7 +680,7 @@ and that for any pair of partitions $P_1$ and $P_2$ we have
     are called the \emph{upper and lower Stieltjes integrals} of $f$ with respect to $\alpha$ on $[a,b]$.
 \end{definition}
 %
-It follows immediately from the definition and \eqref{eq:upper-lower-sum-inequality} that the upper integral is always greater than the lower integral. We also use the notations $\overline{I}(f,\alpha)$ and $\underline{I}(f,\alpha)$ for the upper and lower integrals, respectively, when the interval $[a,b]$ is understood.
+It follows immediately from the definition and \cref{eq:upper-lower-sum-inequality} that the upper integral is always greater than the lower integral. We also use the notations $\overline{I}(f,\alpha)$ and $\underline{I}(f,\alpha)$ for the upper and lower integrals, respectively, when the interval $[a,b]$ is understood.
 
 
 \begin{theorem}[Riemann's condition]
@@ -632,7 +751,7 @@ It follows immediately from the definition and \eqref{eq:upper-lower-sum-inequal
         \leq U_{f,\alpha}(P).
     \end{equation*}
     %
-    Thus \eqref{eq:Riemanns-condition} implies that $0 \leq \overline{I}(f,\alpha) - \underline{I}(f,\alpha) < \epsilon$ for every $\epsilon > 0$, proving \subcref{enum:upper-lower-integrals-equal}.
+    Thus \cref{eq:Riemanns-condition} implies that $0 \leq \overline{I}(f,\alpha) - \underline{I}(f,\alpha) < \epsilon$ for every $\epsilon > 0$, proving \subcref{enum:upper-lower-integrals-equal}.
     
     \item[\subcref{enum:upper-lower-integrals-equal} $\implies$ \subcref{enum:integrability}]
     Let $\epsilon > 0$. There exists a partition $P$ of $[a,b]$ such that
@@ -750,7 +869,7 @@ Since $\alpha = V - (V - \alpha)$ and both $V$ and $V - \alpha$ are increasing, 
 \end{corollary}
 
 \begin{proof}
-    Integrability of $\abs{f}$ follows since $x \mapsto \abs{x}$ is continuous. The inequality \eqref{eq:integral-triangle-inequality} follows since $f \leq \abs{f}$, and since the $\alpha$-integral is increasing when $\alpha$ is.
+    Integrability of $\abs{f}$ follows since $x \mapsto \abs{x}$ is continuous. The inequality \cref{eq:integral-triangle-inequality} follows since $f \leq \abs{f}$, and since the $\alpha$-integral is increasing when $\alpha$ is.
 
     For the product $fg$, notice that
     %
@@ -818,9 +937,9 @@ Since $\alpha = V - (V - \alpha)$ and both $V$ and $V - \alpha$ are increasing, 
             \leq M (\alpha(y) - \alpha(x)),
     \end{equation*}
     %
-    and dividing by $\alpha(y) - \alpha(x)$ proves the above claim for $x < y$. If $y < x$, then exchanging $x$ and $y$ yields a sign change which cancels on each side of \eqref{eq:fundamental-theorem-difference}. From this (i) and (ii) follow immediately.
+    and dividing by $\alpha(y) - \alpha(x)$ proves the above claim for $x < y$. If $y < x$, then exchanging $x$ and $y$ yields a sign change which cancels on each side of \cref{eq:fundamental-theorem-difference}. From this (i) and (ii) follow immediately.
 
-    Now assume that $f$ is continuous at $x \in (a,b)$ and that $\alpha$ is differentiable at $x$. We claim that $c \to f(x)$ as $y \to x$. Let $\epsilon > 0$. By continuity of $f$ at $x$ there is a $\delta > 0$ such that $\abs{x-x'} < \delta$ implies $\abs{f(x) - f(x')} < \epsilon$. Thus if $\abs{x-y} < \delta$ we must have $f(x) - m \leq \epsilon$ and $M - f(x) \leq \epsilon$. Since $m \leq c \leq M$ it follows that $\abs{c - f(x)} \leq \epsilon$. Dividing by $y-x$ and letting $y \to x$ in \eqref{eq:fundamental-theorem-difference} proves (iii).
+    Now assume that $f$ is continuous at $x \in (a,b)$ and that $\alpha$ is differentiable at $x$. We claim that $c \to f(x)$ as $y \to x$. Let $\epsilon > 0$. By continuity of $f$ at $x$ there is a $\delta > 0$ such that $\abs{x-x'} < \delta$ implies $\abs{f(x) - f(x')} < \epsilon$. Thus if $\abs{x-y} < \delta$ we must have $f(x) - m \leq \epsilon$ and $M - f(x) \leq \epsilon$. Since $m \leq c \leq M$ it follows that $\abs{c - f(x)} \leq \epsilon$. Dividing by $y-x$ and letting $y \to x$ in \cref{eq:fundamental-theorem-difference} proves (iii).
 \end{proof}
 
 
@@ -1183,7 +1302,7 @@ We prove that convergence in $\mu$-measure is complete.
     %
     The right-hand side converges to zero as $n \to \infty$, which shows that $(f_n(x))$ is a Cauchy sequence in $\reals$ for $x \in F_k^c$, hence for $x \in F^c$. Letting $f = \lim_{n\to\infty} f_n \indicator{F^c}$ we thus find that $(f_n)$ converges to $f \in \measurable(\calE)$ $\mu$-a.e.
 
-    Next we show that $f_n \to f$ in $\mu$-measure as $n \to \infty$. Letting $m \to \infty$ in \eqref{eq:convergence-in-measure-Cauchy} we find that
+    Next we show that $f_n \to f$ in $\mu$-measure as $n \to \infty$. Letting $m \to \infty$ in \cref{eq:convergence-in-measure-Cauchy} we find that
     %
     \begin{equation*}
         \abs{ f_n - f }
@@ -1207,7 +1326,7 @@ We prove that convergence in $\mu$-measure is complete.
             \leq \sum_{i=n}^\infty \mu(E_i),
     \end{equation*}
     %
-    which converges to zero by \eqref{eq:convergence-in-measure-complete-lemma}.
+    which converges to zero by \cref{eq:convergence-in-measure-complete-lemma}.
 \end{proof}
 
 
@@ -1236,22 +1355,31 @@ We prove that convergence in $\mu$-measure is complete.
 \end{proof}
 
 
-\begin{definition}[Convergence in $\calL^p(\mu)$]
-    Let $(X,\calE,\mu)$ be a measure space. Let $(f_n)_{n\in\naturals}$ be a sequence in $\measurable(\calE)$, and let further $f \in \measurable(\calE)$. If $p \in (0,\infty)$ we say that $(f_n)$ \emph{converges to $f$ in $\calL^p(\mu)$} if
+\begin{definition}[Convergence in mean]
+    Let $(X,\calE,\mu)$ be a measure space. Let $(f_n)_{n\in\naturals}$ be a sequence in $\measurable(\calE)$, and let further $f \in \measurable(\calE)$. If $p \in (0,\infty)$ we say that $(f_n)$ \emph{converges to $f$ in the $\mu$-$p$-th mean} if
     %
     \begin{equation*}
         \lim_{n\to\infty} \int_X \abs{f_n - f}^p \dif\mu = 0.
     \end{equation*}
     %
-    Furthermore, $(f_n)$ is called a \emph{Cauchy sequence in $\calL^p(\mu)$} if
+    Furthermore, $(f_n)$ is called a \emph{Cauchy sequence in the $\mu$-$p$-th mean} if
     %
     \begin{equation*}
         \lim_{m,n\to\infty} \int_X \abs{f_m - f_n}^p \dif\mu = 0.
     \end{equation*}
 \end{definition}
 
-\begin{theorem}[Completeness of convergence in $\calL^p(\mu)$]
-    Let $(X,\calE,\mu)$ be a measure space, let $(f_n)_{n\in\naturals}$ be a sequence in $\measurable(\calE)$ that is Cauchy in $\calL^p(\mu)$, and let $p \in (0,\infty)$. Then there exists a function $f \in \measurable(\calE)$ such that $f_n \to f$ in $\calL^p(\mu)$. Furthermore, $(f_n)$ has a subsequence that converges to $f$ $\mu$-a.e.
+\begin{remark}
+    If $(f_n)$ converges to $f$ in the $\mu$-$p$-th mean, then $f_n - f \in \calL^p(\mu)$ for $n \geq N$ for some $N \in \naturals$. Furthermore, if $f \in \calL^p(\mu)$, then $f_n = (f_n - f) + f \in \calL^p(\mu)$ for $n \geq N$.
+    
+    On the other hand, if $f_n \in \calL^p(\mu)$ for large enough $n$, then $f = (f - f_n) + f_n \in \calL^p(\mu)$. In particular, $\calL^p(\mu)$ is a closed subspace of $\measurable(\calE)$.
+\end{remark}
+
+
+\begin{theorem}[Completeness of convergence in mean]
+    Let $(X,\calE,\mu)$ be a measure space, let $(f_n)_{n\in\naturals}$ be a sequence in $\measurable(\calE)$ that is Cauchy in the $\mu$-$p$-th mean, and let $p \in (0,\infty)$. Then there exists a function $f \in \measurable(\calE)$ such that $f_n \to f$ in the $\mu$-$p$-th mean. Furthermore, $(f_n)$ has a subsequence that converges to $f$ $\mu$-a.e.
+
+    In particular, $\calL^p(\mu)$ is complete.
 \end{theorem}
 
 \begin{proof}
@@ -1267,7 +1395,54 @@ We prove that convergence in $\mu$-measure is complete.
     \end{align*}
     %
     which converges to zero as $n \to \infty$ as desired.
+
+    For the last claim, if $f_n \in \calL^p(\mu)$ for all $n \in \naturals$, then since $\calL^p(\mu)$ is closed we also have $f \in \calL^p(\mu)$.
 \end{proof}
+
+
+% \subsection{Completeness part 2}
+
+% Let $X$ be a topological vector space. If $(x_n)_{n\in\naturals}$ is a sequence in $X$, then the series $\sum_{n=1}^\infty x_n$ is said to \emph{converge} to $x \in X$ if $\sum_{i=1}^n x_i \to x$ as $n \to \infty$. If $X$ is equipped with a pseudometric $\rho$, then the above series is said to be \emph{absolutely convergent} if $\sum_{n=1}^\infty \rho(x_n,0) < \infty$. If $\rho$ is invariant, then notice that
+% %
+% \begin{equation*}
+%     \rho(x+y, 0)
+%         = \rho(x, -y)
+%         \leq \rho(x, 0) + \rho(0, -y)
+%         = \rho(x, 0) + \rho(y, 0)
+% \end{equation*}
+% %
+% for all $x,y \in X$. The most important case is of course when $\rho$ is induced from a seminorm $\norm{\,\cdot\,}$, in which case $\norm{x} = \rho(x,0)$ for $x \in X$.
+
+% \begin{lemma}
+%     Let $X$ be a vector space equipped with an invariant pseudometric $\rho$. Then $X$ is complete if and only if every absolutely convergent series in $X$ converges.
+% \end{lemma}
+
+% \begin{proof}
+%     First assume that $X$ is complete, and consider a sequence $(x_n)_{n\in\naturals}$ in $X$ with $\sum_{n=1}^\infty \rho(x_n,0) < \infty$. Letting $s_n = \sum_{i=1}^n x_i$, if $m < n$ then
+%     %
+%     \begin{equation*}
+%         \rho(s_m, s_n)
+%             = \rho(s_n - s_m, 0)
+%             \leq \sum_{i = m+1}^n \rho(x_i, 0)
+%             \to 0
+%     \end{equation*}
+%     %
+%     as $m,n \to \infty$. Thus $(s_n)$ is Cauchy and hence convergent.
+
+%     Conversely, assume that every absolutely convergent sequence in $X$ converges, and let $(x_n)_{n\in\naturals}$ be a Cauchy sequence in $X$. Choose a strictly increasing sequence $(n_k)_{k\in\naturals}$ of natural numbers such that $\rho(x_m,x_n) < 2^{-k}$ for $m,n \geq n_k$. Let $y_1 = x_{n_1}$ and $y_k = x_{n_k} - x_{n_{k-1}}$ for $k > 1$. Then $\sum_{i=1}^k y_i = x_k$, and
+%     %
+%     \begin{equation*}
+%         \sum_{k=1}^\infty \rho(y_k, 0)
+%             \leq \rho(y_1, 0) + \sum_{k=1}^\infty 2^{-k}
+%             = \rho(y_1, 0) + 1
+%             < \infty.
+%     \end{equation*}
+%     %
+%     Thus $\lim_{k\to\infty} x_{n_k} = \sum_{k=1}^\infty y_k$ exists, and so $(x_n)$ is a Cauchy sequence with a convergent subsequence, and hence is itself convergent.
+% \end{proof}
+
+
+% \subsection{Completeness part 3}
 
 
 \chapter{Portmanteau theorems}
@@ -1360,6 +1535,112 @@ The first condition clearly implies the second, and the second the third.
     %
     as claimed.
 \end{proofsec}
+\end{proof}
+
+
+\chapter{Dynkin systems and monotone classes}
+
+\begin{definition}[Dynkin systems, $\pi$-systems]
+    Let $X$ be a set. A collection $\calD$ of subsets of $X$ is a \emph{Dynkin system} in $X$ if it has the following properties:
+    %
+    \begin{enumdef}
+        \item $X \in \calD$,
+        \item $B \setminus A \in \calD$ whenever $A,B \in \calD$ and $A \subseteq B$, and
+        \item $\bigunion_{n\in\naturals} A_n \in \calD$ for any increasing sequence $(A_n)_{n\in\naturals}$ of sets in $\calD$.
+    \end{enumdef}
+    %
+    Furthermore, a collection $\calS$ of subsets of $X$ is called a \emph{$\pi$-system} if it is closed under intersections.
+\end{definition}
+%
+It is easy to show that if $\calD$ is both a Dynkin system in $X$ and a $\pi$-system, then it is in fact a $\sigma$-algebra in $X$.
+
+\begin{definition}[Monotone classes, set algebras]
+    Let $X$ be a set. A collection $\calM$ of subsets of $X$ is a \emph{monotone class} if it is closed under countable increasing unions and countable decreasing intersections.
+
+    Furthermore, a collection $\calA$ of subsets of $X$ is called a \emph{set algebra} in $X$ if it is closed under finite unions and complements.
+\end{definition}
+%
+We note that a set algebra $\calA$ in $X$ is automatically closed under finite intersections, and that it also contains both $\emptyset$ and $X$. It is easy to show that if $\calM$ is both a monotone class and a set algebra in $X$, then it is in fact a $\sigma$-algebra in $X$.
+
+Notice that we have two pairs of properties that ensure that a collection of sets is a $\sigma$-algebra. On the one hand we should think of Dynkin systems and monotone classes as being analogous, and similarly for $\pi$-systems and set algebras on the other. The latter pair of properties are algebraic, while the first pair are somehow analytic (or continuous), in that they involve infinitely many operations.
+
+It turns out that if $\calS$ is a $\pi$-system, then the Dynkin system $\delta(\calS)$ generated by $\calS$ is also a $\pi$-system. Similarly, if $\calA$ is a set algebra, then the monotone class $M(\calA)$ generated by $\calA$ is also a set algebra. We have the following two results whose proofs are basically identical:
+
+\begin{theorem}[Dynkin's lemma]
+    Let $\calS$ be a $\pi$-system in a set $X$. Then $\delta(\calS)$ is also a $\pi$-system, and in particular
+    %
+    \begin{equation}
+        \label{eq:Dynkins-lemma}
+        \delta(\calS) = \sigma(\calS).
+    \end{equation}
+\end{theorem}
+
+\begin{proof}
+    The identity \cref{eq:Dynkins-lemma} follows if $\delta(\calS)$ is a $\pi$-system: For then it is also a $\sigma$-algebra, and then $\sigma(\calS) \subseteq \delta(\calS)$.
+
+    For $A \in \delta(\calS)$ define
+    %
+    \begin{equation*}
+        \calD_A
+            = \set{B \in \delta(\calS)}{A \intersect B \in \delta(\calS)}.
+    \end{equation*}
+    %
+    This is easily seen to be a Dynkin system. Also notice that $B \in \calD_A$ if and only if $A \in \calD_B$ for all $A,B \in \delta(\calS)$. Furthermore, if $A \in \calS$ then $\calS \subseteq \calD_A$, and so $\delta(\calS) \subseteq \calD_A$. In other words,
+    %
+    \begin{equation*}
+        B \in \calD_A
+        \quad
+        \text{for $A \in \calS$ and $B \in \delta(\calS)$}.
+    \end{equation*}
+    %
+    By symmetry we then have
+    %
+    \begin{equation*}
+        A \in \calD_B
+        \quad
+        \text{for $A \in \calS$ and $B \in \delta(\calS)$},
+    \end{equation*}
+    %
+    and since $\calD_B$ is a Dynkin system it follows that $\delta(\calS) \subseteq \calD_B$. Hence $\delta(\calS)$ is a $\pi$-system as desired.
+\end{proof}
+
+
+\begin{theorem}[The monotone class lemma]
+    Let $\calA$ be a set algebra in a set $X$. Then $M(\calA)$ is also a set algebra, and in particular
+    %
+    \begin{equation}
+        \label{eq:monotone-class-lemma}
+        M(\calA) = \sigma(\calA).
+    \end{equation}
+\end{theorem}
+
+\begin{proof}
+    The identity \cref{eq:monotone-class-lemma} follows if $M(\calA)$ is a set algebra: For then it is also a $\sigma$-algebra, and then $\sigma(\calA) \subseteq M(\calA)$.
+
+    For $A \in M(\calA)$ define
+    %
+    \begin{equation*}
+        \calM_A
+            = \set{B \in M(\calA)}{\text{$A \setminus B$, $B \setminus A$, and $A \intersect B$ are in $M(\calA)$}}.
+    \end{equation*}
+    %
+    This is easily seen to be a monotone class. Also notice that $B \in \calM_A$ if and only if $A \in \calM_B$ for all $A,B \in M(\calA)$. Furthermore, if $A \in \calA$ then $\calA \subseteq \calM_A$, and so $M(\calA) \subseteq \calM_A$. In other words,
+    %
+    \begin{equation*}
+        B \in \calM_A
+        \quad
+        \text{for $A \in \calA$ and $B \in M(\calA)$}.
+    \end{equation*}
+    %
+    By symmetry we then have
+    %
+    \begin{equation*}
+        A \in \calM_B
+        \quad
+        \text{for $A \in \calA$ and $B \in M(\calA)$},
+    \end{equation*}
+    %
+    and since $\calM_B$ is a monotone class it follows that $M(\calA) \subseteq \calM_B$. Hence $M(\calA)$ is a set algebra as desired.
 \end{proof}
 
 
