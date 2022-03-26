@@ -51,7 +51,11 @@
 \usepackage{latex-sty/basicmathcommands}
 \usepackage{latex-sty/framedtheorems}
 \usepackage{latex-sty/topologycommands}
-\usepackage{tikz-cd}
+% \usepackage{tikz-cd}
+\usepackage{tikz}
+\usetikzlibrary{cd}
+\usetikzlibrary{fit, patterns}
+\tikzcdset{arrow style=math font} % https://tex.stackexchange.com/questions/300352/equalities-look-broken-with-tikz-cd-and-math-font
 \usetikzlibrary{babel}
 
 % Lists
@@ -89,6 +93,12 @@
 \newcommand{\strucS}{\mathfrak{S}}
 \DeclarePairedDelimiter{\gen}{\langle}{\rangle} % Generating set
 \newcommand{\frakL}{\mathfrak{L}}
+
+\newenvironment{displaytheorem}{%
+	\begin{displayquote}\itshape%
+}{%
+	\end{displayquote}%
+}
 
 
 \usepackage{graphicx}
@@ -1252,6 +1262,12 @@ Notice that since $U$ is connected, such polygonal paths exist between any pair 
 
 \chapter{Convergence}
 
+It is well-known that a Cauchy sequence $(x_n)_{n\in\naturals}$ in a metric space $S$ converges to some $x \in S$ if and only if $(x_n)$ has a \emph{subsequence} that converges to $x$.
+
+In this section we highlight a similar feature of convergence in measure and convergence in mean: If $(f_n)_{n\in\naturals}$ is a Cauchy sequence in measure, and if there is a subsequence that converges \emph{pointwise a.e.} to some function $f$, then $(f_n)$ also converges to $f$ in measure. Similarly for convergence in mean.
+
+Furthermore, Markov's inequality implies that convergence in mean is stronger than convergence in measure. In particular, a sequence that is Cauchy in mean is also Cauchy in measure. Hence when we show that convergence in measure and in mean are complete, it suffices to show that being Cauchy in measure implies the existence of a pointwise a.e. convergent subsequence.
+
 \begin{definition}[Convergence in measure]
     Let $(X,\calE,\mu)$ be a measure space. Let $(f_n)_{n\in\naturals}$ be a sequence in $\measurable(\calE)$, and let further $f \in \measurable(\calE)$. We say that $(f_n)$ \emph{converges to $f$ in $\mu$-measure} if for every $\epsilon > 0$,
     %
@@ -1269,6 +1285,7 @@ Notice that since $U$ is connected, such polygonal paths exist between any pair 
 We prove that convergence in $\mu$-measure is complete.
 
 \begin{lemma}
+    \label{thm:convergence-in-measure-lemma}
     Let $(X,\calE,\mu)$ be a measure space, and let $(f_n)_{n\in\naturals}$ be a sequence in $\measurable(\calE)$. If there exists a sequence $(\epsilon_n)_{n\in\naturals}$ of strictly positive numbers such that
     %
     \begin{equation}
@@ -1335,23 +1352,29 @@ We prove that convergence in $\mu$-measure is complete.
 \end{theorem}
 
 \begin{proof}
-    Choose a subsequence $(g_k) = (f_{n_k})$ such that
+    We prove the following lemma:
+    %
+    \begin{displaytheorem}
+        Let $(X,\calE,\mu)$ be a measure space, and let $(f_n)_{n\in\naturals}$ be a sequence in $\measurable(\calE)$ that is Cauchy in $\mu$-measure. If $(f_n)$ has a subsequence that converges $\mu$-a.e. to function $f \in \measurable(\calE)$, then $(f_n)$ also converges to $f$ in $\mu$-measure.
+    \end{displaytheorem}
+    %
+    Let $(f_{n_k})$ be such a subsequence. For $\epsilon > 0$ we then have
+    %
+    \begin{equation*}
+        \{ \abs{f_n - f} > \epsilon \}
+            \subseteq \{ \abs{f_n - f_{n_k}} > \epsilon/2 \} \union \{ \abs{f_{n_k} - f} > \epsilon/2 \},
+    \end{equation*}
+    %
+    and the measures of the sets on the right-hand side go to zero as $n \to \infty$ (since $n_k \geq n$). This proves the lemma.
+
+    To prove the theorem, choose a subsequence $(g_k) = (f_{n_k})$ such that
     %
     \begin{equation*}
         \mu \bigl( \{ \abs{g_{k+1} - g_k} > 2^{-k} \} \bigr)
             \leq 2^{-k}.
     \end{equation*}
     %
-    [Lemma] then implies the existence of a function $f \in \measurable(\calE)$ such that $g_k \to f$ both $\mu$-a.e. and in $\mu$-measure.
-
-    It remains to be shown that $(f_n)$ also converges to $f$ in $\mu$-measure. But this follows since, for $\epsilon > 0$,
-    %
-    \begin{equation*}
-        \{ \abs{f_n - f} > \epsilon \}
-            \subseteq \{ \abs{f_n - g_k} > \epsilon/2 \} \union \{ \abs{g_k - f} > \epsilon/2 \},
-    \end{equation*}
-    %
-    and the measures of the sets on the right-hand side go to zero as $n,k \to \infty$.
+    \cref{thm:convergence-in-measure-lemma} then implies the existence of a function $f \in \measurable(\calE)$ such that $g_k \to f$ both $\mu$-a.e. and in $\mu$-measure. The claim then follows from the above lemma.
 \end{proof}
 
 
@@ -1377,15 +1400,19 @@ We prove that convergence in $\mu$-measure is complete.
 
 
 \begin{theorem}[Completeness of convergence in mean]
-    Let $(X,\calE,\mu)$ be a measure space, let $(f_n)_{n\in\naturals}$ be a sequence in $\measurable(\calE)$ that is Cauchy in the $\mu$-$p$-th mean, and let $p \in (0,\infty)$. Then there exists a function $f \in \measurable(\calE)$ such that $f_n \to f$ in the $\mu$-$p$-th mean. Furthermore, $(f_n)$ has a subsequence that converges to $f$ $\mu$-a.e.
+    Let $(X,\calE,\mu)$ be a measure space, let $p \in (0,\infty)$, and let $(f_n)_{n\in\naturals}$ be a sequence in $\measurable(\calE)$ that is Cauchy in the $\mu$-$p$-th mean. Then there exists a function $f \in \measurable(\calE)$ such that $f_n \to f$ in the $\mu$-$p$-th mean. Furthermore, $(f_n)$ has a subsequence that converges to $f$ $\mu$-a.e.
 
     In particular, $\calL^p(\mu)$ is complete.
 \end{theorem}
 
 \begin{proof}
-    Markov's inequality implies that $(f_n)$ is also a Cauchy sequence in $\mu$-measure, so [reference] yields a function $f \in \measurable(\calE)$ such that $f_n \to f$ in $\mu$-measure, and such that $(f_n)$ has a subsequence $(f_{n_k})_{k\in\naturals}$ that converges to $f$ $\mu$-a.e. We show that $(f_n)$ also converges to $f$ in $\calL^p(\mu)$.
-
-    For $n \in \naturals$, Fatou's lemma implies that
+    We prove the following lemma:
+    %
+    \begin{displaytheorem}
+        Let $(X,\calE,\mu)$ be a measure space, let $p \in (0,1)$, and let $(f_n)_{n\in\naturals}$ be a sequence in $\measurable(\calE)$ that is Cauchy in the $\mu$-$p$-th mean. If $(f_n)$ has a subsequence that converges $\mu$-a.e. to function $f \in \measurable(\calE)$, then $(f_n)$ also converges to $f$ in the $\mu$-$p$-th mean.
+    \end{displaytheorem}
+    %
+    Let $(f_{n_k})_{k\in\naturals}$ be a subsequence that converges $\mu$-a.e. to $f$. For $n \in \naturals$, Fatou's lemma implies that
     %
     \begin{align*}
         \int_X \abs{f_n - f}^p \dif\mu
@@ -1395,6 +1422,8 @@ We prove that convergence in $\mu$-measure is complete.
     \end{align*}
     %
     which converges to zero as $n \to \infty$ as desired.
+
+    We now prove the theorem. Markov's inequality implies that $(f_n)$ is also a Cauchy sequence in $\mu$-measure, so [reference] yields a function $f \in \measurable(\calE)$ such that $f_n \to f$ in $\mu$-measure, and such that $(f_n)$ has a subsequence $(f_{n_k})_{k\in\naturals}$ that converges to $f$ $\mu$-a.e. The lemma then implies that $(f_n)$ converges to $f$ in the $\mu$-$p$-th mean.
 
     For the last claim, if $f_n \in \calL^p(\mu)$ for all $n \in \naturals$, then since $\calL^p(\mu)$ is closed we also have $f \in \calL^p(\mu)$.
 \end{proof}
@@ -1450,35 +1479,97 @@ We prove that convergence in $\mu$-measure is complete.
 \newcommand{\lip}{\mathrm{Lip}}
 \newcommand{\lipbounded}{\lip_b}
 
+\definecolor{arrowcolor}{HTML}{a84e32}
+
 Recall that a map $f \colon (S,\rho) \to (T,\delta)$ between metric spaces is called \emph{Lipschitz} if there is a real number $K > 0$ such that
 %
 \begin{equation*}
     \delta(f(x), f(y)) \leq K \rho(x,y)
 \end{equation*}
 %
-for all $x,y \in S$. The space of Lipschitz functions $(S,\rho) \to \reals$ is denoted $\lip(S,\rho)$, and the subspace of bounded functions $\lipbounded(S,\rho)$.
+for all $x,y \in S$. The space of Lipschitz functions $(S,\rho) \to \reals$ is denoted $\lip(S,\rho)$, and the subspace of bounded functions $\lipbounded(S,\rho)$. We also denote the space of continuous functions that are uniformly bounded with respect to $\rho$ by $C_u(S,\rho)$.
 
 If $P$ is a Borel probability measure on a topological space $X$, then a subset $A \subseteq X$ is called a \emph{$P$-continuity set} if $P(\boundary A) = 0$.
+
+If $(X,\calE,\mu)$ is a measure space, then $\mu$ induces a linear functional $\phi_\mu$ on $\calL^1(\mu)$ by
+%
+\begin{equation*}
+    \phi_\mu(f) = \int_X f \dif \mu.
+\end{equation*}
+%
+If $\mu$ is finite and $X$ is a topological space, then $\mu$ in particular induces a functional $\phi_\mu$ on $C_b(X)$. We also use the notation $\mu(f)$ or just $\mu f$ for $\phi_\mu(f)$.
 
 \begin{theorem}
     Let $(P_n)_{n\in\naturals}$ and $P$ be probability measures on a metrisable space $S$. Then the following conditions are equivalent:
     %
     \begin{enumthm}
         \item \label{enum:portmanteau-weak-convergence} $P_n \wto P$.
-        \item \label{enum:portmanteau-uniformly-continuous} $\int_S f \dif P_n \to \int_S f \dif P_n$ for all bounded, uniformly continuous $f \colon S \to \reals$. (metric?)
-        \item \label{enum:portmanteau-lipschitz} There is a metric $\rho$ on $S$ such that $\int_S f \dif P_n \to \int_S f \dif P$ for all $f \in \lipbounded(S,\rho)$.
+
+        \item \label{enum:portmanteau-uniformly-continuous-universal} For all metrics $\rho$ on $S$, $P_n f \to Pf$ as $n\to\infty$ for all $f \in C_u(S,\rho)$.
+
+        \item \label{enum:portmanteau-uniformly-continuous-existence} There exists a metric $\rho$ on $S$ such that $P_n f \to Pf$ as $n\to\infty$ for all $f \in C_u(S,\rho)$.
+
+        \item \label{enum:portmanteau-lipschitz-universal} For all metrics $\rho$ on $S$, $P_n f \to Pf$ as $n\to\infty$ for all $f \in \lipbounded(S,\rho)$.
+
+        \item \label{enum:portmanteau-lipschitz-existence} There is a metric $\rho$ on $S$ such that $P_n f \to Pf$ as $n\to\infty$ for all $f \in \lipbounded(S,\rho)$.
+
         \item \label{enum:portmanteau-closed} $\limsup_{n\to\infty} P_n(F) \leq P(F)$ for all closed $F \subseteq S$.
-        \item \label{enum:portmanteau-open} $\liminf_{n\to\infty} P_n(G) \geq P(G)$ for all open $F \subseteq S$.
+
+        \item \label{enum:portmanteau-open} $\liminf_{n\to\infty} P_n(G) \geq P(G)$ for all open $G \subseteq S$.
+
         \item \label{enum:portmanteau-continuity-sets} $P_n(A) \to P(A)$ for all $P$-continuity sets $A \subseteq S$.
     \end{enumthm}
 \end{theorem}
 
+% \begin{theorem}
+%     Let $(P_n)_{n\in\naturals}$ and $P$ be probability measures on a metrisable space $S$. Then the following conditions are equivalent:
+%     %
+%     \begin{enumthm}
+%         \item \label{enum:portmanteau-weak-convergence} $P_n \wto P$.
+%         \item \label{enum:portmanteau-uniformly-continuous} $\int_S f \dif P_n \to \int_S f \dif P_n$ for all bounded, uniformly continuous $f \colon S \to \reals$. (metric?)
+%         \item \label{enum:portmanteau-lipschitz} There is a metric $\rho$ on $S$ such that $\int_S f \dif P_n \to \int_S f \dif P$ for all $f \in \lipbounded(S,\rho)$.
+%         \item \label{enum:portmanteau-closed} $\limsup_{n\to\infty} P_n(F) \leq P(F)$ for all closed $F \subseteq S$.
+%         \item \label{enum:portmanteau-open} $\liminf_{n\to\infty} P_n(G) \geq P(G)$ for all open $F \subseteq S$.
+%         \item \label{enum:portmanteau-continuity-sets} $P_n(A) \to P(A)$ for all $P$-continuity sets $A \subseteq S$.
+%     \end{enumthm}
+% \end{theorem}
+
+\newcommand{\enumnumber}[1]{\textit{(#1)}}
+
 \begin{proof}
-The first condition clearly implies the second, and the second the third.
+We prove the following implications:
+%
+\begin{equation*} % TODO: Those are CM arrows, not KP arrows!
+    \tikz[%remember picture, 
+    overlay]{
+    \draw[black,dashed,rounded corners] (2,-1) rectangle (2.95,-2.9);
+    }
+    \begin{tikzcd}
+        & \enumnumber{i}
+            \ar[d, Rightarrow, arrowcolor] \\
+        & |[alias=two]| \enumnumber{ii}
+            \ar[dl, Rightarrow, arrowcolor] \\
+        \enumnumber{iii}
+            \ar[dr, Rightarrow, arrowcolor]
+        && |[alias=four]| \enumnumber{iv} \\
+        & |[alias=five]| \enumnumber{v}
+            \ar[d, Rightarrow] \\
+        & \enumnumber{vi}
+            \ar[d, Leftrightarrow] \\
+        & \enumnumber{vii}
+            \ar[d, Rightarrow] \\
+        & \enumnumber{viii}
+            \ar[uuuuuu, Rightarrow, bend right]
+        \ar[dr, Rightarrow, from=two, to=four, arrowcolor]
+        \ar[dl, Rightarrow, from=four, to=five, arrowcolor]
+    \end{tikzcd}
+\end{equation*}
+%
+The implications marked in red are trivial. Notice that the two existential claims follow from the the two universal claims since $S$ is assumed metrisable.
 
 \begin{proofsec}
-    \item[\subcref{enum:portmanteau-lipschitz} $\implies$ \subcref{enum:portmanteau-closed}]
-    Let $g_k(x) = (1 - k\rho(x,F)) \join 0$ and $F_k = \set{x \in S}{\rho(x,F) < 1/k}$ for $k \in \naturals$. First notice that $g_k$ is Lipschitz, since
+    \item[\subcref{enum:portmanteau-lipschitz-existence} $\implies$ \subcref{enum:portmanteau-closed}]
+    Let $\rho$ be a metric on $S$ in accordance with the hypothesis, and let $g_k(x) = (1 - k\rho(x,F)) \join 0$ and $F_k = \set{x \in S}{\rho(x,F) < 1/k}$ for $k \in \naturals$. First notice that $g_k$ is Lipschitz, since
     %
     \begin{align*}
         \abs{ g_k(x) - g_k(y) }
@@ -1520,16 +1611,16 @@ The first condition clearly implies the second, and the second the third.
     %
     \begin{equation*}
         \int_S f \dif P
-            = \int_0^\infty P(\{ f > t \}) \dif t
-            = \int_0^1 P(\{ f > t \}) \dif t,
+            = \int_0^\infty P( f \geq t ) \dif t
+            = \int_0^1 P( f \geq t ) \dif t,
     \end{equation*}
     %
-    and similarly for $P_n$. Since $f$ is continuous, we have $\boundary \{ f > t \} \subseteq \{ f = t \}$. Now notice that $\{ f = t \}$ a $P$-null set except for countably many $t \in (0,1)$, since $P$ is a finite measure. Hence $\{ f > t \}$ is a $P$-continuity set for all but countably many $t$. It then follows from \subcref{enum:portmanteau-continuity-sets} and the dominated convergence theorem that
+    and similarly for $P_n$. Since $f$ is continuous, we have $\boundary \{ f \geq t \} \subseteq \{ f = t \}$. Now notice that $\{ f = t \}$ is a $P$-null set except for countably many $t \in (0,1)$, since $P$ is a finite measure.\footnote{Indeed, $f$ is a random variable whose discrete support is precisely this set of $t$s. But the discrete support of any random variable is countable.} Hence $\{ f \geq t \}$ is a $P$-continuity set for all but countably many $t$. It then follows from \subcref{enum:portmanteau-continuity-sets} and the dominated convergence theorem that
     %
     \begin{equation*}
         \int_S f \dif P_n
-            = \int_0^1 P_n(\{ f > t \}) \dif t
-            \to \int_0^1 P(\{ f > t \}) \dif t
+            = \int_0^1 P_n( f \geq t ) \dif t
+            \xrightarrow[n\to\infty]{} \int_0^1 P( f \geq t ) \dif t
             = \int_S f \dif P
     \end{equation*}
     %
