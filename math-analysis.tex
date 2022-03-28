@@ -1476,114 +1476,36 @@ We prove that convergence in $\mu$-measure is complete.
 
 \chapter{Portmanteau theorems}
 
-\newcommand{\lip}{\mathrm{Lip}}
-\newcommand{\lipbounded}{\lip_b}
-
-\definecolor{arrowcolor}{HTML}{a84e32}
-
-Recall that a map $f \colon (S,\rho) \to (T,\delta)$ between metric spaces is called \emph{Lipschitz} if there is a real number $K > 0$ such that
-%
-\begin{equation*}
-    \delta(f(x), f(y)) \leq K \rho(x,y)
-\end{equation*}
-%
-for all $x,y \in S$. The space of Lipschitz functions $(S,\rho) \to \reals$ is denoted $\lip(S,\rho)$, and the subspace of bounded functions $\lipbounded(S,\rho)$. We also denote the space of continuous functions that are uniformly bounded with respect to $\rho$ by $C_u(S,\rho)$.
-
 If $P$ is a Borel probability measure on a topological space $X$, then a subset $A \subseteq X$ is called a \emph{$P$-continuity set} if $P(\boundary A) = 0$.
 
-If $(X,\calE,\mu)$ is a measure space, then $\mu$ induces a linear functional $\phi_\mu$ on $\calL^1(\mu)$ by
-%
-\begin{equation*}
-    \phi_\mu(f) = \int_X f \dif \mu.
-\end{equation*}
-%
-If $\mu$ is finite and $X$ is a topological space, then $\mu$ in particular induces a functional $\phi_\mu$ on $C_b(X)$. We also use the notation $\mu(f)$ or just $\mu f$ for $\phi_\mu(f)$.
+Recall that a topological space $X$ is called a \emph{$G_\delta$ space} or a \emph{perfect space} if every closed subset of $X$ is a $G_\delta$ set, i.e. a countable intersection of open sets. (Equivalently, every open subset is an $F_\sigma$ set, a countable union of closed sets.) Furthermore, if $A$ and $B$ are closed subsets of $X$, a \emph{Urysohn function} for the pair $(A,B)$ is a continuous function $f \colon X \to [0,1]$ with $f(A) = 1$ and $f(B) = 0$.\footnote{The ordering of $A$ and $B$ is only relevant insofar as it is relevant on which set the Urysohn function in question vanishes. If $f \colon X \to [0,1]$ is a Urysohn function for the pair $(A,B)$, then the function $1-f$ is a Urysohn function for the pair $(B,A)$.} By Urysohn's lemma, a topological space is normal (i.e. every pair of disjoint closed sets can be separated by disjoint open sets) if and only if there is a Urysohn function for every pair of disjoint closed subsets. Finally, a (not necessarily Hausdorff) normal $G_\delta$ space is called a \emph{perfectly normal space}. If it is also Hausdorff it also called a \emph{$T_6$-space} or a \emph{perfectly $T_4$ space}.
+
+It is easy to show that (pseudo-)metrisable spaces are perfectly normal. Another notable class of perfectly normal (Hausdorff) spaces are the CW complexes. [TODO: Reference, proof somewhere else maybe?]
 
 \begin{theorem}
-    Let $(P_n)_{n\in\naturals}$ and $P$ be probability measures on a metrisable space $S$. Then the following conditions are equivalent:
+    Let $(P_n)_{n\in\naturals}$ and $P$ be probability measures on a perfectly normal space $X$. Then the following conditions are equivalent:
     %
     \begin{enumthm}
         \item \label{enum:portmanteau-weak-convergence} $P_n \wto P$.
 
-        \item \label{enum:portmanteau-uniformly-continuous-universal} For all metrics $\rho$ on $S$, $P_n f \to Pf$ as $n\to\infty$ for all $f \in C_u(S,\rho)$.
+        \item \label{enum:portmanteau-closed} $\limsup_{n\to\infty} P_n(F) \leq P(F)$ for all closed $F \subseteq X$.
 
-        \item \label{enum:portmanteau-uniformly-continuous-existence} There exists a metric $\rho$ on $S$ such that $P_n f \to Pf$ as $n\to\infty$ for all $f \in C_u(S,\rho)$.
+        \item \label{enum:portmanteau-open} $\liminf_{n\to\infty} P_n(G) \geq P(G)$ for all open $G \subseteq X$.
 
-        \item \label{enum:portmanteau-lipschitz-universal} For all metrics $\rho$ on $S$, $P_n f \to Pf$ as $n\to\infty$ for all $f \in \lipbounded(S,\rho)$.
-
-        \item \label{enum:portmanteau-lipschitz-existence} There is a metric $\rho$ on $S$ such that $P_n f \to Pf$ as $n\to\infty$ for all $f \in \lipbounded(S,\rho)$.
-
-        \item \label{enum:portmanteau-closed} $\limsup_{n\to\infty} P_n(F) \leq P(F)$ for all closed $F \subseteq S$.
-
-        \item \label{enum:portmanteau-open} $\liminf_{n\to\infty} P_n(G) \geq P(G)$ for all open $G \subseteq S$.
-
-        \item \label{enum:portmanteau-continuity-sets} $P_n(A) \to P(A)$ for all $P$-continuity sets $A \subseteq S$.
+        \item \label{enum:portmanteau-continuity-sets} $P_n(A) \to P(A)$ for all $P$-continuity sets $A \subseteq X$.
     \end{enumthm}
 \end{theorem}
 
-% \begin{theorem}
-%     Let $(P_n)_{n\in\naturals}$ and $P$ be probability measures on a metrisable space $S$. Then the following conditions are equivalent:
-%     %
-%     \begin{enumthm}
-%         \item \label{enum:portmanteau-weak-convergence} $P_n \wto P$.
-%         \item \label{enum:portmanteau-uniformly-continuous} $\int_S f \dif P_n \to \int_S f \dif P_n$ for all bounded, uniformly continuous $f \colon S \to \reals$. (metric?)
-%         \item \label{enum:portmanteau-lipschitz} There is a metric $\rho$ on $S$ such that $\int_S f \dif P_n \to \int_S f \dif P$ for all $f \in \lipbounded(S,\rho)$.
-%         \item \label{enum:portmanteau-closed} $\limsup_{n\to\infty} P_n(F) \leq P(F)$ for all closed $F \subseteq S$.
-%         \item \label{enum:portmanteau-open} $\liminf_{n\to\infty} P_n(G) \geq P(G)$ for all open $F \subseteq S$.
-%         \item \label{enum:portmanteau-continuity-sets} $P_n(A) \to P(A)$ for all $P$-continuity sets $A \subseteq S$.
-%     \end{enumthm}
-% \end{theorem}
-
-\newcommand{\enumnumber}[1]{\textit{(#1)}}
 
 \begin{proof}
-We prove the following implications:
-%
-\begin{equation*} % TODO: Those are CM arrows, not KP arrows!
-    \tikz[%remember picture, 
-    overlay]{
-    \draw[black,dashed,rounded corners] (2,-1) rectangle (2.95,-2.9);
-    }
-    \begin{tikzcd}
-        & \enumnumber{i}
-            \ar[d, Rightarrow, arrowcolor] \\
-        & |[alias=two]| \enumnumber{ii}
-            \ar[dl, Rightarrow, arrowcolor] \\
-        \enumnumber{iii}
-            \ar[dr, Rightarrow, arrowcolor]
-        && |[alias=four]| \enumnumber{iv} \\
-        & |[alias=five]| \enumnumber{v}
-            \ar[d, Rightarrow] \\
-        & \enumnumber{vi}
-            \ar[d, Leftrightarrow] \\
-        & \enumnumber{vii}
-            \ar[d, Rightarrow] \\
-        & \enumnumber{viii}
-            \ar[uuuuuu, Rightarrow, bend right]
-        \ar[dr, Rightarrow, from=two, to=four, arrowcolor]
-        \ar[dl, Rightarrow, from=four, to=five, arrowcolor]
-    \end{tikzcd}
-\end{equation*}
-%
-The implications marked in red are trivial. Notice that the two existential claims follow from the the two universal claims since $S$ is assumed metrisable.
-
 \begin{proofsec}
-    \item[\subcref{enum:portmanteau-lipschitz-existence} $\implies$ \subcref{enum:portmanteau-closed}]
-    Let $\rho$ be a metric on $S$ in accordance with the hypothesis, and let $g_k(x) = (1 - k\rho(x,F)) \join 0$ and $F_k = \set{x \in S}{\rho(x,F) < 1/k}$ for $k \in \naturals$. First notice that $g_k$ is Lipschitz, since
-    %
-    \begin{align*}
-        \abs{ g_k(x) - g_k(y) }
-            &= \abs[\big]{ (1 - k\rho(x,F)) \join 0 - (1 - k\rho(y,F)) \join 0 } \\
-            &\leq \abs{ k\rho(x,F) - k\rho(y,F) }
-             \leq k \rho(x,y).
-    \end{align*}
-    %
-    Furthermore, $\indicator{F} \leq g_k \leq \indicator{F_k}$ so
+    \item[\subcref{enum:portmanteau-weak-convergence} $\implies$ \subcref{enum:portmanteau-closed}]
+    Let $F$ be a closed subset of $X$. Since $X$ is $G_\delta$, there is a decreasing sequence $(F_k)_{k\in\naturals}$ such that $F = \bigintersect_{k\in\naturals} F_k$. Furthermore, since $X$ is normal there is for each $k \in \naturals$ a Urysohn function $g_k$ for the pair $(F,F_k^c)$. We clearly have $\indicator{F} \leq g_k \leq \indicator{F_k}$ so
     %
     \begin{equation*}
         \limsup_{n\to\infty} P_n(F)
-            \leq \limsup_{n\to\infty} \int_S g_k \dif P_n
-            = \int_S g_k \dif P
+            \leq \limsup_{n\to\infty} \int_X g_k \dif P_n
+            = \int_X g_k \dif P
             \leq P(F_k).
     \end{equation*}
     %
@@ -1593,7 +1515,7 @@ The implications marked in red are trivial. Notice that the two existential clai
     This follows easily by taking complements.
 
     \item[\subcref{enum:portmanteau-closed} \& \subcref{enum:portmanteau-open} $\implies$ \subcref{enum:portmanteau-continuity-sets}]
-    For $A \subseteq S$ we have
+    For $A \subseteq X$ we have
     %
     \begin{align*}
         P(\interior{A})
@@ -1607,10 +1529,10 @@ The implications marked in red are trivial. Notice that the two existential clai
     If $A$ is a $P$-continuity set then $P(\interior{A}) = P(\closure{A})$, which implies \subcref{enum:portmanteau-continuity-sets}.
 
     \item[\subcref{enum:portmanteau-continuity-sets} $\implies$ \subcref{enum:portmanteau-weak-convergence}]
-    Given $f \in C_b(S)$, by linearity we may assume that $0 \leq f \leq 1$. Then
+    Given $f \in C_b(X)$, by linearity we may assume that $0 \leq f \leq 1$. Then
     %
     \begin{equation*}
-        \int_S f \dif P
+        \int_X f \dif P
             = \int_0^\infty P( f \geq t ) \dif t
             = \int_0^1 P( f \geq t ) \dif t,
     \end{equation*}
@@ -1618,15 +1540,52 @@ The implications marked in red are trivial. Notice that the two existential clai
     and similarly for $P_n$. Since $f$ is continuous, we have $\boundary \{ f \geq t \} \subseteq \{ f = t \}$. Now notice that $\{ f = t \}$ is a $P$-null set except for countably many $t \in (0,1)$, since $P$ is a finite measure.\footnote{Indeed, $f$ is a random variable whose discrete support is precisely this set of $t$s. But the discrete support of any random variable is countable.} Hence $\{ f \geq t \}$ is a $P$-continuity set for all but countably many $t$. It then follows from \subcref{enum:portmanteau-continuity-sets} and the dominated convergence theorem that
     %
     \begin{equation*}
-        \int_S f \dif P_n
+        \int_X f \dif P_n
             = \int_0^1 P_n( f \geq t ) \dif t
             \xrightarrow[n\to\infty]{} \int_0^1 P( f \geq t ) \dif t
-            = \int_S f \dif P
+            = \int_X f \dif P
     \end{equation*}
     %
     as claimed.
 \end{proofsec}
 \end{proof}
+
+
+\begin{remark}
+    In the case that $X$ is pseudometrisable, we may pick a pseudometric $\rho$. The sets $F_k$ can then be given explicitly by
+    %
+    \begin{equation*}
+        F_k
+            = \set[\bigg]{x \in S}{\rho(x,F) < \frac{1}{k}}.
+    \end{equation*}
+    %
+    Furthermore, we may take the Urysohn functions $g_k$ to be given by $g_k(x) = (1 - k\rho(x,F)) \join 0$. Notice that these are Lipschitz since
+    %
+    \begin{align*}
+        \abs{ g_k(x) - g_k(y) }
+            &= \abs[\big]{ (1 - k\rho(x,F)) \join 0 - (1 - k\rho(y,F)) \join 0 } \\
+            &\leq \abs{ k\rho(x,F) - k\rho(y,F) }
+             \leq k \rho(x,y)
+    \end{align*}
+    %
+    for all $x,y \in X$. In particular they are uniformly continuous. Hence weak convergence in a metrisable space may be characterised by the bounded, uniformly continuous functions, or even the bounded Lipschitz functions. Notice also that this is independent of the metric.
+\end{remark}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 \chapter{Dynkin systems and monotone classes}
