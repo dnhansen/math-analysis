@@ -426,6 +426,8 @@ If $A$ is a subset of a metric space $S$, recall that $A$ is \emph{totally bound
 
 \section{Functions of bounded variation}
 
+\newcommand{\boundedvar}[1]{\mathit{BV}[#1]}
+
 A \emph{partition} of an interval $[a,b]$ is a collection $P = \{x_0, \ldots, x_n \}$ of real numbers such that
 %
 \begin{equation*}
@@ -434,12 +436,17 @@ A \emph{partition} of an interval $[a,b]$ is a collection $P = \{x_0, \ldots, x_
 %
 In turn, a \emph{tagged partition} of $[a,b]$ is a pair $(P,T)$ where $P$ is a partition of $[a,b]$ and $T = \{t_1, \ldots, t_n\}$ is a multiset of numbers such that $t_i \in [x_{i-1}, x_i]$ for all $i = 1, \ldots, n$. Let $\calP'[a,b]$ denote the set of tagged partitions of $[a,b]$. We define a direction on $\calP'[a,b]$ by $(P,T) \preceq (P',T')$ if $P \subseteq P'$. Notice that $T$ and $T'$ do not appear in this definition. This also induces a direction on the set $\calP[a,b]$ of all (non-tagged) partitions of $[a,b]$.
 
-Given a partition $P = \{x_0, \ldots, x_n \}$ of $[a,b]$ and a function $f \colon [a,b] \to \reals$ we write $\Delta f_i = f(x_i) - f(x_{i-1})$ for $i = 1, \ldots, n$. If $f$ is the identity function we simply write $\Delta x_i = x_i - x_{i-1}$. Furthermore, we write
+Given a partition $P = \{x_0, \ldots, x_n \}$ of $[a,b]$ and a function $f \colon [a,b] \to \reals$ we write $\Delta f_i = f(x_i) - f(x_{i-1})$ for $i = 1, \ldots, n$. We furthermore write $\Delta x_i = x_i - x_{i-1}$. Furthermore, define
 %
 \begin{equation*}
+    \norm{P}
+        = \max_{1 \leq i \leq n} \Delta x_i
+    \quad \text{and} \quad
     \Sigma_f(P)
         = \sum_{i=1}^n \abs{\Delta f_i}.
 \end{equation*}
+%
+The number $\norm{P}$ is called the \emph{norm} of $P$. Notice that the map $P \mapsto \norm{P}$ is decreasing, while the map $P \mapsto \Sigma_f(P)$ is increasing.
 
 \begin{definition}[Total variation]
     Consider a function $f \colon [a,b] \to \reals$. The \emph{total variation} of $f$ on $[a,b]$ is the number
@@ -449,7 +456,7 @@ Given a partition $P = \{x_0, \ldots, x_n \}$ of $[a,b]$ and a function $f \colo
             = \sup_{P \in \calP[a,b]} \Sigma_f(P).
     \end{equation*}
     %
-    If $V_f(a,b) < \infty$, then we say that $f$ is of \emph{bounded variation} on $[a,b]$.
+    If $V_f(a,b) < \infty$, then we say that $f$ is of \emph{bounded variation} on $[a,b]$. The set of all functions that are of bounded variation on $[a,b]$ is denoted $\boundedvar{a,b}$.
 \end{definition}
 %
 If $f$ is of bounded variation on $[a,b]$, then it is clear that $f$ is also of bounded variation on any subinterval of $[a,b]$. If $c \in (a,b)$ it is also easy to show that
@@ -460,7 +467,7 @@ If $f$ is of bounded variation on $[a,b]$, then it is clear that $f$ is also of 
         = V_f(a,c) + V_f(c,b).
 \end{equation}
 %
-If $g \colon [a,b] \to \reals$ is another function of bounded variation on $[a,b]$, then it is clear from the definition that $f + g$ is also of bounded variation.
+If $g \colon [a,b] \to \reals$ is another function of bounded variation on $[a,b]$ and $c \in \reals$, then it is clear from the definition that $f + g$ and $cf$ are also of bounded variation. It is also simple to show that the product $fg$ is of bounded variation. Hence $\boundedvar{a,b}$ is an $\reals$-algebra.
 
 Also note that monotonic functions are of bounded variation on any compact interval.
 
@@ -1107,7 +1114,7 @@ Since $\alpha = V - (V - \alpha)$ and both $V$ and $V - \alpha$ are increasing, 
 \newcommand{\partition}{\mathcal{P}}
 \newcommand{\grad}{\nabla}
 
-\noindent Recall that a \emph{path} in a topological space $X$ is a continuous map $\gamma \colon [a,b] \to X$. A subset $\Gamma \subseteq X$ is called a \emph{curve} in $X$ if there is a path $\alpha$ in $X$ whose image is $\Gamma$. The image of a path $\gamma$ is called its \emph{trace} and is denoted $\gamma^*$.
+\noindent Recall that a \emph{path} in a topological space $X$ is a continuous map $\gamma \colon [a,b] \to X$, and that $\gamma$ is \emph{closed} if $\gamma(a) = \gamma(b)$. A subset $\Gamma \subseteq X$ is called a \emph{curve} in $X$ if there is a path $\alpha$ in $X$ whose image is $\Gamma$. The image of a path $\gamma$ is called its \emph{trace} and is denoted $\gamma^*$.
 
 \begin{definition}[Equivalence of paths]
 	Let $\alpha \colon [a,b] \to X$ and $\beta \colon [c,d] \to X$ be paths in a topological space $X$. If there is an increasing homeomorphism $\phi \colon [c,d] \to [a,b]$ such that $\beta = \alpha \circ \phi$, then $\alpha$ and $\beta$ are said to be \emph{properly equivalent}.
@@ -1127,7 +1134,7 @@ Since $\alpha = V - (V - \alpha)$ and both $V$ and $V - \alpha$ are increasing, 
 %
 Note that the condition that $\phi$ be an increasing (decreasing) homeomorphism is equivalent to it being continuous, strictly increasing (decreasing) and surjective. Also note that equivalent paths trace out the same curve in $X$.
 
-\begin{definition}[Line integrals]
+\begin{definition}[Line integrals] % TODO: Assume f is bounded, as for regular integrals?
 	Let $\gamma \colon [a,b] \to \setR^d$ be a path, and let $f \colon \gamma^* \to \setR^d$ be a vector field. Given a tagged partition $(P,T)$ of $[a,b]$ then, with notation as above, we form the sums
     %
     \begin{equation*}
@@ -1135,7 +1142,7 @@ Note that the condition that $\phi$ be an increasing (decreasing) homeomorphism 
             = \sum_{i=1}^n f(\gamma(t_i)) \cdot (\gamma(x_i) - \gamma(x_{i-1})).
     \end{equation*}
     %
-    Define the \emph{line integral} of $f$ with respect to $\gamma$ as the limit of the net $S_f$, if the limit exists. We denote this integral by $\int f \cdot \dif\gamma$.
+    Define the \emph{line integral} of $f$ with respect to $\gamma$ as the limit of the net $S_{f,\gamma}$, if the limit exists. We denote this integral by $\int f \cdot \dif\gamma$.
 \end{definition}
 %
 Notice that if $\alpha$ and $\beta$ are properly equivalent paths, then
