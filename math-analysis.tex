@@ -427,6 +427,7 @@ If $A$ is a subset of a metric space $S$, recall that $A$ is \emph{totally bound
 \section{Functions of bounded variation}
 
 \newcommand{\boundedvar}[1]{\mathit{BV}[#1]}
+\newcommand{\integrable}[2][]{\calR_{#1}[#2]}
 
 A \emph{partition} of an interval $[a,b]$ is a collection $P = \{x_0, \ldots, x_n \}$ of real numbers such that
 %
@@ -517,7 +518,7 @@ This induces a net $S_{f,\alpha} \colon \calP'[a,b] \to \reals$.
         \int_a^b f(x) \dif \alpha(x).
     \end{equation*}
     %
-    We denote the set of $\alpha$-integrable functions on $[a,b]$ by $\calR_\alpha[a,b]$.
+    We denote the set of $\alpha$-integrable functions on $[a,b]$ by $\integrable[\alpha]{a,b}$.
 \end{definition}
 %
 We call $f$ the \emph{integrand} and $\alpha$ the \emph{integrator}. In the case where $\alpha(x) = x$, we use the notations
@@ -530,12 +531,12 @@ We call $f$ the \emph{integrand} and $\alpha$ the \emph{integrator}. In the case
     \int_a^b f(x) \dif x.
 \end{equation*}
 %
-The sums $S_f$ are then simply called \emph{Riemann sums} and the integral the \emph{Riemann integral} of $f$ on $[a,b]$. With this choice of $\alpha$, an $\alpha$-integrable function is called \emph{Riemann integrable} on $[a,b]$, and the set of such functions is denoted $\calR[a,b]$.
+The sums $S_f$ are then simply called \emph{Riemann sums} and the integral the \emph{Riemann integral} of $f$ on $[a,b]$. With this choice of $\alpha$, an $\alpha$-integrable function is called \emph{Riemann integrable} on $[a,b]$, and the set of such functions is denoted $\integrable{a,b}$.
 
 Below we fix an interval $[a,b]$ and (bounded) integrators $\alpha$ and $\beta$ on it.
 
 \begin{proposition}[Linearity of the integral]
-    Let $f,g \in \calR_\alpha[a,b]$ and $c_1, c_2 \in \reals$. Then:
+    Let $f,g \in \integrable[\alpha]{a,b}$ and $c_1, c_2 \in \reals$. Then:
     %
     \begin{enumprop}
         \item $c_1 f + c_2 g$ is $\alpha$-integrable on $[a,b]$ and
@@ -545,7 +546,7 @@ Below we fix an interval $[a,b]$ and (bounded) integrators $\alpha$ and $\beta$ 
                 = c_1 \int_a^b f \dif\alpha + c_2 \int_a^b g \dif\alpha.
         \end{equation*}
         %
-        In particular, $\calR_\alpha[a,b]$ is a vector space.
+        In particular, $\integrable[\alpha]{a,b}$ is a vector space.
 
         \item $f$ is $(c_1 \alpha + c_2 \beta)$-integrable on $[a,b]$ and
         %
@@ -562,28 +563,77 @@ Below we fix an interval $[a,b]$ and (bounded) integrators $\alpha$ and $\beta$ 
 
 
 \begin{proposition}[Integration by parts]
-    Given functions $f,\alpha \colon [a,b] \to \reals$, assume that $f$ is $\alpha$-integrable on $[a,b]$. Then $\alpha$ is $f$-integrable on $[a,b]$ and
+    Given functions $f,\alpha \colon [a,b] \to \reals$, assume that $f \in \integrable[\alpha]{a,b}$. Then $\alpha \in \integrable[f]{a,b}$ and
     %
     \begin{equation*}
         \int_a^b f \dif\alpha + \int_a^b \alpha \dif f
             = f(b)\alpha(b) - f(a)\alpha(a).
     \end{equation*}
 \end{proposition}
+%
+In particular, by exchanging $f$ and $\alpha$ we find that
+%
+\begin{equation*}
+    f \in \integrable[\alpha]{a,b}
+        \quad \Leftrightarrow \quad
+        \alpha \in \integrable[f]{a,b}.
+\end{equation*}
 
 \begin{proof}
-    Let $(P,T)$ be a tagged partition of $[a,b]$. Then an easy calculation shows that
+    Let $(P,T)$ be a tagged partition of $[a,b]$ with $P = \{x_0, \ldots, x_n\}$ and $T = \{t_1, \ldots, t_n\}$. Writing $A = f(b)\alpha(b) - f(a)\alpha(a)$, notice that
     %
     \begin{equation*}
-        f(b)\alpha(b) - f(a)\alpha(a) - S_{\alpha,f}(P,T)
-            = S_{f,\alpha}(P \union T, P'),
+        A
+            = \sum_{i=1}^n f(x_i) \alpha(x_i) - \sum_{i=1}^n f(x_{i-1}) \alpha(x_{i-1}),
     \end{equation*}
     %
-    where $P'$ is obtained from $P$ by duplicating appropriate elements such that each subinterval of $P \union T$ contains the corresponding element from $P'$. Since $P \union T$ is finer than $P$, the claim follows by taking the limit of $S_{\alpha,f}$.
+    and that
+    %
+    \begin{equation*}
+        S_{\alpha,f}(P,T)
+            = \sum_{i=1}^n \alpha(t_i) \Delta f_i
+            = \sum_{i=1}^n f(x_i) \alpha(t_i) - \sum_{i=1}^n f(x_{i-1}) \alpha(t_i).
+    \end{equation*}
+    %
+    Hence we have
+    %
+    \begin{align*}
+        A - S_{\alpha,f}(P,T)
+            &= \sum_{i=1}^n f(x_i) (\alpha(x_i) - \alpha(t_i)) + \sum_{i=1}^n f(x_{i-1}) (\alpha(t_i) - \alpha(x_{i-1})) \\
+            &= S_{f,\alpha}(P \union T, P'),
+    \end{align*}
+    %
+    where $P'$ is obtained from $P$ by duplicating\footnote{Recall that if $(P,T)$ is a tagged partition, then $T$ is a \emph{multiset}.} appropriate elements such that each subinterval of $P \union T$ contains the corresponding element from $P'$. Notice that if $P$ and $T$ have any elements in common, these are not duplicated in the union $P \union T$. However, in this case the corresponding terms in the sum above vanish, so the last equality does in fact hold. Since $P \union T$ is finer than $P$, the claim follows by taking the limit of $S_{\alpha,f}$.
 \end{proof}
 
 
-\begin{proposition}
-    Let $\alpha \in C^1[a,b]$ and $f \in \calR_\alpha[a,b]$. Then $f \alpha' \in \calR[a,b]$, and
+\begin{proposition}[Change of variables in Riemann--Stieljes integrals]
+    Let $f \in \integrable[\alpha]{a,b}$, and let $\phi \colon I \to [a,b]$ be a monotonic (or equivalently continuous) bijection where $I$ is an interval with endpoints $c$ and $d$. Assume that $a = \phi(c)$ and $b = \phi(d)$. Then $f \circ \phi \in \integrable[\alpha \circ \phi]{c,d}$ and
+    %
+    \begin{equation*}
+        \int_a^b f \dif \alpha
+            = \int_c^d f \circ \phi \dif(\alpha \circ \phi).
+    \end{equation*}
+\end{proposition}
+
+\begin{proof}
+    Since $\phi$ is bijective it is strictly monotonic, so it induces an increasing bijection $\calP'[c,d] \to \calP'[a,b]$ given by $(P, T) \mapsto (\phi(P), \phi(T))$.
+
+    Now let $(P,T) \in \calP'[c,d]$ with $P = \{y_0, \ldots, y_n\}$ and $T = \{s_1, \ldots, s_n\}$ and write $x_i = \phi(y_i)$ and $t_i = \phi(s_i)$. Assuming for definiteness that $\phi$ is increasing, we have
+    %
+    \begin{equation*}
+        S_{f \circ \phi, \alpha \circ \phi}(P,T)
+            = \sum_{i=1}^n (f \circ \phi)(s_i) \Delta(\alpha \circ \phi)_i
+            = \sum_{i=1}^n f \circ \phi(t_i) \Delta \alpha_i
+            = S_{f,\alpha}(\phi(P),\phi(T)).
+    \end{equation*}
+    %
+    Since the map $(P,T) \mapsto (\phi(P),\phi(T))$ is an increasing bijection, each side above converges to the corresponding integral, proving the claim.
+\end{proof}
+
+
+\begin{proposition}[Reduction to a Riemann integral]
+    Let $\alpha \in C^1[a,b]$ and $f \in \integrable[\alpha]{a,b}$. Then $f \alpha' \in \integrable{a,b}$, and
     %
     \begin{equation*}
         \int_a^b f \dif\alpha
@@ -704,7 +754,7 @@ It follows immediately from the definition and \cref{eq:upper-lower-sum-inequali
     Let $f,\alpha \colon [a,b] \to \reals$ be bounded functions with $\alpha$ increasing. Then the following conditions are equivalent:
     %
     \begin{enumthm}
-        \item \label{enum:integrability} $f \in \calR_\alpha[a,b]$.
+        \item \label{enum:integrability} $f \in \integrable[\alpha]{a,b}$.
         \item \label{enum:Riemanns-condition} $f$ satisfies \emph{Riemann's condition} with respect to $\alpha$ on $[a,b]$: For every $\epsilon > 0$ there exists a partition $P$ of $[a,b]$ such that
         %
         \begin{equation}
@@ -781,7 +831,7 @@ It follows immediately from the definition and \cref{eq:upper-lower-sum-inequali
         < \overline{I}(f,\alpha) + \epsilon
     \end{equation*}
     %
-    for any choice of points $T$ such that $(P,T)$ is a tagged partition. Denoting the common value of $\underline{I}(f,\alpha)$ and $\overline{I}(f,\alpha)$ by $A$, this shows that $\abs{S_{f,\alpha}(P',T') - A} < \epsilon$ for all tagged partitions $(P',T')$ with $P \subseteq P'$. Hence $f \in \calR_\alpha[a,b]$, and the integral of $f$ with respect to $\alpha$ equals $A$.
+    for any choice of points $T$ such that $(P,T)$ is a tagged partition. Denoting the common value of $\underline{I}(f,\alpha)$ and $\overline{I}(f,\alpha)$ by $A$, this shows that $\abs{S_{f,\alpha}(P',T') - A} < \epsilon$ for all tagged partitions $(P',T')$ with $P \subseteq P'$. Hence $f \in \integrable[\alpha]{a,b}$, and the integral of $f$ with respect to $\alpha$ equals $A$.
 \end{proofsec}
 \end{proof}
 
@@ -789,11 +839,11 @@ It follows immediately from the definition and \cref{eq:upper-lower-sum-inequali
 \section{Integrators of bounded variation}
 
 \begin{theorem}
-    Let $\alpha \colon [a,b] \to \reals$ be of bounded variation, and let $V(x) = V_\alpha(a,x)$ for $x \in (a,b]$ and $V(a) = 0$. Then $\calR_\alpha[a,b] \subseteq \calR_V[a,b]$.
+    Let $\alpha \colon [a,b] \to \reals$ be of bounded variation, and let $V(x) = V_\alpha(a,x)$ for $x \in (a,b]$ and $V(a) = 0$. Then $\integrable[\alpha]{a,b} \subseteq \integrable[V]{a,b}$.
 \end{theorem}
 
 \begin{proof}
-    Let $f \in \calR_\alpha[a,b]$, and choose $M > 0$ such that $\abs{f} \leq M$. Choose a partition $P = \{x_0, \ldots, x_n\}$ of $[a,b]$ such that $V(b) < \sum_{i=1}^n \abs{\Delta\alpha_i} + \epsilon$. Then
+    Let $f \in \integrable[\alpha]{a,b}$, and choose $M > 0$ such that $\abs{f} \leq M$. Choose a partition $P = \{x_0, \ldots, x_n\}$ of $[a,b]$ such that $V(b) < \sum_{i=1}^n \abs{\Delta\alpha_i} + \epsilon$. Then
     %
     \begin{align*}
         \sum_{i=1}^n (M_i(f) - m_i(f)) ( \Delta V_i - \abs{\Delta\alpha_i})
@@ -833,14 +883,14 @@ It follows immediately from the definition and \cref{eq:upper-lower-sum-inequali
             < 2(M+1)\epsilon,
     \end{equation*}
     %
-    and since $\epsilon$ was arbitrary, this shows that $f \in \calR_V[a,b]$.
+    and since $\epsilon$ was arbitrary, this shows that $f \in \integrable[V]{a,b}$.
 \end{proof}
 %
 Since $\alpha = V - (V - \alpha)$ and both $V$ and $V - \alpha$ are increasing, this allows us to reduce questions about integrators of bounded variation to questions about monotonic integrators. In particular it lets us use Riemann's condition to prove integrability with respect to integrators of bounded variation. 
 
 
 \begin{proposition}
-    Let $\alpha \colon [a,b] \to \reals$ be of bounded variation, and let $f \in \calR_\alpha[a,b]$. Choose $m,M \in \reals$ such that $m \leq f \leq M$. If $\phi \colon [m,M] \to \reals$ is continuous, then $\phi \circ f \in \calR_\alpha[a,b]$.
+    Let $\alpha \colon [a,b] \to \reals$ be of bounded variation, and let $f \in \integrable[\alpha]{a,b}$. Choose $m,M \in \reals$ such that $m \leq f \leq M$. If $\phi \colon [m,M] \to \reals$ is continuous, then $\phi \circ f \in \integrable[\alpha]{a,b}$.
 \end{proposition}
 
 \begin{proof}
@@ -871,12 +921,12 @@ Since $\alpha = V - (V - \alpha)$ and both $V$ and $V - \alpha$ are increasing, 
             &\leq (\alpha(b) - \alpha(a) + 2K) \epsilon.
     \end{align*}
     %
-    Since $\epsilon$ was arbitrary, it follows that $g \in \calR_\alpha[a,b]$.
+    Since $\epsilon$ was arbitrary, it follows that $g \in \integrable[\alpha]{a,b}$.
 \end{proof}
 
 
 \begin{corollary}
-    Let $\alpha \colon [a,b] \to \reals$ be of bounded variation, and let $f,g \in \calR_\alpha[a,b]$. Then the functions $\abs{f}$ and $fg$ are also $\alpha$-integrable. If $\alpha$ is increasing we also have
+    Let $\alpha \colon [a,b] \to \reals$ be of bounded variation, and let $f,g \in \integrable[\alpha]{a,b}$. Then the functions $\abs{f}$ and $fg$ are also $\alpha$-integrable. If $\alpha$ is increasing we also have
     %
     \begin{equation}
         \label{eq:integral-triangle-inequality}
@@ -911,14 +961,14 @@ Since $\alpha = V - (V - \alpha)$ and both $V$ and $V - \alpha$ are increasing, 
             \leq \epsilon (\alpha(b) - \alpha(a)),
     \end{equation*}
     %
-    and since $\epsilon$ was arbitrary, it follows from Riemann's condition that $f \in \calR_\alpha[a,b]$.
+    and since $\epsilon$ was arbitrary, it follows from Riemann's condition that $f \in \integrable[\alpha]{a,b}$.
 \end{proof}
 
 
 \section{The fundamental theorems of calculus}
 
 \begin{theorem}[The first fundamental theorem of calculus]
-    Let $\alpha \colon [a,b] \to \reals$ be of bounded variation, and let $f \in \calR_\alpha[a,b]$. Define a function $F \colon [a,b] \to \reals$ by
+    Let $\alpha \colon [a,b] \to \reals$ be of bounded variation, and let $f \in \integrable[\alpha]{a,b}$. Define a function $F \colon [a,b] \to \reals$ by
     %
     \begin{equation*}
         F(x)
@@ -973,7 +1023,7 @@ Since $\alpha = V - (V - \alpha)$ and both $V$ and $V - \alpha$ are increasing, 
 
 
 \begin{theorem}[The second fundamental theorem of calculus]
-    Let $f \in \calR[a,b]$. If there exists a continuous function $F \colon [a,b] \to \reals$ that is differentiable on $(a,b)$ with $F' = f$, then
+    Let $f \in \integrable{a,b}$. If there exists a continuous function $F \colon [a,b] \to \reals$ that is differentiable on $(a,b)$ with $F' = f$, then
     %
     \begin{equation*}
         \int_a^b f
@@ -1023,7 +1073,7 @@ Since $\alpha = V - (V - \alpha)$ and both $V$ and $V - \alpha$ are increasing, 
 
 
 \begin{proposition}
-    Let $f \colon [a,b] \times [c,d] \to \reals$ be bounded, and let $\alpha \colon [a,b] \to \reals$ be of bounded variation. Assume that $f(\,\cdot\,,y) \in \calR_\alpha[a,b]$ for all $y \in [c,d]$, that $f(x,\,\cdot\,)$ is continuous on $[c,d]$ and differentiable on $(c,d)$ for all $x \in [a,b]$, and that $D_2 f$ is continuous on $[a,b] \times (c,d)$. Then the function $F \colon [c,d] \to \reals$ given by
+    Let $f \colon [a,b] \times [c,d] \to \reals$ be bounded, and let $\alpha \colon [a,b] \to \reals$ be of bounded variation. Assume that $f(\,\cdot\,,y) \in \integrable[\alpha]{a,b}$ for all $y \in [c,d]$, that $f(x,\,\cdot\,)$ is continuous on $[c,d]$ and differentiable on $(c,d)$ for all $x \in [a,b]$, and that $D_2 f$ is continuous on $[a,b] \times (c,d)$. Then the function $F \colon [c,d] \to \reals$ given by
     %
     \begin{equation*}
         F(y)
@@ -1068,7 +1118,7 @@ Since $\alpha = V - (V - \alpha)$ and both $V$ and $V - \alpha$ are increasing, 
             = \lim_{n\to\infty} \int_a^b f_n \dif\alpha.
     \end{equation*}
     %
-    In particular, $\calR_\alpha[a,b]$ is a closed subspace of $C[a,b]$ equipped with the uniform norm.
+    In particular, $\integrable[\alpha]{a,b}$ is a closed subspace of $C[a,b]$ equipped with the uniform norm.
 \end{proposition}
 
 \begin{proof}
