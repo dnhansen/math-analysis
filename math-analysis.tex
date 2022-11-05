@@ -499,7 +499,7 @@ Also note that monotonic functions are of bounded variation on any compact inter
 
 \section{Integration}
 
-Next consider bounded functions $f, \alpha \colon [a,b] \to \reals$. For each tagged partition $(P,T)$ of $[a,b]$ we define the \emph{Riemann--Stieltjes sum}
+Next consider two functions $f, \alpha \colon [a,b] \to \reals$. For each tagged partition $(P,T)$ of $[a,b]$ we define the \emph{Riemann--Stieltjes sum}
 %
 \begin{equation*}
     S_{f,\alpha}(P,T)
@@ -510,7 +510,7 @@ This induces a net $S_{f,\alpha} \colon \calP'[a,b] \to \reals$.
 
 
 \begin{definition}[Riemann--Stieltjes integral]
-    Let $f,\alpha \colon [a,b] \to \reals$ be bounded functions. We say that $f$ is \emph{Riemann-integrable} with respect to $\alpha$ (or simply \emph{$\alpha$-integrable}) on $[a,b]$ if the net $S_{f,\alpha}$ has a limit $A$. In this case $A$ is called the \emph{Riemann--Stieltjes integral} of $f$ with respect to $\alpha$ on $[a,b]$ and is denoted
+    Let $f,\alpha \colon [a,b] \to \reals$ be bounded functions. We say that $f$ is \emph{Riemann-integrable} with respect to $\alpha$ (or simply \emph{$\alpha$-integrable}) on $[a,b]$ if the net $S_{f,\alpha}$ has a limit $A \in \reals$. In this case $A$ is called the \emph{Riemann--Stieltjes integral} of $f$ with respect to $\alpha$ on $[a,b]$ and is denoted
     %
     \begin{equation*}
         \int_a^b f \dif \alpha
@@ -533,9 +533,41 @@ We call $f$ the \emph{integrand} and $\alpha$ the \emph{integrator}. In the case
 %
 The sums $S_f$ are then simply called \emph{Riemann sums} and the integral the \emph{Riemann integral} of $f$ on $[a,b]$. With this choice of $\alpha$, an $\alpha$-integrable function is called \emph{Riemann integrable} on $[a,b]$, and the set of such functions is denoted $\integrable{a,b}$.
 
+\begin{remark}
+    In the ordinary Riemann integral it is not necessary to assume that $f$ is bounded, since integrability in this case implies boundedness. We claim that this assumption can be lifted whenever the integrator $\alpha$ is injective. In fact, we only need to assume that there is a partition $Q$ of $[a,b]$ such that $\alpha$ is injective on each subinterval of $Q$.
+    
+    If the net $S_{f,\alpha}$ has a limit $A \in \reals$, then there is a tagged partition $(P,T)$ of $[a,b]$ such that
+    %
+    \begin{equation*}
+        \abs{A - S_{f,\alpha}(P',T')} < 1,
+        \quad \text{implying that} \quad
+        \abs{S_{f,\alpha}(P',T')} < M \defn \abs{A} + 1,
+    \end{equation*}
+    %
+    whenever $(P,T) \preceq (P',T')$. By replacing $P$ with $P \union Q$ we may assume that $\alpha$ is injective on each subinterval of $P$, since $\alpha$ is clearly also injective on each subinterval of $P \union Q$.
+    
+    Write $P = \{x_0, \ldots, x_n\}$ and $T = \{t_1, \ldots, t_n\}$. Let $x \in [x_{k-1},x_k]$ and consider the multiset $T_x = \{t_1, \ldots, t_{k-1}, x, t_{k+1}, \ldots, t_n\}$ and the corresponding tagged partition $(P,T_x)$. We then have
+    %
+    \begin{equation*}
+        f(x) \Delta \alpha_k
+            = S_{f,\alpha}(P,T_x) - \sum_{i \neq k} f(t_i) \Delta \alpha_i.
+    \end{equation*}
+    %
+    Since $\alpha$ is injective on $[x_{k-1},x_k]$ we have $\Delta\alpha_k \neq 0$, so the above implies that
+    %
+    \begin{equation*}
+        \abs{f(x)}
+            = \frac{1}{\abs{\Delta \alpha_k}} \abs[\bigg]{ S_{f,\alpha}(P,T_x) - \sum_{i \neq k} f(t_i) \Delta \alpha_i }
+            < \frac{1}{\abs{\Delta \alpha_k}} \biggl( M + \abs[\bigg]{ \sum_{i \neq k} f(t_i) \Delta \alpha_i } \biggr),
+    \end{equation*}
+    %
+    where the inequality follows since $(P,T) \preceq (P,T_x)$ for all $x \in [x_{k-1},x_k]$. The right-hand side is thus as upper bound for $\abs{f}$ on $[x_{k-1},x_k]$, and there are finitely many such intervals, so $f$ is bounded on $[a,b]$ as claimed.
+\end{remark}
+
 Below we fix an interval $[a,b]$ and (bounded) integrators $\alpha$ and $\beta$ on it.
 
 \begin{proposition}[Linearity of the integral]
+    \label{prop:integral-linearity}
     Let $f,g \in \integrable[\alpha]{a,b}$ and $c_1, c_2 \in \reals$. Then:
     %
     \begin{enumprop}
@@ -562,22 +594,47 @@ Below we fix an interval $[a,b]$ and (bounded) integrators $\alpha$ and $\beta$ 
 \end{proof}
 
 
+\begin{proposition}
+    \label{prop:integral-dividing-interval}
+    Consider $f, \alpha \colon [a,b] \to \reals$ and let $c \in (a,b)$. If two of the three integrals in \cref{eq:integral-dividing-interval} exist, then so does the third and we have
+    %
+    \begin{equation}
+        \label{eq:integral-dividing-interval}
+        \int_a^c f \dif\alpha + \int_c^b f \dif\alpha
+            = \int_a^b f \dif\alpha.
+    \end{equation}
+\end{proposition}
+
+\begin{proof}
+    Let $(P,T)$ be a tagged partition of $[a,b]$ such that $c \in P$, and let $P_1 = P \intersect [a,c]$ and $P_2 = P \intersect [c,b]$, and $T_1 = T \intersect [a,c]$ and $T_2 = T \intersect [c,b]$. Then
+    %
+    \begin{equation}
+        \label{eq:Riemann-sums-dividing-interval}
+        S_{f,\alpha}(P,T)
+            = S_{f,\alpha}(P_1,T_1) + S_{f,\alpha}(P_2,T_2).
+    \end{equation}
+    %
+    If two of the three integrals in \cref{eq:integral-dividing-interval} exist, then two of the nets in \cref{eq:Riemann-sums-dividing-interval} converge to the respective integrals. The third net then also converges to the relevant integral: Notice that we assume without loss of generality that $c \in P$, since adding $c$ to a partition simply yields a finer partition. Also notice that any partition $P'$ of e.g. $[a,c]$ is on the form $P' = P \intersect [a,c]$ for some partition $P$ of $[a,b]$.
+\end{proof}
+
+
 \begin{proposition}[Integration by parts]
+    \label{prop:integration-by-parts}
     Given functions $f,\alpha \colon [a,b] \to \reals$, assume that $f \in \integrable[\alpha]{a,b}$. Then $\alpha \in \integrable[f]{a,b}$ and
     %
     \begin{equation*}
         \int_a^b f \dif\alpha + \int_a^b \alpha \dif f
             = f(b)\alpha(b) - f(a)\alpha(a).
     \end{equation*}
+    %
+    In particular, exchanging $f$ and $\alpha$ we have
+    %
+    \begin{equation*}
+        f \in \integrable[\alpha]{a,b}
+            \quad \text{if and only if} \quad
+            \alpha \in \integrable[f]{a,b}.
+    \end{equation*}
 \end{proposition}
-%
-In particular, by exchanging $f$ and $\alpha$ we find that
-%
-\begin{equation*}
-    f \in \integrable[\alpha]{a,b}
-        \quad \Leftrightarrow \quad
-        \alpha \in \integrable[f]{a,b}.
-\end{equation*}
 
 \begin{proof}
     Let $(P,T)$ be a tagged partition of $[a,b]$ with $P = \{x_0, \ldots, x_n\}$ and $T = \{t_1, \ldots, t_n\}$. Writing $A = f(b)\alpha(b) - f(a)\alpha(a)$, notice that
@@ -617,9 +674,9 @@ In particular, by exchanging $f$ and $\alpha$ we find that
 \end{proposition}
 
 \begin{proof}
-    Since $\phi$ is bijective it is strictly monotonic, so it induces an increasing bijection $\calP'[c,d] \to \calP'[a,b]$ given by $(P, T) \mapsto (\phi(P), \phi(T))$.
+    Since $\phi$ is bijective it is strictly monotonic, so it induces an order isomorphism $\calP'(I) \to \calP'[a,b]$ given by $(P, T) \mapsto (\phi(P), \phi(T))$.
 
-    Now let $(P,T) \in \calP'[c,d]$ with $P = \{y_0, \ldots, y_n\}$ and $T = \{s_1, \ldots, s_n\}$ and write $x_i = \phi(y_i)$ and $t_i = \phi(s_i)$. Assuming for definiteness that $\phi$ is increasing, we have
+    Now let $(P,T) \in \calP'[c,d]$ with $P = \{y_0, \ldots, y_n\}$ and $T = \{s_1, \ldots, s_n\}$. Assume for definiteness that $\phi$ is increasing so that $I = [c,d]$, and write $x_i = \phi(y_i)$ and $t_i = \phi(s_i)$. Then we have
     %
     \begin{equation*}
         S_{f \circ \phi, \alpha \circ \phi}(P,T)
@@ -628,7 +685,7 @@ In particular, by exchanging $f$ and $\alpha$ we find that
             = S_{f,\alpha}(\phi(P),\phi(T)).
     \end{equation*}
     %
-    Since the map $(P,T) \mapsto (\phi(P),\phi(T))$ is an increasing bijection, each side above converges to the corresponding integral, proving the claim.
+    Since the map $(P,T) \mapsto (\phi(P),\phi(T))$ is an order isomorphism, each side above converges to the corresponding integral, proving the claim.
 \end{proof}
 
 
@@ -659,14 +716,21 @@ In particular, by exchanging $f$ and $\alpha$ we find that
             = \sum_{i=1}^n f(t_i) (\alpha'(s_i) - \alpha'(t_i)) \Delta x_i.
     \end{equation*}
     %
-    By uniform continuity of $\alpha'$, given $\epsilon > 0$ there exists a $\delta > 0$ such that $\abs{x-y} < \delta$ implies $\abs{\alpha'(x) - \alpha'(y)} < \epsilon$ for all $x,y \in [a,b]$. If $\norm{P} < \delta$ we thus have
+    By uniform continuity of $\alpha'$, given $\epsilon > 0$ there exists a $\delta > 0$ such that $\abs{x-y} < \delta$ implies $\abs{\alpha'(x) - \alpha'(y)} < \epsilon$ for all $x,y \in [a,b]$. Choosing a tagged partition $(P,T)$ with $\norm{P} < \delta$ we thus have
     %
     \begin{equation*}
         \abs{S_{f,\alpha}(P,T) - S_{f\alpha'}(P,T)}
-            \leq \norm{f}_\infty \epsilon (b-a).
+            \leq \norm{f}_{\sup} \epsilon (b-a).
     \end{equation*}
     %
-    But $S_{f,\alpha}(P,T)$ approaches the $\alpha$-integral of $f$ for finer and finer partitions, which proves the claim.
+    Since $\epsilon$ was arbitrary, the left-hand side converges to zero. It follows that
+    %
+    \begin{equation*}
+        \abs[\bigg]{ \int_a^b f \dif\alpha - S_{f\alpha'}(P,T) }
+            \leq \abs[\bigg]{ \int_a^b f \dif\alpha - S_{f,\alpha}(P,T) } + \abs{ S_{f,\alpha}(P,T) - S_{f\alpha'}(P,T) },
+    \end{equation*}
+    %
+    which converges to zero. Hence $S_{f\alpha'}(P,T)$ converges, so $f\alpha' \in \integrable{a,b}$, and its integral equals the $\alpha$-integral of $f$ as claimed.
 \end{proof}
 
 
@@ -695,7 +759,7 @@ In particular, by exchanging $f$ and $\alpha$ we find that
     are called the \emph{upper and lower Stieltjes sums} of $f$ with respect to $\alpha$ for the partition $P$.
 \end{definition}
 %
-It is immediate that
+Since $\alpha$ is increasing we have $\Delta\alpha_i \geq 0$, so it is immediate that
 %
 \begin{equation*}
     L_{f,\alpha}(P)
@@ -703,13 +767,14 @@ It is immediate that
         \leq U_{f,\alpha}(P)
 \end{equation*}
 %
-for any tagged partition $(P,T)$ of $[a,b]$. It is also obvious that, if $P \subseteq P'$, then
+for any tagged partition $(P,T)$ of $[a,b]$. It is also clear that, if $P \subseteq P'$, then
 %
-\begin{equation*}
+\begin{equation}
+    \label{eq:upper-lower-sum-decreasing-increasing}
     U_{f,\alpha}(P) \geq U_{f,\alpha}(P')
     \quad \text{and} \quad
     L_{f,\alpha}(P) \leq L_{f,\alpha}(P'),
-\end{equation*}
+\end{equation}
 %
 and that for any pair of partitions $P_1$ and $P_2$ we have
 %
@@ -747,7 +812,7 @@ and that for any pair of partitions $P_1$ and $P_2$ we have
     are called the \emph{upper and lower Stieltjes integrals} of $f$ with respect to $\alpha$ on $[a,b]$.
 \end{definition}
 %
-It follows immediately from the definition and \cref{eq:upper-lower-sum-inequality} that the upper integral is always greater than the lower integral. We also use the notations $\overline{I}(f,\alpha)$ and $\underline{I}(f,\alpha)$ for the upper and lower integrals, respectively, when the interval $[a,b]$ is understood.
+We also use the notations $\overline{I}(f,\alpha)$ and $\underline{I}(f,\alpha)$ for the upper and lower integrals, respectively, when the interval $[a,b]$ is understood. It follows immediately from the definition and \cref{eq:upper-lower-sum-inequality} that $\underline{I}(f,\alpha) \leq \overline{I}(f,\alpha)$. 
 
 
 \begin{theorem}[Riemann's condition]
@@ -839,6 +904,7 @@ It follows immediately from the definition and \cref{eq:upper-lower-sum-inequali
 \section{Integrators of bounded variation}
 
 \begin{theorem}
+    \label{thm:alpha-integrable-implies-V-integrable}
     Let $\alpha \colon [a,b] \to \reals$ be of bounded variation, and let $V(x) = V_\alpha(a,x)$ for $x \in (a,b]$ and $V(a) = 0$. Then $\integrable[\alpha]{a,b} \subseteq \integrable[V]{a,b}$.
 \end{theorem}
 
@@ -886,7 +952,33 @@ It follows immediately from the definition and \cref{eq:upper-lower-sum-inequali
     and since $\epsilon$ was arbitrary, this shows that $f \in \integrable[V]{a,b}$.
 \end{proof}
 %
-Since $\alpha = V - (V - \alpha)$ and both $V$ and $V - \alpha$ are increasing, this allows us to reduce questions about integrators of bounded variation to questions about monotonic integrators. In particular it lets us use Riemann's condition to prove integrability with respect to integrators of bounded variation. 
+Since $\alpha = V - (V - \alpha)$ and both $V$ and $V - \alpha$ are increasing, this allows us to reduce questions about integrators of bounded variation to questions about monotonic integrators. In particular it lets us use Riemann's condition to prove integrability with respect to integrators of bounded variation.
+
+
+\begin{corollary}
+    \label{cor:integrable-on-subinterval}
+    Let $\alpha \colon [a,b] \to \reals$ be of bounded variation, and let $f \in \integrable[\alpha]{a,b}$. Then $f \in \integrable[\alpha]{c,d}$ for every subinterval $[c,d]$ of $[a,b]$.
+\end{corollary}
+
+\begin{proof}
+    By \cref{thm:alpha-integrable-implies-V-integrable} and \cref{prop:integral-linearity}, it suffices to prove the claim when $\alpha$ is increasing. Furthermore, by \cref{prop:integral-dividing-interval} it suffices to show that $f$ is $\alpha$-integrable on $[a,x]$ for all $x \in (a,b]$. Given $\epsilon > 0$, by \cref{enum:Riemanns-condition} there is a partition $P$ of $[a,b]$ such that
+    %
+    \begin{equation*}
+        U_{f,\alpha}(P) - L_{f,\alpha}(P) < \epsilon.
+    \end{equation*}
+    %
+    By \cref{eq:upper-lower-sum-decreasing-increasing}, adjoining $x$ to $P$ preserves the inequality. Writing $P = \{x_0, \ldots, x_n\}$ we may thus assume that $x = x_k$ for some $k \in \{1, \ldots, n\}$. Letting $P' = P \intersect [a,x]$ we thus have
+    %
+    \begin{align*}
+        U_{f,\alpha}(P') - L_{f,\alpha}(P')
+            &= \sum_{i=1}^k (M_i(f) - m_i(f)) \Delta\alpha_i
+             \leq \sum_{i=1}^n (M_i(f) - m_i(f)) \Delta\alpha_i \\
+            &= U_{f,\alpha}(P) - L_{f,\alpha}(P)
+             < \epsilon,
+    \end{align*}
+    %
+    where the first inequality follows since every term in the second sum is non-negative. Thus $f$ is integrable on $[a,x]$.
+\end{proof}
 
 
 \begin{proposition}
@@ -949,7 +1041,7 @@ Since $\alpha = V - (V - \alpha)$ and both $V$ and $V - \alpha$ are increasing, 
 
 
 \begin{proposition}
-    Let $f,\alpha \colon [a,b] \to \reals$ be functions with $f$ continuous and $\alpha$ of bounded variation. Then $f$ is $\alpha$-integrable.
+    Let $f,\alpha \colon [a,b] \to \reals$ be functions with $f$ continuous and $\alpha$ of bounded variation. Then $f$ is $\alpha$-integrable, and $\alpha$ is $f$-integrable.
 \end{proposition}
 
 \begin{proof}
@@ -961,7 +1053,7 @@ Since $\alpha = V - (V - \alpha)$ and both $V$ and $V - \alpha$ are increasing, 
             \leq \epsilon (\alpha(b) - \alpha(a)),
     \end{equation*}
     %
-    and since $\epsilon$ was arbitrary, it follows from Riemann's condition that $f \in \integrable[\alpha]{a,b}$.
+    and since $\epsilon$ was arbitrary, it follows from Riemann's condition that $f \in \integrable[\alpha]{a,b}$. The final claim follows from \cref{prop:integration-by-parts}.
 \end{proof}
 
 
@@ -978,13 +1070,13 @@ Since $\alpha = V - (V - \alpha)$ and both $V$ and $V - \alpha$ are increasing, 
     Then the following hold:
     %
     \begin{enumthm}
-        \item $F$ is of bounded variation.
-        \item Every point of continuity of $\alpha$ is also a point of continuity of $F$.
-        \item Assume that $\alpha$ is increasing. If $f$ is continuous and $\alpha$ differentiable at $x \in (a,b)$, then $F$ is differentiable at $x$ with $F'(x) = f(x) \alpha'(x)$.
+        \item \label{enum:integral-is-BV} $F$ is of bounded variation.
+        \item \label{enum:continuity-of-integral} Every point of continuity of $\alpha$ is also a point of continuity of $F$.
+        \item \label{enum:derivative-of-integral} Assume that $\alpha$ is increasing. If $f$ is continuous and $\alpha$ differentiable at $x \in (a,b)$, then $F$ is differentiable at $x$ with $F'(x) = f(x) \alpha'(x)$.
     \end{enumthm}
 \end{theorem}
 %
-[We need that $f$ is also integrable on the subintervals!]
+Notice that the integral above exists by \cref{cor:integrable-on-subinterval}, and so do the integrals in the proof below. 
 
 \begin{proof}
     We may assume that $\alpha$ is increasing. Let $x,y \in [a,b]$ with $x \neq y$, and let $I$ denote the closed interval between $x$ and $y$. If $m = \inf_{t \in I} f(t)$ and $M = \sup_{t \in I} f(t)$, we claim that there exists a $c \in \reals$ with $m \leq c \leq M$ such that
@@ -1004,14 +1096,14 @@ Since $\alpha = V - (V - \alpha)$ and both $V$ and $V - \alpha$ are increasing, 
             \leq M (\alpha(y) - \alpha(x)),
     \end{equation*}
     %
-    and dividing by $\alpha(y) - \alpha(x)$ proves the above claim for $x < y$. If $y < x$, then exchanging $x$ and $y$ yields a sign change which cancels on each side of \cref{eq:fundamental-theorem-difference}. From this (i) and (ii) follow immediately.
+    and dividing by $\alpha(y) - \alpha(x)$ proves the above claim for $x < y$. If $y < x$, then exchanging $x$ and $y$ yields a sign change which cancels on each side of \cref{eq:fundamental-theorem-difference}. From this \subcref{enum:integral-is-BV} and \subcref{enum:continuity-of-integral} follow immediately.
 
-    Now assume that $f$ is continuous at $x \in (a,b)$ and that $\alpha$ is differentiable at $x$. We claim that $c \to f(x)$ as $y \to x$. Let $\epsilon > 0$. By continuity of $f$ at $x$ there is a $\delta > 0$ such that $\abs{x-x'} < \delta$ implies $\abs{f(x) - f(x')} < \epsilon$. Thus if $\abs{x-y} < \delta$ we must have $f(x) - m \leq \epsilon$ and $M - f(x) \leq \epsilon$. Since $m \leq c \leq M$ it follows that $\abs{c - f(x)} \leq \epsilon$. Dividing by $y-x$ and letting $y \to x$ in \cref{eq:fundamental-theorem-difference} proves (iii).
+    Now assume that $f$ is continuous at $x \in (a,b)$ and that $\alpha$ is differentiable at $x$. We claim that $c \to f(x)$ as $y \to x$. Let $\epsilon > 0$. By continuity of $f$ at $x$ there is a $\delta > 0$ such that $\abs{x-x'} < \delta$ implies $\abs{f(x) - f(x')} < \epsilon$. Thus if $\abs{x-y} < \delta$ we must have $f(x) - m \leq \epsilon$ and $M - f(x) \leq \epsilon$. Since $m \leq c \leq M$ it follows that $\abs{c - f(x)} \leq \epsilon$. Dividing by $y-x$ and letting $y \to x$ in \cref{eq:fundamental-theorem-difference} proves \subcref{enum:derivative-of-integral}.
 \end{proof}
 
 
 \begin{remark}
-    In the case $\alpha(x) = x$, (iii) has an easier proof: Simply note that
+    In the case $\alpha(x) = x$, \subcref{enum:derivative-of-integral} has an easier proof: Simply note that
     %
     \begin{equation*}
         \frac{F(y)-F(x)}{y-x} - f(x)
