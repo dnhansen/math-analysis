@@ -100,11 +100,10 @@
 	\end{displayquote}%
 }
 
+% Break
+\usepackage{adforn}
+\newcommand\fleuronbreak{\fancybreak{\textcolor{linkcolor}{\adfhangingflatleafleft}}}
 
-\usepackage{graphicx}
-\newcommand*{\flip}[1]{\scalebox{-1}[1]{\rotatebox[origin = c]{180}{#1}}}
-\DeclareRobustCommand{\Lambdabb}{\flip{\ensuremath{\mathbb{V}}}}
-% https://tex.stackexchange.com/questions/297680/how-can-i-rotate-pi-by-180-degrees/297742
 
 \begin{document}
 
@@ -473,6 +472,7 @@ If $g \colon [a,b] \to \reals$ is another function of bounded variation on $[a,b
 Also note that monotonic functions are of bounded variation on any compact interval.
 
 \begin{lemma}
+    \label{lem:total-variation-increasing}
     Let $f \colon [a,b] \to \reals$ be of bounded variation, and let $V(x) = V_f(a,x)$ for $x \in (a, b]$ and $V(a) = 0$. Then the functions $V$ and $V - f$ are increasing on $[a,b]$.
 \end{lemma}
 
@@ -489,11 +489,60 @@ Also note that monotonic functions are of bounded variation on any compact inter
 
 
 \begin{proposition}
+    \label{prop:BV-difference-of-increasing-functions}
     A function $f \colon [a,b] \to \reals$ is of bounded variation if and only if it is the difference of two (strictly) increasing functions.
 \end{proposition}
 
 \begin{proof}
-    By the lemma we can write $f$ as the difference of two increasing functions as $f = V - (V - f)$. Adding a strictly increasing function to both $V$ and $V - f$ yields the claim.
+    By \cref{lem:total-variation-increasing} we can write $f$ as the difference of two increasing functions as $f = V - (V - f)$. Adding a strictly increasing function to both $V$ and $V - f$ yields the claim.
+\end{proof}
+
+
+\begin{proposition}
+    \label{prop:total-variation-continuity}
+    Let $f \colon [a,b] \to \reals$ be of bounded variation, and let $V(x) = V_f(a,x)$ for $x \in (a, b]$ and $V(a) = 0$. If $c \in [a,b]$, then $f$ is continuous at $c$ if and only if $V$ is continuous at $c$.
+\end{proposition}
+
+\begin{proof}
+    We prove the claim in the case where $c$ is an inner point of $[a,b]$. First assume that $V$ is continuous at $c$. Since $V$ is monotonic by \cref{lem:total-variation-increasing}, the left- and right-hand limits $V(c-)$ and $V(c+)$ exist. For $x \in (c,b]$ we have
+    %
+    \begin{equation*}
+        \abs{f(x) - f(c)}
+            \leq V(x) - V(c)
+            \xrightarrow[x \downarrow c]{}
+            V(c+) - V(c)
+            = 0,
+    \end{equation*}
+    %
+    so $f$ is right-continuous at $c$. Similarly for left-continuity.
+
+    We prove the converse, so assume that $f$ is continuous at $c$ and let $\epsilon > 0$. There exists a $\delta > 0$ such that $0 < \abs{x - c} < \delta$ implies $\abs{f(x) - f(c)} < \epsilon$. Further choose a partition $P = \{x_0, \ldots, x_n\}$ of $[c,b]$ such that
+    %
+    \begin{equation*}
+        V_f(c,b) - \epsilon
+            < \sum_{i=1}^n \abs{\Delta f_k}.
+    \end{equation*}
+    %
+    This inequality is conserved when adding points to $P$, so we may assume that $x_1 - x_0 < \delta$, implying that $\abs{\Delta f_1} < \epsilon$. The inequality above then becomes
+    %
+    \begin{equation*}
+        V_f(c,b) - \epsilon
+            < \epsilon + \sum_{i=2}^n \abs{\Delta f_k}
+            \leq \epsilon + V_f(x_1,b),
+    \end{equation*}
+    %
+    so that $V_f(c,b) - V_f(x_1,b) < 2\epsilon$. This implies that
+    %
+    \begin{align*}
+        0
+            &\leq V(x_1) - V(c)
+             = V_f(a,x_1) - V_f(a,c) \\
+            &= V_f(c,x_1)
+             = V_f(c,b) - V_f(x_1,b)
+             < 2\epsilon,
+    \end{align*}
+    %
+    showing that $V(c+) = V(c)$. A similar argument yields $V(c-) = V(c)$, so $V$ is continuous at $c$.
 \end{proof}
 
 
@@ -676,7 +725,7 @@ Below we fix an interval $[a,b]$ and (bounded) integrators $\alpha$ and $\beta$ 
 \begin{proof}
     Since $\phi$ is bijective it is strictly monotonic, so it induces an order isomorphism $\calP'(I) \to \calP'[a,b]$ given by $(P, T) \mapsto (\phi(P), \phi(T))$.
 
-    Now let $(P,T) \in \calP'[c,d]$ with $P = \{y_0, \ldots, y_n\}$ and $T = \{s_1, \ldots, s_n\}$. Assume for definiteness that $\phi$ is increasing so that $I = [c,d]$, and write $x_i = \phi(y_i)$ and $t_i = \phi(s_i)$. Then we have
+    Now let $(P,T) \in \calP'(I)$ with $P = \{y_0, \ldots, y_n\}$ and $T = \{s_1, \ldots, s_n\}$. Assume for definiteness that $\phi$ is increasing so that $I = [c,d]$, and write $x_i = \phi(y_i)$ and $t_i = \phi(s_i)$. Then we have
     %
     \begin{equation*}
         S_{f \circ \phi, \alpha \circ \phi}(P,T)
@@ -901,6 +950,42 @@ We also use the notations $\overline{I}(f,\alpha)$ and $\underline{I}(f,\alpha)$
 \end{proof}
 
 
+\section{Mean value theorems}
+
+\begin{proposition}[The first mean value theorem]
+    \label{prop:mean-value-1}
+    Let $\alpha \colon [a,b] \to \reals$ be increasing, and let $f \in \integrable[\alpha]{a,b}$. Let $m = \inf_{x \in [a,b]} f(x)$ and $M = \sup_{x \in [a,b]} f(x)$. Then there exists a $c \in \reals$ with $m \leq c \leq M$ such that
+    %
+    \begin{equation*}
+        \int_a^b f \dif\alpha
+            = c \int_a^b \dif\alpha
+            = c (\alpha(y) - \alpha(x)).
+    \end{equation*}
+\end{proposition}
+
+\begin{proof}
+    If $\alpha(a) = \alpha(b)$ then both sides are zero, so assume that $\alpha(a) < \alpha(b)$. From the inequalities
+    %
+    \begin{equation*}
+        m (\alpha(b) - \alpha(a))
+            \leq \int_a^b f \dif\alpha
+            \leq M (\alpha(b) - \alpha(a))
+    \end{equation*}
+    %
+    follow that
+    %
+    \begin{equation*}
+        m 
+            \leq \frac{1}{\alpha(b) - \alpha(a)} \int_a^b f \dif\alpha
+            \leq M,
+    \end{equation*}
+    %
+    so defining $c$ as the middle term, the claim follows.
+\end{proof}
+
+% [TODO MVT2?]
+
+
 \section{Integrators of bounded variation}
 
 \begin{theorem}
@@ -982,11 +1067,32 @@ Since $\alpha = V - (V - \alpha)$ and both $V$ and $V - \alpha$ are increasing, 
 
 
 \begin{proposition}
+    Let $f,\alpha \colon [a,b] \to \reals$ be functions with $f$ continuous and $\alpha$ of bounded variation. Then $f$ is $\alpha$-integrable, and $\alpha$ is $f$-integrable.
+\end{proposition}
+
+\begin{proof}
+    We may assume that $\alpha$ is increasing. Let $\epsilon > 0$. Uniform continuity of $f$ furnishes a $\delta < 0$ such that $\abs{x-y} < \delta$ implies $\abs{f(x)-f(y)} < \epsilon$ for $x,y \in [a,b]$. Let $P = \{x_0,\ldots,x_n\}$ be a partition with $\norm{P} < \delta$. Then $M_i(f) - m_i(f) \leq \epsilon$, implying that
+    %
+    \begin{equation*}
+        U_{f,\alpha}(P) - L_{f,\alpha}(P)
+            = \sum_{i=1}^n (M_i(f) - m_i(f)) \Delta\alpha_i
+            \leq \epsilon (\alpha(b) - \alpha(a)),
+    \end{equation*}
+    %
+    and since $\epsilon$ was arbitrary, it follows from Riemann's condition that $f \in \integrable[\alpha]{a,b}$. The final claim follows from \cref{prop:integration-by-parts}.
+\end{proof}
+
+\fleuronbreak
+
+For functions $f \colon [a,b] \to \reals$ and $g \colon f([a,b]) \to \reals$, when is the composition $g \circ f$ integrable? In the Lebesgue theory all that is required is that $f$ and $g$ are measurable, but as far as I know, no such result is available for the Riemann integral. However, in the case where $g$ is continuous, \cref{prop:continuity-integrability} below shows that $g \circ f$ is indeed integrable. We first prove this and then prove a couple of important corollaries.
+
+\begin{proposition}
+    \label{prop:continuity-integrability}
     Let $\alpha \colon [a,b] \to \reals$ be of bounded variation, and let $f \in \integrable[\alpha]{a,b}$. Choose $m,M \in \reals$ such that $m \leq f \leq M$. If $\phi \colon [m,M] \to \reals$ is continuous, then $\phi \circ f \in \integrable[\alpha]{a,b}$.
 \end{proposition}
 
 \begin{proof}
-    We may assume that $\alpha$ is increasing. Put $g = \phi \circ f$ and let $\epsilon > 0$. Uniform continuity of $\phi$ yields a $\delta > 0$ such that $\abs{s-t} < \delta$ implies $\abs{\phi(s) - \phi(t)} < \epsilon$ for $s,t \in [m,M]$. Also choose $\delta$ such that $\delta < \epsilon$. Let $P = \{x_0, \ldots, x_n\}$ be a partition of $[a,b]$ such that
+    We may assume that $\alpha$ is increasing. Put $g = \phi \circ f$ and let $\epsilon > 0$. Uniform continuity of $\phi$ yields a $\delta > 0$ such that $\abs{s-t} < \delta$ implies $\abs{\phi(s) - \phi(t)} < \epsilon$ for $s,t \in [m,M]$. Also choose $\delta$ such that $\delta \leq \epsilon$. Let $P = \{x_0, \ldots, x_n\}$ be a partition of $[a,b]$ such that
     %
     \begin{equation*}
         U_{f,\alpha}(P) - L_{f,\alpha}(P) < \delta^2.
@@ -999,6 +1105,7 @@ Since $\alpha = V - (V - \alpha)$ and both $V$ and $V - \alpha$ are increasing, 
     \begin{equation*}
         \sum_{i \in B} \Delta\alpha_i
             \leq \frac{1}{\delta} \sum_{i \in B} (M_i(f) - m_i(f)) \Delta\alpha_i
+            \leq \frac{1}{\delta} \bigl( U_{f,\alpha}(P) - L_{f,\alpha}(P) \bigr)
             < \delta.
     \end{equation*}
     %
@@ -1017,8 +1124,27 @@ Since $\alpha = V - (V - \alpha)$ and both $V$ and $V - \alpha$ are increasing, 
 \end{proof}
 
 
+For any function $f \colon X \to \reals$, recall that the \emph{positive and negative parts} of $f$ are the functions $f^+ = f \join 0$ and $f^- = -(f \meet 0)$ respectively, and that $f = f^+ - f^-$. We notice that $f^+$ and $f^-$ are both non-negative.
+
 \begin{corollary}
-    Let $\alpha \colon [a,b] \to \reals$ be of bounded variation, and let $f,g \in \integrable[\alpha]{a,b}$. Then the functions $\abs{f}$ and $fg$ are also $\alpha$-integrable. If $\alpha$ is increasing we also have
+    \label{cor:positive-negative-part}
+    Let $\alpha \colon [a,b] \to \reals$ be of bounded variation. Then a function $f \colon [a,b] \to \reals$ is $\alpha$-integrable if and only if $f^+$ and $f^-$ are, in which case
+    %
+    \begin{equation*}
+        \int_a^b f \dif\alpha
+            = \int_a^b f^+ \dif\alpha - \int_a^b f^- \dif\alpha.
+    \end{equation*}
+\end{corollary}
+
+\begin{proof}
+    This follows immediately from \cref{prop:continuity-integrability}, since the maps $x \mapsto x \join 0$ and $x \mapsto -(x \meet 0)$ are continuous.
+\end{proof}
+
+
+\begin{corollary}
+    Let $\alpha \colon [a,b] \to \reals$ be of bounded variation, and let $f,g \in \integrable[\alpha]{a,b}$. Then the functions $\abs{f}$ and $fg$ are also $\alpha$-integrable. In particular, $\integrable[\alpha]{a,b}$ is an $\reals$-algebra.
+    
+    If $\alpha$ is increasing we also have
     %
     \begin{equation}
         \label{eq:integral-triangle-inequality}
@@ -1026,34 +1152,19 @@ Since $\alpha = V - (V - \alpha)$ and both $V$ and $V - \alpha$ are increasing, 
             \leq \int_a^b \abs{f}\dif\alpha.
     \end{equation}
 \end{corollary}
+%
+Recall from \cref{prop:integral-linearity} that $\integrable[\alpha]{a,b}$ is always a vector space. 
 
 \begin{proof}
-    Integrability of $\abs{f}$ follows since $x \mapsto \abs{x}$ is continuous. The inequality \cref{eq:integral-triangle-inequality} follows since $f \leq \abs{f}$, and since the $\alpha$-integral is increasing when $\alpha$ is.
+    Integrability of $\abs{f}$ follows from \cref{prop:continuity-integrability} since $x \mapsto \abs{x}$ is continuous. The inequality \cref{eq:integral-triangle-inequality} follows since $f \leq \abs{f}$, and since the $\alpha$-integral is increasing when $\alpha$ is.
 
     For the product $fg$, notice that
     %
     \begin{equation*}
-        2fg = (f+g)^2 - f^2 + g^2,
+        2fg = (f+g)^2 - f^2 - g^2,
     \end{equation*}
     %
     and that the function $x \mapsto x^2$ is continuous.
-\end{proof}
-
-
-\begin{proposition}
-    Let $f,\alpha \colon [a,b] \to \reals$ be functions with $f$ continuous and $\alpha$ of bounded variation. Then $f$ is $\alpha$-integrable, and $\alpha$ is $f$-integrable.
-\end{proposition}
-
-\begin{proof}
-    We may assume that $\alpha$ is increasing. Let $\epsilon > 0$. Uniform continuity of $f$ furnishes a $\delta < 0$ such that $\abs{x-y} < \delta$ implies $\abs{f(x)-f(y)} < \epsilon$ for $x,y \in [a,b]$. Let $P = \{x_0,\ldots,x_n\}$ be a partition with $\norm{P} < \delta$. Then $M_i(f) - m_i(f) < \epsilon$, implying that
-    %
-    \begin{equation*}
-        U_{f,\alpha}(P) - L_{f,\alpha}(P)
-            = \sum_{i=1}^n (M_i(f) - m_i(f)) \Delta\alpha_i
-            \leq \epsilon (\alpha(b) - \alpha(a)),
-    \end{equation*}
-    %
-    and since $\epsilon$ was arbitrary, it follows from Riemann's condition that $f \in \integrable[\alpha]{a,b}$. The final claim follows from \cref{prop:integration-by-parts}.
 \end{proof}
 
 
@@ -1076,34 +1187,54 @@ Since $\alpha = V - (V - \alpha)$ and both $V$ and $V - \alpha$ are increasing, 
     \end{enumthm}
 \end{theorem}
 %
-Notice that the integral above exists by \cref{cor:integrable-on-subinterval}, and so do the integrals in the proof below. 
+Notice that the integral above exists by \cref{cor:integrable-on-subinterval}, and so do the integrals in the proof below.
+
+% [TODO (ii) requires that alpha continuous implies V continuous!]
 
 \begin{proof}
-    We may assume that $\alpha$ is increasing. Let $x,y \in [a,b]$ with $x \neq y$, and let $I$ denote the closed interval between $x$ and $y$. If $m = \inf_{t \in I} f(t)$ and $M = \sup_{t \in I} f(t)$, we claim that there exists a $c \in \reals$ with $m \leq c \leq M$ such that
+\begin{proofsec}
+    \item[Proof of \subcref{enum:integral-is-BV}]
+    Since $\boundedvar{a,b}$ is a vector space, we may assume that $\alpha$ is increasing. By \cref{cor:positive-negative-part} we may further assume that $f$ is positive. Then $F$ is increasing, hence of bounded variation.\footnote{E.g. Apostol [TODO ref] attempt to prove this using \cref{prop:mean-value-1}, but his argument is not, as far as I can tell, correct as stated. Hence we use a different argument, more in the spirit of Lebesgue.}
+    
+    \item[Proof of \subcref{enum:continuity-of-integral}]
+    By \cref{prop:total-variation-continuity} we may assume that $\alpha$ is increasing. Let $x,y \in [a,b]$ with $x \neq y$, and let $I$ denote the closed interval between $x$ and $y$. \Cref{prop:mean-value-1} now furnishes a $c_{xy} \in \reals$ with
+    %
+    \begin{equation*}
+        \inf_{t \in [a,b]} f(t)
+            \leq \inf_{t \in I} f(t)
+            \leq c_{xy}
+            \leq \sup_{t \in I} f(t)
+            \leq \sup_{t \in [a,b]} f(t),
+    \end{equation*}
+    %
+    such that
     %
     \begin{equation}
         \label{eq:fundamental-theorem-difference}
         F(y) - F(x)
             = \int_x^y f \dif\alpha
-            = c (\alpha(y) - \alpha(x)).
+            = c_{xy} (\alpha(y) - \alpha(x)).
     \end{equation}
     %
-    If $\alpha(x) = \alpha(y)$ this is trivial, so assume otherwise. If $x < y$ we clearly have
+    Assume now that $\alpha$ is continuous at $x$. Since $y \mapsto c_{xy}$ is bounded on $[a,b]$ (since $f$ is), letting $y \to x$ thus yields continuity of $F$ at $x$.
+
+    \item[Proof of \subcref{enum:derivative-of-integral}]
+    If $f$ is continuous at $x$, then $c_{xy} \to f(x)$ as $y \to x$, since $c_{xy}$ is bounded by the supremum and infimum of $f$ in a neighbourhood of $x$. Now \cref{eq:fundamental-theorem-difference} implies that
     %
     \begin{equation*}
-        m (\alpha(y) - \alpha(x))
-            \leq \int_x^y f \dif\alpha
-            \leq M (\alpha(y) - \alpha(x)),
+        \frac{F(y) - F(x)}{y-x}
+            = c_{xy} \frac{\alpha(y) - \alpha(x)}{y-x}
+            \xrightarrow[y \to x]{}
+            f(x) \alpha'(x),
     \end{equation*}
     %
-    and dividing by $\alpha(y) - \alpha(x)$ proves the above claim for $x < y$. If $y < x$, then exchanging $x$ and $y$ yields a sign change which cancels on each side of \cref{eq:fundamental-theorem-difference}. From this \subcref{enum:integral-is-BV} and \subcref{enum:continuity-of-integral} follow immediately.
-
-    Now assume that $f$ is continuous at $x \in (a,b)$ and that $\alpha$ is differentiable at $x$. We claim that $c \to f(x)$ as $y \to x$. Let $\epsilon > 0$. By continuity of $f$ at $x$ there is a $\delta > 0$ such that $\abs{x-x'} < \delta$ implies $\abs{f(x) - f(x')} < \epsilon$. Thus if $\abs{x-y} < \delta$ we must have $f(x) - m \leq \epsilon$ and $M - f(x) \leq \epsilon$. Since $m \leq c \leq M$ it follows that $\abs{c - f(x)} \leq \epsilon$. Dividing by $y-x$ and letting $y \to x$ in \cref{eq:fundamental-theorem-difference} proves \subcref{enum:derivative-of-integral}.
+    as desired.
+\end{proofsec}
 \end{proof}
 
 
 \begin{remark}
-    In the case $\alpha(x) = x$, \subcref{enum:derivative-of-integral} has an easier proof: Simply note that
+    In the case $\alpha(x) = x$, \subcref{enum:derivative-of-integral} has a proof that does not use \cref{prop:mean-value-1}: Simply note that
     %
     \begin{equation*}
         \frac{F(y)-F(x)}{y-x} - f(x)
