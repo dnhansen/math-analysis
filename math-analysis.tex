@@ -420,6 +420,206 @@ If $A$ is a subset of a metric space $S$, recall that $A$ is \emph{totally bound
 % \end{lemma}
 
 
+\chapter{Differentiation}
+
+\begin{definition}[Differentiability]
+    Let $A \subseteq \reals$, let $a \in A$ be a limit point\footnotemark{} of $A$, and let $f \colon A \to \reals$. If the limit
+    %
+    \begin{equation*}
+        \lim_{x \to a} \frac{f(x) - f(a)}{x - a}
+    \end{equation*}
+    %
+    exists and equals $L$, then we say that $f$ is \emph{differentiable} at $a$. The number $L$ is called the \emph{derivative} of $f$ at $a$ and is denoted $f'(a)$.
+\end{definition}
+\footnotetext{Recall that $a$ is a limit point of $A$ if every punctured neighbourhood of $a$ intersects $A$.}
+%
+\begin{remark}
+    \label{rem:differentiability-reformulation}
+    Notice that we may reformulate the definition of differentiability of $f$ at $a$ by instead requiring that the limit
+    %
+    \begin{equation*}
+        \lim_{h \to 0} \frac{f(a+h) - f(a)}{h}
+    \end{equation*}
+    %
+    exists, when $h \in A-a$.
+\end{remark}
+
+\begin{lemma}[Hadamard's lemma]
+    \label{lem:Hadamard-1D}
+    Let $A \subseteq \reals$, let $a \in A$ be a limit point of $A$, and let $f \colon A \to \reals$. The following are equivalent:
+    %
+    \begin{enumlem}
+        \item $f$ is differentiable at $a$.
+
+        \item There exists a function $\phi = \phi_a \colon A \to \reals$, continuous at $a$, such that
+        %
+        \begin{equation}
+            \label{eq:Hadamard-1D-phi}
+            f(x) - f(a)
+                = \phi_a(x) (x - a)
+        \end{equation}
+        %
+        for all $x \in A$.
+
+        \item There exists an $L(a) \in \reals$ and a function $\epsilon_a \colon A-a \to \reals$ such that
+        %
+        \begin{equation*}
+            \lim_{h \to 0} \frac{\epsilon_a(h)}{h} = 0
+            \quad \text{and} \quad
+            f(a+h) - f(a)
+                = L(a)h + \epsilon_a(h)
+        \end{equation*}
+        %
+        for all $h \in A-a$.
+    \end{enumlem}
+    %
+    If any of these conditions are satisfied, then
+    %
+    \begin{equation*}
+        f'(a) = \phi_a(a) = L(a),
+        \quad \text{and} \quad
+        \phi_a(x)
+            = \frac{\epsilon_a(x-a)}{x-a}
+    \end{equation*}
+    %
+    for all $x \in A \setminus \{a\}$.
+\end{lemma}
+%
+We will call the function $\phi = \phi_a$ an \emph{Hadamard function} for $f$ at $a$.
+
+\begin{proof}
+\begin{proofsec}
+    \item[(i) $\implies$ (ii)]
+    Define
+    %
+    \begin{equation*}
+        \phi_a(x) =
+        \begin{cases}
+            \frac{f(x) - f(a)}{x - a}, & x \in A \setminus \{a\}, \\
+            f'(a), & x = a.
+        \end{cases}
+    \end{equation*}
+    %
+    Then $\phi_a$ is continuous at $a$ and satisfies \cref{eq:Hadamard-1D-phi} for all $x \in A$.
+
+    \item[(ii) $\implies$ (iii)]
+    Let $L(a) = \phi_a(a)$ and
+    %
+    \begin{equation*}
+        \epsilon_a(h)
+            = \frac{\phi_a(a+h) + \phi_a(a)}{h}.
+    \end{equation*}
+
+    \item[(iii) $\implies$ (i)]
+    This is clear from \cref{rem:differentiability-reformulation}.
+\end{proofsec}
+\end{proof}
+
+[TODO diff implies continuous]
+
+\begin{theorem}[The chain rule]
+    Let $A,B \subseteq \reals$, and let $f \colon A \to \reals$ and $g \colon B \to \reals$ with $f(A) \subseteq B$. Let $a \in A$ be a limit point of $A$, and assume that $f(a) \in B$ is a limit point of $B$, that $f$ is differentiable at $a$ and that $g$ is differentiable at $f(a)$. Then $g \circ f$ is differentiable at $a$ with
+    %
+    \begin{equation*}
+        (g \circ f)'(a)
+            = g'(f(a)) f'(a).
+    \end{equation*}
+\end{theorem}
+
+\begin{proof}
+    Let $\phi$ be an Hadamard function for $f$ at $a$, and let $\psi$ be an Hadamard function for $g$ at $f(a)$. Hence
+    %
+    \begin{equation*}
+        f(x) - f(a)
+            = \phi(x)(x - a)
+        \quad \text{and} \quad
+        g(y) - g(f(a))
+            = \psi(y)(y - f(a))
+    \end{equation*}
+    %
+    for all $x \in A$ and $y \in B$. Letting $y = f(x)$ we thus have
+    %
+    \begin{equation*}
+        g(f(x)) - g(f(a))
+            = \psi(f(x))(f(x) - f(a))
+            = \psi(f(x))\phi(x)(x - a).
+    \end{equation*}
+    %
+    Notice that the map $x \mapsto \psi(f(x))\phi(x)$ is continuous at $a$, so it is an Hadamard function for $g \circ f$ at $a$. Thus \cref{lem:Hadamard-1D} implies that $g \circ f$ is differentiable at $a$ with
+    %
+    \begin{equation*}
+        (g \circ f)'(a)
+            = \psi(f(a)) \phi(a)
+            = g'(f(a)) f'(a),
+    \end{equation*}
+    %
+    as claimed.
+\end{proof}
+
+
+\begin{proposition}
+    \label{prop:local-extrema-stationary}
+    Let $f \colon (a,b) \to \reals$, and let $c \in (a,b)$. Assume that $f$ is differentiable at $c$ and attains a local extremum at $c$. Then $f'(c) = 0$.
+\end{proposition}
+
+\begin{proof}
+    Assume for definiteness that $f$ has a local maximum at $c$, and choose $\delta > 0$ such that $f(x) \leq f(c)$ for $x \in (c - \delta, c + \delta)$. For $x \in (c - \delta, c)$ we have
+    %
+    \begin{equation*}
+        \frac{f(x) - f(c)}{x - c} \geq 0,
+    \end{equation*}
+    %
+    and letting $x \uparrow c$ we find that $f'(c) \geq 0$. By considering $x \in (c, c + \delta)$ we similarly find that $f'(c) \leq 0$ as desired.
+\end{proof}
+
+
+\begin{lemma}[Rolle's theorem]
+    \label{lem:Rolle}
+    Let $f \colon [a,b] \to \reals$ be a continuous function that is differentiable on $(a,b)$. If $f(a) = f(b)$, then there is a $c \in (a,b)$ such that $f'(c) = 0$.
+\end{lemma}
+
+\begin{proof}
+    If $f$ is constant, then this is obvious. If $f$ is not constant, then since it is continuous it has a local extremum at some $c \in (a,b)$. By \cref{prop:local-extrema-stationary} we thus have $f'(c) = 0$ as desired.
+\end{proof}
+
+\begin{theorem}[The generalised mean value theorem]
+    \label{thm:generalised-MVT}
+    Let $f,g \colon [a,b] \to \reals$ be continuous functions that are differentiable on $(a,b)$. Then there exists a point $c \in (a,b)$ such that
+    %
+    \begin{equation*}
+        \bigl( f(b) - f(a) \bigr) g'(c)
+            = \bigl( g(b) - g(a) \bigr) f'(c).
+    \end{equation*}
+\end{theorem}
+
+\begin{proof}
+    Define $h \colon [a,b] \to \reals$ by $h(x) = (f(b) - f(a)) g(x) - (g(b) - g(a)) f(x)$, and notice that $h$ is continuous on $[a,b]$, differentiable on $(a,b)$, and that
+    %
+    \begin{equation*}
+        h(a)
+            = f(b)g(a) - g(b)f(a)
+            = h(b).
+    \end{equation*}
+    %
+    \Cref{lem:Rolle} thus implies that $h'(c) = 0$ for some $c \in (a,b)$. This proves the claim.
+\end{proof}
+
+
+\begin{corollary}[The mean value theorem]
+    Let $f \colon [a,b] \to \reals$ be a continuous function that is differentiable on $(a,b)$. Then there is a $c \in (a,b)$ such that
+    %
+    \begin{equation*}
+        f(b) - f(a)
+            = (b-a) f'(c).
+    \end{equation*}
+\end{corollary}
+
+\begin{proof}
+    Let $g(x) = x$ in \cref{thm:generalised-MVT}.
+\end{proof}
+
+[TODO monotonicity]
+
 
 \chapter{Integration}
 
