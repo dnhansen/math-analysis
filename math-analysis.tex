@@ -61,6 +61,10 @@
 % Lists
 \usepackage{enumitem}
 \setenumerate[0]{label=\normalfont(\arabic*)}
+\setlist{
+    listparindent=\parindent,
+    parsep=0pt,
+}
 
 % Bibliography
 \usepackage[backend=biber, style=authoryear, maxcitenames=2, useprefix]{biblatex}
@@ -422,55 +426,392 @@ If $A$ is a subset of a metric space $S$, recall that $A$ is \emph{totally bound
 
 \chapter{Differentiation}
 
-\begin{definition}[Differentiability]
-    Let $A \subseteq \reals$, let $a \in A$ be a limit point\footnotemark{} of $A$, and let $f \colon A \to \reals$. If the limit
+\section{Limits of functions} % [TODO move somewhere else?]
+
+\newcommand{\calN}{\mathcal{N}}
+\newcommand{\nhoods}[1]{\calN_{#1}}
+\newcommand{\pnhoods}[1]{\calN'_{#1}}
+\newcommand{\limitval}{\calL}
+% [TODO: consider giving \nhoods an optional parameter for the topological space. E.g. \calN_space(point).]
+
+Let $X$ be a topological space, and let $A \subseteq X$. A subset $N$ is a \emph{neighbourhood} of $A$ if there is an open set $U$ such that $A \subseteq U \subseteq N$. The set of neighbourhoods of $A$ is denoted $\nhoods{A}$ and is called the \emph{neighbourhood filter} of $A$ (since it is indeed a filter). If $A = \{x\}$ is a singleton we also write $\nhoods{x}$ for the neighbourhood filter of $x$. A \emph{punctured neighbourhood} of $x \in X$ is a set on the form $N \setminus \{x\}$, where $N \in \nhoods{x}$. The set of punctured neighbourhoods of $x$ is denoted $\pnhoods{x}$.
+
+A point $a \in X$ is called an \emph{adherent point} of $A \subseteq X$ if every neighbourhood of $a$ intersects $A$, i.e. if $a \in \closure{A}$. Furthermore, $a$ is called a \emph{limit point} of $A$ if every \emph{punctured} neighbourhood of $a$ intersects $A$, or equivalently if $a$ is an adherent point of $A \setminus \{a\}$.
+
+\begin{definition}[Limits of functions]
+    \label{def:limit-of-function}
+    Let $X$ and $Y$ be topological spaces, let $A \subseteq X$, and let $f \colon A \to Y$. If $L \subseteq A$ and $a \in X$ is an adherent point of $L$, then the triple $(f,L,a)$ is called a \emph{limit in $X$}. If $b \in Y$ is such that
     %
     \begin{equation*}
-        \lim_{x \to a} \frac{f(x) - f(a)}{x - a}
+        \forall N \in \nhoods{b}\,
+            \exists M \in \nhoods{a} \colon
+            f(M \intersect L) \subseteq N,
     \end{equation*}
     %
-    exists and equals $L$, then we say that $f$ is \emph{differentiable} at $a$. The number $L$ is called the \emph{derivative} of $f$ at $a$ and is denoted $f'(a)$.
+    then we say that $b$ is a \emph{limit value} for the limit $(f,L,a)$. The set of such limit values is denoted $\limitval(f,L,a)$.
+
+    If $\limitval(f,L,a)$ contains a single element $b$, then we also write
+    %
+    \begin{equation*}
+        b
+            = \lim_{a, L} f
+            = \lim_{\substack{x \to a \\ x \in L}} f(x).
+    \end{equation*}
+
+    % be a map between topological spaces. If $a \in X$ is an adherent point of a subset $A \subseteq X$ and $b \in Y$, then we say that $f$ \emph{converges to $b$ in $Y$ at $a$ in $A$}, or that $f(x)$ \emph{converges to $b$ in $Y$ as $x$ converges to $a$ in $A$}, if
+
+    % In this case, $b$ is called a \emph{limit of $f$ at $a$ in $A$} or a \emph{limit of $f(x)$ as $x$ converges to $a$ in $A$}.
+
+    % If there is a unique such limit $b$, then we write
+    % %
+    % \begin{equation*}
+    %     b
+    %         = \lim_{a \in A} f
+    %         = \lim_{\substack{x \to a \\ a \in A}} f(x).
+    % \end{equation*}
 \end{definition}
-\footnotetext{Recall that $a$ is a limit point of $A$ if every punctured neighbourhood of $a$ intersects $A$.}
-%
+
 \begin{remark}
-    \label{rem:differentiability-reformulation}
-    Notice that we may reformulate the definition of differentiability of $f$ at $a$ by instead requiring that the limit
+    \label{rem:limit-neighbourhoods}
+    In \cref{def:limit-of-function} we did not specify whether the neighbourhoods of $a$ were neighbourhoods in $A$ or in $X$. In fact, this does not matter: The map $M \mapsto M \intersect A$ gives a one-to-one correspondence between neighbourhoods of $a$ in $X$ and $A$, and since $L$ is a subset of $A$ we have
     %
     \begin{equation*}
-        \lim_{h \to 0} \frac{f(a+h) - f(a)}{h}
+        f((M \intersect A) \intersect L) = f(M \intersect L).
     \end{equation*}
     %
-    exists, when $h \in A-a$.
+    Hence we may use either neighbourhoods in $X$ or in $A$ when taking limits.
 \end{remark}
 
+\begin{proposition}[Uniqueness of limits]
+    \label{prop:Hausdorff-limits-unique}
+    Let $X$ and $Y$ be topological spaces, let $A \subseteq X$, and let $f \colon A \to Y$. If $Y$ is Hausdorff, then any limit $(f,L,a)$ in $X$ has at most one limit point.
+\end{proposition}
+
+\begin{proof}
+    Let $b \in Y$ be a limit value for $(f,L,a)$, let $b' \neq b$, and let $N,N' \subseteq Y$ be disjoint neighbourhoods of $b$ and $b'$, respectively. Since $b$ is a limit value, there is a neighbourhood $M \in \nhoods{a}$ such that $f(M \intersect L) \subseteq N$. If $M'$ is any neighbourhood of $a$ then $M \intersect M'$ is also a neighbourhood of $a$, so it intersects $L$.\footnote{Notice that we here make crucial use of the requirement that $a$ be an adherent point of $L$.} But since
+    %
+    \begin{equation*}
+        f((M \intersect M') \intersect L)
+            \subseteq f(M \intersect L)
+            \subseteq N,
+    \end{equation*}
+    %
+    the set $f(M' \intersect L)$ intersects $N$, so it does not lie in $N'$. Hence $b'$ is not a limit value for $(f,L,a)$.
+\end{proof}
+
+% Overwrite \ball from topologycommands.sty
+\renewcommand{\ball}[3][]{B_{#1}(#2,#3)}
+\newcommand{\cball}[3][]{\overline{B}_{#1}(#2,#3)}
+\newcommand{\pball}[3][]{B'_{#1}(#2,#3)}
+
+\begin{example}
+    \Cref{def:limit-of-function} provides a very general notion of limit, of which the familiar limiting processes are special cases:
+    %
+    \begin{enumexample}
+        \item \label{enum:deleted-limit} Recall the standard definition of a limit of a function between topological spaces: If $a$ is a limit point of $A$, then we usually say that $b \in Y$ is a limit of $f(x)$ as $x \to a$ if
+        %
+        \begin{equation*}
+            \forall N \in \nhoods{b}\,
+                \exists M' \in \pnhoods{a} \colon
+                f(M') \subseteq N.
+        \end{equation*}
+        %
+        We recover this notion by considering the triple $(f,A \setminus \{a\},a)$: For notice that if $M$ is a neighbourhood of $a$, then
+        %
+        \begin{equation*}
+            M \intersect (A \setminus \{a\})
+                = (M \setminus \{a\}) \intersect A,
+        \end{equation*}
+        %
+        and every punctured neighbourhood of $a$ is on the form $M \setminus \{a\}$. Here we recall from \cref{rem:limit-neighbourhoods} that it is immaterial whether we ue neighbourhoods of $a$ in $A$ or in $X$, so the intersection with $A$ makes no difference.
+
+        Notice that it is crucial that $a$ is a limit point of $A$ and not just an adherent point, since $a$ is a limit point of $A$ if and only if $a$ is an adherent point of $A \setminus \{a\}$, which we require in our definition of limits.
+
+        Below we shall take this notion of limit as standard, so if $Y$ is Hausdorff and hence limits are unique by \cref{prop:Hausdorff-limits-unique}, we use the shorthand notation
+        %
+        \begin{equation*}
+            b
+                = \lim_a f
+                = \lim_{x \to a} f(x).
+        \end{equation*}
+        %
+        If the set $A$ is not clear from context, we may disambiguate by writing \enquote{for $x \in A \setminus \{a\}$},  or something to that effect.
+
+        \item Some authors distinguish between \emph{deleted} and \emph{non-deleted} limits. The notion of limits in \subcref{enum:deleted-limit} is that of deleted limits, since we only reture that $f(M') \subseteq N$ for a \emph{punctured} neighbourhood $M'$ of $a$. By contrast, in a \emph{non-deleted} limit we require that $f(M) \subseteq N$ for an ordinary neighbourhood $M$ of $a$. We may recover the notion of non-deleted limits by considering triples $(f,A,a)$.
+        
+        Non-deleted limits are relatively rare in the English-language literature (one notable exception is \textcite{taoanalysisI,taoanalysisII}, who allows for both types), but it seems to be the prevailing notion in the French-language literature.
+        
+        \item Consider next a function $f \colon A \to Y$, where $A \subseteq \reals$ contains an interval $(a,b)$. In this case we may consider the one-sided limits of $f(x)$ as $x$ approaches either $a$ from above or $b$ from below. These may be described in the above formalism by the triples $(f,(a,b),a)$ and $(f,(a,b),b)$, respectively (indeed, we may choose any subinterval of $(a,b)$ with $a$ or $b$ as a limit point, respectively, and the set of limit values is clearly independent of such a choice). If they exist, we denote the corresponding limit values by
+        %
+        \begin{equation*}
+            \lim_{x \downarrow a} f(x)
+            \quad \text{and} \quad
+            \lim_{x \uparrow b} f(x),
+        \end{equation*}
+        %
+        respectively.
+    \end{enumexample}
+\end{example}
+
+
+\begin{lemma}
+    Let $X$ and $Y$ be topological spaces, let $A \subseteq X$, and let $f \colon A \to Y$. If $L_1 \subseteq L_2 \subseteq A$ and $a \in X$ is an adherent point of both $L_1$ and $L_2$, then
+    %
+    \begin{equation*}
+        \limitval(f,L_2,a)
+            \subseteq \limitval(f,L_1,a).
+    \end{equation*}
+\end{lemma}
+
+\begin{proof}
+    Let $b \in \limitval(f,L_2,a)$ and let $N \in \nhoods{b}$. Then there is an $M \in \nhoods{a}$ such that
+    %
+    \begin{equation*}
+        f(M \intersect L_1)
+            \subseteq f(M \intersect L_2)
+            \subseteq N,
+    \end{equation*}
+    %
+    showing that $b \in \limitval(f,L_1,a)$ as desired.
+\end{proof}
+
+
+\begin{proposition}
+    Let $X$ and $Y$ be topological spaces, let $A \subseteq X$, and let $f \colon A \to Y$. If $a \in A$ is a limit point of $A$, then the following are equivalent:
+    %
+    \begin{enumprop}
+        \item $f$ is continuous at $a$.
+        \item $f(a) \in \limitval(f, A, a)$.
+        \item $f(a) \in \limitval(f, A \setminus \{a\}, a)$.
+    \end{enumprop}
+\end{proposition}
+
+\begin{proof}
+    Assume that $f$ is continuous at $a$, and let $N \in \nhoods{f(a)}$. By continuity there is an\footnote{Recall that we may use either neighbourhoods of $a$ in $A$ or in $X$, cf. \cref{rem:limit-neighbourhoods}.} $M \in \nhoods{a}$ such that $f(M) \subseteq N$, implying that $f(M \intersect A) \subseteq N$. Next, (ii) implies (iii) by [TODO ref lemma].
+    
+    Finally, if $f(a) \in \limitval(f, A \setminus \{a\}, a)$ then given $N \in \nhoods{f(a)}$ there is a neighbourhood $M \in \nhoods{a}$ in $A$ such that $f(M \setminus \{a\}) = f(M \intersect A \setminus \{a\}) \subseteq N$. Since $N$ contains $f(a)$ we have $f(M) \subseteq N$ so $f$ is continuous at $a$.
+\end{proof}
+
+
+\section{Differentiability}
+
+% \begin{definition}[Differentiability on $\reals$]
+%     Let $A \subseteq \reals$, let $a \in A$ be a limit point of $A$, and let $f \colon A \to \reals$. If the limit
+%     %
+%     \begin{equation*}
+%         \lim_{x \to a} \frac{f(x) - f(a)}{x - a}
+%     \end{equation*}
+%     %
+%     exists and equals $L \in \reals$, then we say that $f$ is \emph{differentiable} at $a$. The number $L$ is called the \emph{derivative} of $f$ at $a$ and is denoted $f'(a)$.
+% \end{definition}
+% %
+% % \begin{remark}
+% %     \label{rem:differentiability-reformulation}
+% %     Recall that our standard notion of limit is that of \emph{deleted limits}, cf. \cref{enum:deleted-limit}. Hence the above is shorthand for the limit
+% %     %
+% %     \begin{equation*}
+% %         \lim_{\substack{x \to a \\ a \in A \setminus \{a\}}} \frac{f(x) - f(a)}{x - a}.
+% %     \end{equation*}
+% %     %
+% %     That is, we do not allow $x$ to equal $a$ (as is of course necessary since we divide by $x-a$).
+    
+% %     Notice also that we may reformulate the definition of differentiability of $f$ at $a$ by instead requiring that the limit
+% %     %
+% %     \begin{equation*}
+% %         \lim_{\substack{h \to 0 \\ h \in (A-a) \setminus \{0\}}} \frac{f(a+h) - f(a)}{h}
+% %     \end{equation*}
+% %     %
+% %     exist.
+% % \end{remark}
+
+% \begin{lemma}[Hadamard's lemma on $\reals$]
+%     \label{lem:Hadamard-1D}
+%     Let $A \subseteq \reals$, let $a \in A$ be a limit point of $A$, and let $f \colon A \to \reals$. The following are equivalent:
+%     %
+%     \begin{enumlem}
+%         \item $f$ is differentiable at $a$.
+
+%         \item There exists an $L(a) \in \reals$ and a function $\epsilon_a \colon A-a \to \reals$ such that
+%         %
+%         \begin{equation*}
+%             \lim_{h \to 0} \frac{\epsilon_a(h)}{h} = 0,
+%             \quad \text{and} \quad
+%             f(a+h) - f(a)
+%                 = L(a)h + \epsilon_a(h)
+%         \end{equation*}
+%         %
+%         for all $h \in A-a$.
+
+%         \item There exists a function $\phi = \phi_a \colon A \to \reals$, continuous at $a$, such that
+%         %
+%         \begin{equation*}
+%             f(x) - f(a)
+%                 = \phi_a(x) (x - a)
+%         \end{equation*}
+%         %
+%         for all $x \in A$.
+%     \end{enumlem}
+%     %
+%     If any of these conditions are satisfied, then
+%     %
+%     \begin{equation*}
+%         f'(a) = \phi_a(a) = L(a),
+%         \quad \text{and} \quad
+%         \phi_a(x)
+%             = f'(a) + \frac{\epsilon_a(x-a)}{x-a}
+%     \end{equation*}
+%     %
+%     for all $x \in A \setminus \{a\}$.
+% \end{lemma}
+% %
+% We will call the function $\phi = \phi_a$ an \emph{Hadamard function} for $f$ at $a$.
+
+% \begin{proof}
+% \begin{proofsec}
+%     \item[(i) $\implies$ (ii)]
+%     Let $L(a) = f'(a)$ and put
+%     %
+%     \begin{equation*}
+%         \epsilon_a(h)
+%             = f(a+h) - f(a) - f'(a)h
+%     \end{equation*}
+%     %
+%     for $h \in A - a$. Then we have
+%     %
+%     \begin{equation*}
+%         \frac{\epsilon_a(h)}{h}
+%             = \frac{f(a+h) - f(a) - f'(a)h}{h}
+%             = \frac{f(a+h) - f(a)}{h} - f'(a)
+%             \xrightarrow[h \to 0]{} 0
+%     \end{equation*}
+%     %
+%     as required.
+
+%     \item[(ii) $\implies$ (iii)]
+%     Define
+%     %
+%     \begin{equation*}
+%         \phi_a(x) =
+%         \begin{cases}
+%             L(a) + \frac{1}{x-a} \epsilon_a(x-a),
+%                 & x \in A \setminus \{a\}, \\
+%             L(a),
+%                 & x = a.
+%         \end{cases}
+%     \end{equation*}
+%     %
+%     Then $\phi_a$ is continuous at $a$, and furthermore
+%     %
+%     \begin{equation*}
+%         \phi_a(x)(x-a)
+%             = L(a)(x-a) + \epsilon_a(x-a)
+%             = f(x) - f(a)
+%     \end{equation*}
+%     %
+%     for $x \in A \setminus \{a\}$ as required.
+
+%     \item[(iii) $\implies$ (i)]
+%     Notice that
+%     %
+%     \begin{equation*}
+%         \frac{f(x) - f(a)}{x-a}
+%             = \phi_a(x-a)
+%             \xrightarrow[x \to a]{} \phi_a(a),
+%     \end{equation*}
+%     %
+%     so $f$ is differentiable at $a$.
+% \end{proofsec}
+% \end{proof}
+
+
+
+
+\begin{definition}[Differentiability]
+    \label{def:differentiability}
+    Let $A \subseteq \reals^d$, let $a \in A$ be a limit point of $A$, and let $f \colon A \to \reals^m$. If there exists a linear map $L \in \calL(\reals^d, \reals^m)$ such that
+    %
+    \begin{equation}
+        \label{eq:differentiability-definition}
+        \lim_{x \to a} \frac{\norm{f(x) - f(a) - L(x-a)}}{\norm{x - a}}
+            = 0,
+    \end{equation}
+    %
+    then $f$ is said to be \emph{differentiable} at $a$. The map $L$ is called the \emph{derivative} of $f$ at $a$ and is denoted $f'(a)$. If $E \subseteq A$ and $f$ is differentiable at $a$ for all $a \in E$, then we say that $f$ is \emph{differentiable on $E$}. If $f$ is differentiable on $A$, then we simply say that $f$ is \emph{differentiable}.
+    
+    If $f$ is differentiable, then the map $f' \colon A to \calL(\reals^d,\reals^m)$ is called the \emph{derivative} of $f$.
+\end{definition}
+%
+Note that for $f$ to be differentiable on $E$, every point in $E$ must be a limit point of $A$. In particular, for $f$ to be differentiable every point in $A$ must be a limit point of $A$. This is for instance the case when $A$ is open or when $A$ is an interval.
+
+
+\begin{remarkbreak}[Differentiability on $\reals$]
+    In the case where $d = 1$, the quotient in \cref{eq:differentiability-definition} goes to zero if and only if
+    %
+    \begin{equation*}
+        \frac{f(x) - f(a)}{x - a} - L
+            = \frac{f(x) - f(a) - L(x-a)}{x - a}
+    \end{equation*}
+    %
+    goes to zero, i.e. the difference quotient converges to $L$. Furthermore, if also $m = 1$ then $L$ is multiplication by a scalar, so in this case \cref{def:differentiability} is equivalent to the usual definition of the derivative.
+\end{remarkbreak}
+
+[TODO uniqueness]
+
+
+\begin{lemma}
+    \label{lem:differentiability-coordinate-functions}
+    Let $A \subseteq \reals^d$, let $a \in A$ be a limit point of $A$, and let $f = (f_1, \ldots, f_m) \colon A \to \reals^m$. Then $f$ is differentiable at $a$ if and only if each $f_i$ is differentiable at $a$, and $f'(a) = (f_1'(a), \ldots, f_m'(a))$.
+\end{lemma}
+
+\begin{proof}
+    If $L = (L_1, \ldots, L_m) \in \calL(\reals^d,\reals^m)$, then notice that
+    %
+    \begin{equation*}
+        f(x) - f(a) - L(x-a) =
+        \begin{pmatrix}
+            f_1(x) - f_1(a) - L_1(x-a) \\
+            \vdots \\
+            f_m(x) - f_m(a) - L_m(x-a)
+        \end{pmatrix}.
+    \end{equation*}
+    %
+    The claim then follows since the quotient in \cref{eq:differentiability-definition} converges to zero if and only if each quotient
+    %
+    \begin{equation*}
+        \frac{\abs{f_i(x) - f_i(a) - L_i(x-a)}}{\norm{x - a}}
+    \end{equation*}
+    %
+    converges to zero.
+\end{proof}
+
+\newcommand{\trans}{^{\top}}
+
 \begin{lemma}[Hadamard's lemma]
-    \label{lem:Hadamard-1D}
-    Let $A \subseteq \reals$, let $a \in A$ be a limit point of $A$, and let $f \colon A \to \reals$. The following are equivalent:
+    \label{lem:Hadamard-multiD}
+    Let $A \subseteq \reals^d$, let $a \in A$ be a limit point of $A$, and let $f \colon A \to \reals^m$. The following are equivalent:
     %
     \begin{enumlem}
         \item $f$ is differentiable at $a$.
 
-        \item There exists a function $\phi = \phi_a \colon A \to \reals$, continuous at $a$, such that
-        %
-        \begin{equation}
-            \label{eq:Hadamard-1D-phi}
-            f(x) - f(a)
-                = \phi_a(x) (x - a)
-        \end{equation}
-        %
-        for all $x \in A$.
-
-        \item There exists an $L(a) \in \reals$ and a function $\epsilon_a \colon A-a \to \reals$ such that
+        \item There exists a linear map $L(a) \in \calL(\reals^d,\reals^m)$ and a function $\epsilon_a \colon A-a \to \reals^m$ such that
         %
         \begin{equation*}
-            \lim_{h \to 0} \frac{\epsilon_a(h)}{h} = 0
+            \lim_{h \to 0} \frac{\norm{\epsilon_a(h)}}{\norm{h}} = 0,
             \quad \text{and} \quad
             f(a+h) - f(a)
                 = L(a)h + \epsilon_a(h)
         \end{equation*}
         %
         for all $h \in A-a$.
+
+        \item There exists a function $\phi = \phi_a \colon A \to \calL(\reals^d,\reals^m)$, continuous at $a$, such that
+        %
+        \begin{equation*}
+            f(x) - f(a)
+                = \phi_a(x) (x - a)
+        \end{equation*}
+        %
+        for all $x \in A$.
     \end{enumlem}
     %
     If any of these conditions are satisfied, then
@@ -479,7 +820,7 @@ If $A$ is a subset of a metric space $S$, recall that $A$ is \emph{totally bound
         f'(a) = \phi_a(a) = L(a),
         \quad \text{and} \quad
         \phi_a(x)
-            = \frac{\epsilon_a(x-a)}{x-a}
+            = f'(a) + \frac{1}{\norm{x-a}^2} \epsilon_a(x-a)(x-a)\trans,
     \end{equation*}
     %
     for all $x \in A \setminus \{a\}$.
@@ -488,37 +829,99 @@ If $A$ is a subset of a metric space $S$, recall that $A$ is \emph{totally bound
 We will call the function $\phi = \phi_a$ an \emph{Hadamard function} for $f$ at $a$.
 
 \begin{proof}
-\begin{proofsec}
-    \item[(i) $\implies$ (ii)]
-    Define
-    %
-    \begin{equation*}
-        \phi_a(x) =
-        \begin{cases}
-            \frac{f(x) - f(a)}{x - a}, & x \in A \setminus \{a\}, \\
-            f'(a), & x = a.
-        \end{cases}
-    \end{equation*}
-    %
-    Then $\phi_a$ is continuous at $a$ and satisfies \cref{eq:Hadamard-1D-phi} for all $x \in A$.
-
-    \item[(ii) $\implies$ (iii)]
-    Let $L(a) = \phi_a(a)$ and
-    %
-    \begin{equation*}
-        \epsilon_a(h)
-            = \frac{\phi_a(a+h) + \phi_a(a)}{h}.
-    \end{equation*}
-
-    \item[(iii) $\implies$ (i)]
-    This is clear from \cref{rem:differentiability-reformulation}.
-\end{proofsec}
+    \begin{proofsec}
+        \item[(i) $\implies$ (ii)]
+        Let $L(a) = f'(a)$ and put
+        %
+        \begin{equation*}
+            \epsilon_a(h)
+                = f(a+h) - f(a) - f'(a)h
+        \end{equation*}
+        %
+        for $h \in A - a$. Then we have
+        %
+        \begin{equation*}
+            \frac{\norm{\epsilon_a(h)}}{\norm{h}}
+                = \frac{\norm{f(a+h) - f(a) - f'(a)h}}{\norm{h}}
+                \xrightarrow[h \to 0]{} 0
+        \end{equation*}
+        %
+        as required.
+    
+        \item[(ii) $\implies$ (iii)]
+        Define
+        %
+        \begin{equation*}
+            \phi_a(x) =
+            \begin{cases}
+                L(a) + \frac{1}{\norm{x-a}^2} \epsilon_a(x-a)(x-a)\trans,
+                    & x \in A \setminus \{a\}, \\
+                L(a),
+                    & x = a.
+            \end{cases}
+        \end{equation*}
+        %
+        We first of all have
+        %
+        \begin{align*}
+            \phi_a(x)(x-a)
+                &= L(a)(x-a) + \epsilon_a(x-a) \frac{(x-a)\trans (x-a)}{\norm{x-a}^2} \\
+                &= L(a)(x-a) + \epsilon_a(x-a) \\
+                &= f(x) - f(a)
+        \end{align*}
+        %
+        as required. Next notice that, since $h$ and $\epsilon_a(h)$ are (column) vectors, we have\footnote{More generally, let $v = (v_1, \ldots, v_d) \in \reals^d$ and $w = (w_1, \ldots, w_m) \in \reals^m$. Then $(wv\trans)_{ij} = w_i v_j$, so
+        %
+        \begin{equation*}
+            \norm{wv\trans}^2
+                = \sum_{i,j} \abs{w_i v_j}^2
+                = \sum_{i=1}^m \abs{w_i}^2 \sum_{j=1}^d \abs{v_i}^2
+                = \norm{w}^2 \norm{v}^2.
+        \end{equation*}}
+        %
+        \begin{equation*}
+            \frac{\norm{\epsilon_a(h) h\trans}}{\norm{h}^2}
+                = \frac{\norm{\epsilon_a(h)} \, \norm{h}}{\norm{h}^2}
+                = \frac{\norm{\epsilon_a(h)}}{\norm{h}}
+                \xrightarrow[h \to 0]{} 0,
+        \end{equation*}
+        %
+        so $\phi_a$ is continuous at $a$.
+    
+        \item[(iii) $\implies$ (i)]
+        Notice that
+        %
+        \begin{align*}
+            \frac{\norm{f(x) - f(a) - \phi_a(a)(x-a)}}{\norm{x-a}}
+                &= \frac{\norm{\phi_a(x)(x-a) - \phi_a(a)(x-a)}}{\norm{x-a}} \\
+                &\leq \frac{\norm{\phi_a(x) - \phi_a(a)} \, \norm{x-a}}{\norm{x-a}} \\
+                &= \norm{\phi_a(x) - \phi_a(a)}
+                \xrightarrow[x \to a]{} 0,
+        \end{align*}
+        %
+        by continuity of $\phi_a$ at $a$, and continuity of the operator norm, so $f$ is differentiable at $a$.
+    \end{proofsec}
 \end{proof}
 
-[TODO diff implies continuous]
+
+\begin{proposition}
+    Let $A \subseteq \reals^d$, let $a \in A$ be a limit point of $A$, and let $f \colon A \to \reals^m$. If $f$ is differentiable at $a$, then $f$ is continuous at $a$.
+\end{proposition}
+
+\begin{proof}
+    Let $\phi_a$ be an Hadamard function for $f$ at $a$, such that
+    %
+    \begin{equation}
+        f(x)
+            = f(a) + \phi_a(x)(x-a)
+    \end{equation}
+    %
+    for $x \in A$. Since $\phi_a$ is continuous at $a$, so is $f$.
+\end{proof}
+
 
 \begin{theorem}[The chain rule]
-    Let $A,B \subseteq \reals$, and let $f \colon A \to \reals$ and $g \colon B \to \reals$ with $f(A) \subseteq B$. Let $a \in A$ be a limit point of $A$, and assume that $f(a) \in B$ is a limit point of $B$, that $f$ is differentiable at $a$ and that $g$ is differentiable at $f(a)$. Then $g \circ f$ is differentiable at $a$ with
+    Let $A \subseteq \reals^d$ and $B \subseteq \reals^m$, and let $f \colon A \to \reals^m$ and $g \colon B \to \reals^p$ with $f(A) \subseteq B$. Assume that $a \in A$ is a limit point of $A$, that $f(a) \in B$ is a limit point of $B$, that $f$ is differentiable at $a$, and that $g$ is differentiable at $f(a)$. Then $g \circ f$ is differentiable at $a$ with
     %
     \begin{equation*}
         (g \circ f)'(a)
@@ -545,7 +948,7 @@ We will call the function $\phi = \phi_a$ an \emph{Hadamard function} for $f$ at
             = \psi(f(x))\phi(x)(x - a).
     \end{equation*}
     %
-    Notice that the map $x \mapsto \psi(f(x))\phi(x)$ is continuous at $a$, so it is an Hadamard function for $g \circ f$ at $a$. Thus \cref{lem:Hadamard-1D} implies that $g \circ f$ is differentiable at $a$ with
+    Notice that the map $x \mapsto \psi(f(x))\phi(x)$ is continuous at $a$, so it is an Hadamard function for $g \circ f$ at $a$. Thus \cref{lem:Hadamard-multiD} implies that $g \circ f$ is differentiable at $a$ with
     %
     \begin{equation*}
         (g \circ f)'(a)
@@ -556,6 +959,8 @@ We will call the function $\phi = \phi_a$ an \emph{Hadamard function} for $f$ at
     as claimed.
 \end{proof}
 
+
+\section{Extrema and mean value theorems}
 
 \begin{proposition}
     \label{prop:local-extrema-stationary}
@@ -581,6 +986,7 @@ We will call the function $\phi = \phi_a$ an \emph{Hadamard function} for $f$ at
 \begin{proof}
     If $f$ is constant, then this is obvious. If $f$ is not constant, then since it is continuous it has a local extremum at some $c \in (a,b)$. By \cref{prop:local-extrema-stationary} we thus have $f'(c) = 0$ as desired.
 \end{proof}
+
 
 \begin{theorem}[The generalised mean value theorem]
     \label{thm:generalised-MVT}
@@ -610,7 +1016,7 @@ We will call the function $\phi = \phi_a$ an \emph{Hadamard function} for $f$ at
     %
     \begin{equation*}
         f(b) - f(a)
-            = (b-a) f'(c).
+            = f'(c) (b-a).
     \end{equation*}
 \end{corollary}
 
@@ -619,6 +1025,182 @@ We will call the function $\phi = \phi_a$ an \emph{Hadamard function} for $f$ at
 \end{proof}
 
 [TODO monotonicity]
+
+
+\section{Directional and partial derivatives}
+
+\begin{definition}[Directional and partial derivatives]
+    Let $A \subseteq \reals^d$, and let $f \colon A \to \reals^m$. If $a$ is an interior point of $A$ and $v \in \reals^d$, then we say that $f$ has a \emph{directional derivative} at $a$ in the direction of $v$ if the limit
+    %
+    \begin{equation*}
+        \lim_{t \to 0} \frac{f(a + tv) - f(a)}{t}
+    \end{equation*}
+    %
+    exists. The value of this limit is denoted $D_v f(a)$ and is called the \emph{directional derivative} of $f$ at $a$ in the direction of $v$.
+
+    If $v = e_j$, then we write $D_{e_j} f(a) = D_j f(a)$ and call $D_j f(a)$ the \emph{$j$-th partial derivative} of $f$ at $a$. If $D_j f(a)$ exists for all $j$, then $f$ is said to be \emph{partially differentiable} at $a$. If $E \subseteq A$ and $f$ is partially differentiable at $a$ for all $a \in E$, then we say that $f$ is \emph{partially differentiable on $E$}. If $f$ is partially differentiable on $A$, then we simply say that $f$ is \emph{partially differentiable}.
+
+    If $f$ is partially differentiable on a set $E \subseteq A$, then the functions $D_i f \colon E \to \reals^m$ are called the \emph{partial derivatives} of $f$ (on $E$).
+\end{definition}
+
+\begin{proposition}
+    If $f$ is differentiable at an inner point $a$
+    \begin{enumprop}
+        \item then the directional derivative $D_v f(a)$ exists for all $v \in \reals^d$, and
+        %
+        \begin{equation*}
+            D_v f(a)
+                = f'(a) v.
+        \end{equation*}
+
+        \item \label{enumprop:derivative-linear-combination-of-partials} $f$ is partially differentiable at $a$, and
+        %
+        \begin{equation*}
+            f'(a)v
+                = \sum_{j=1}^d v_j D_j f(a)
+        \end{equation*}
+        %
+        for all $v = (v_1, \ldots v_d) \in \reals^d$. In particular, writing $f = (f_1, \ldots, f_m)$ the standard matrix representation $J_f(a)$ of $f'(a)$ is given by $J_f(a) = (D_j f_i(a))_{ij}$.
+    \end{enumprop}
+\end{proposition}
+
+\begin{proof}
+\begin{proofsec}
+    \item[Proof of (i)]
+    Let $U$ be an open neighbourhood of $a$ contained in $A$, and define the function $g \colon U \to \reals$ by $g(t) = f(a + tv)$. Then since the function $t \mapsto a+tv$ is differentiable at $0$ with derivative $v$, the chain rule implies that
+    %
+    \begin{equation*}
+        \lim_{t \to 0} \frac{f(a + tv) - f(a)}{t}
+            = g'(0)
+            = f'(a)v.
+    \end{equation*}
+
+    \item[Proof of (ii)]
+    Partial differentiability follows from (i). Writing $v = \sum_{j=1}^d v_j e_j$, it follows from (i) that
+    %
+    \begin{equation*}
+        f'(a)v
+            = \sum_{j=1}^d v_j f'(a)e_j
+            = \sum_{j=1}^d v_j D_{e_j}(a)
+            = \sum_{j=1}^d v_j D_j(a).
+    \end{equation*}
+\end{proofsec}
+\end{proof}
+
+
+\begin{theorem}[Criterion for differentiability]
+    \label{thm:continuous-partials-implies-differentiable}
+    Let $A \subseteq \reals^d$, let $a$ be an inner point of $A$, and $f \colon A \to \reals^m$. If $f$ is partially differentiable in a neighbourhood of $a$ and each partial derivative is continuous at $a$, then $f$ is differentiable at $a$.
+\end{theorem}
+
+\begin{proof}
+    We may assume that $m = 1$ by \cref{lem:differentiability-coordinate-functions}. Let $U$ be an open neighbourhood of $a$ on which $f$ is partially differentiable. Let $h = (h_1, \ldots, h_d) \in \reals^d$, and for $k = 1, \ldots, d$ let $h^{(k)} = \sum_{j=1}^k h_j e_j$. Notice that $h^{(d)} = h$. Choose $h$ small enough such that $h^{(k)} \in U$ for all $k$. Next let $I_k \subseteq \reals$ be an open interval containing $0$ and $h_k$ such that the map
+    %
+    \begin{align*}
+        g_k \colon I_k &\to \reals, \\
+        t &\mapsto f(a + h^{(k-1)} + t e_k),
+    \end{align*}
+    %
+    is differentiable. Applying the mean value theorem on $g_k$ yields an $s_k$ in the interval between $0$ and $h_k$ such that
+    %
+    \begin{equation*}
+        g_k(h_k) - g_k(0)
+            = g_k'(s_k) h_k
+            = D_k f(a + h^{(k-1)} + s_k e_k) h_k.
+    \end{equation*}
+    %
+    Next define a map $\phi_a \colon U \to \calL(\reals^d,\reals)$ by
+    %
+    \begin{equation*}
+        \phi_a(a+h)x
+            = \sum_{k=1}^d D_k f(a + h^{(k-1)} + s_k e_k) x_k
+    \end{equation*}
+    %
+    for $h \in U - a$ and $x = (x_1, \ldots, x_d) \in \reals^d$. This is clearly well-defined, and since the partial derivatives of $f$ are continuous at $a$, so is $\phi_a$ (notice that $s_k$ also goes to zero when $h$ goes to zero).
+    
+    Finally notice that
+    %
+    \begin{align*}
+        f(a+h) - f(a)
+            &= \sum_{k=1}^d \bigl( f(a + h^{(k)}) - f(a + h^{(k-1)}) \bigr) \\
+            &= \sum_{k=1}^d \bigl( g_k(h_k) - g_k(0)) \bigr) \\
+            &= \sum_{k=1}^d D_k f(a + h^{(k-1)} + s_k e_k) h_k \\
+            &= \phi_a(a+h) h.
+    \end{align*}
+    %
+    But then $\phi_a$ is an Hadamard function for $f$ at $a$, so $f$ is differentiable at $a$ by \cref{lem:Hadamard-multiD}.
+\end{proof}
+
+
+\section{Continuous differentiability}
+
+Since $\calL(\reals^d,\reals^m)$ is a finite-dimensional vector space, it has a unique vector space topology [TODO ref to my notes on topological vector spaces]. Hence it makes sense to talk about the continuity of maps into or out of $\calL(\reals^d,\reals^m)$. In particular, if the derivative $f'$ of $f$ is continuous, then we say that $f$ is \emph{continuously differentiable}. The subset of $C(A,\reals^m)$ containing the continuously differentiable functions is denoted $C^1(A,\reals^m)$.
+
+\begin{corollary}
+    Let $U \subseteq \reals^d$ be open and let $f \colon U \to \reals^m$. Then $f$ is continuously differentiable if and only if $f$ is partially differentiable and all of its partial derivatives are continuous.
+\end{corollary}
+
+\begin{proof}
+    If $f$ is partially differentiable, then $D_j f$ equals the function $a \mapsto f'(a) e_j$ by \cref{enumprop:derivative-linear-combination-of-partials}. If $f$ is differentiable then it is partially differentiable, and if $f'$ is continuous then so are the $D_j f$.
+
+    Conversely, if $f$ is partially differentiable with continuous partial derivatives, then \cref{thm:continuous-partials-implies-differentiable} implies that $f$ is differentiable. Continuity of $f'$ now follows since its coordinate functions are continuous.
+\end{proof}
+
+
+\section{Higher-order derivatives}
+
+\begin{theorem}[Clairaut's Theorem]
+    Let $A \subseteq \reals^d$ be open, let $a$ be an inner point of $U$, and let $f \colon A \to \reals^m$. For $i,j \in \{1, \ldots, d\}$, if $D_j D_i f$ and $D_i D_j f$ exist in a neighbourhood of $a$ and are continuous at $a$, then
+    %
+    \begin{equation*}
+        D_j D_i f(a)
+            = D_i D_j f(a).
+    \end{equation*}
+\end{theorem}
+
+\begin{proof}
+    By permuting indices, we may assume that $i = 1$ and $j = 2$, and indeed that $d = 2$. Furthermore, by \cref{lem:differentiability-coordinate-functions} it suffices to prove the theorem for $m = 1$.
+
+    Let $U$ be an open convex neighbourhood of $a$ on which $D_j D_i f$ and $D_i D_j f$ exist, and let $x \in U$. Writing $a = (a_1,a_2)$ and $x = (x_1,x_2)$, define
+    %
+    \begin{equation*}
+        r(x)
+            = \frac{f(x) - f(a_1,x_2) - f(x_1,a_2) + f(a)}{(x_1 - a_1)(x_2 - a_2)}
+    \end{equation*}
+    %
+    for $x \neq a$. Let $I$ be an open interval containing $a_1$ and $x_1$, and define $g \colon I \to \reals$ by $g(t) = f(t,x_2) - f(t,a_2)$. Notice that $g$ is well-defined by convexity of $U$. Then
+    %
+    \begin{equation*}
+        r(x)
+            = \frac{g(x_1) - g(a_1)}{(x_1 - a_1)(x_2 - a_2)}.
+    \end{equation*}
+    %
+    Since $g$ is differentiable on $I$, the mean value theorem yields an $s_1 \in \reals$ between $a_1$ and $x_1$ such that
+    %
+    \begin{equation*}
+        r_(x)
+            = \frac{g'(s_1)}{x_2 - a_2}
+            = \frac{D_1 f(s_1,x_2) - D_1 f(s_1,a_2)}{x_2 - a_2}.
+    \end{equation*}
+    %
+    Similarly, let $J$ be an open interval containing $a_2$ and $x_2$, and define $h \colon J \to \reals$ by $h(t) = D_1 f(s_1,t)$. Again the mean value theorem yields an $s_2 \in \reals$ between $x_2$ and $a_2$ such that
+    %
+    \begin{equation*}
+        r(x)
+            = h'(s_2)
+            = D_2 D_1 f(s_1, s_2).
+    \end{equation*}
+    %
+    Let $s = (s_1,s_2)$. Since $\norm{s - a} \leq \norm{x - a}$, when $x \to a$ we also have $s \to a$. Continuity of $D_2 D_1 f$ at $a$ thus implies that
+    %
+    \begin{equation*}
+        \lim_{x \to a} r(x)
+            = \lim_{s \to a} D_2 D_1 f(s)
+            = D_2 D_1 f(a).
+    \end{equation*}
+    %
+    Finally notice that the above argument is symmetric in the indices $1$ and $2$, so we similarly find that $\lim_{x \to a} r(x) = D_1 D_2 f(a)$.
+\end{proof}
 
 
 \chapter{Integration}
