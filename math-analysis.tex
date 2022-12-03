@@ -79,6 +79,7 @@
 \newcommand{\calT}{\mathcal{T}}
 \newcommand{\calU}{\mathcal{U}}
 \newcommand{\calB}{\mathcal{B}}
+\newcommand{\calV}{\mathcal{V}}
 \newcommand{\calE}{\mathcal{E}}
 \newcommand{\calC}{\mathcal{C}}
 \newcommand{\calD}{\mathcal{D}}
@@ -109,18 +110,197 @@
 \newcommand\fleuronbreak{\fancybreak{\textcolor{linkcolor}{\adfhangingflatleafleft}}}
 
 
+\newcommand{\posints}{\ints_{+}}
+\newcommand{\exreals}{\closure{\reals}}
+
+
 \begin{document}
 
 \maketitle
 
-\chapter{The exponential function}
 
-\begin{theorem}
-    Given $b > 0$ there exists a unique continuous function $E_b \colon \reals \to \reals$ such that $E_b(m/n) = (b^m)^{1/n}$ for all $m,n \in \ints$ with $n > 0$.
+\chapter{Basic concepts}
+
+\section{The real numbers}
+
+\begin{definition}[Peano systems]
+    A \emph{Peano system} is a tuple $(X,0_X,S)$ such that $X$ is a set, $0_X$ is some element in $X$, and $S \colon X \to X$ is a map, that has the following properties:
+    %
+    \begin{enumdef}
+        \item $S$ is injective.
+        \item For all $x \in X$, $0_X \neq S(x)$.
+        \item For all $A \subseteq X$, if $0_X \in A$ and $x \in A$ implies $S(x) \in A$, then $A = X$.
+    \end{enumdef}
+\end{definition}
+
+
+\begin{definition}[The real numbers]
+    The \emph{real numbers} is the unique (up to isomorphism) complete ordered field, and is denoted $\reals$.
+\end{definition}
+%
+We denote the operations on $\reals$ by the usual symbols. In particular, the ordering is denoted $\leq$, and the additive and multiplicative identities are denoted $0$ and $1$ respectively. Furthermore, if $A \subseteq \reals$ then we write e.g.
+%
+\begin{align*}
+    x + A
+        &\defn \set{x + a}{a \in A}, \\
+    cA
+        &\defn \set{ca}{a \in A},
+\end{align*}
+%
+for $x,c \in \reals$. We further write $-A$ instead of $-1A$.
+
+A subset $A$ of $\reals$ is said to be \emph{inductive} if $0 \in A$, and if $a \in A$ implies $a + 1 \in A$ for all $a \in \reals$. Any intersection of inductive subsets is itself inductive, so the intersection of all inductive subsets is inductive, in particular nonempty. This is clearly the smallest inductive subset of $\reals$, and is called the \emph{natural numbers} and is denoted $\naturals$. Notice that the positive axis $[0,\infty)$ is inductive, so all natural numbers are nonnegative and $0$ is the minimum of $\naturals$.
+
+\begin{proposition}
+    If $S \colon \naturals \to \naturals$ is given by $S(n) = n+1$, then $(\naturals,0,S)$ is a Peano system.
+\end{proposition}
+
+\begin{proof}
+    Clearly $0 \in \naturals$, and $S$ is injective by cancellation of addition. Also, notice that $S(n) = n+1 > n \geq 0$ for all $n \in \naturals$, so $0$ is not in the image of $S$. Finally, let $A \subseteq \naturals$ be such that $0 \in A$ and $n \in A$ implies $S(n) \in A$. Then $A$ is an inductive subset of $\reals$, so $\naturals \subseteq A$. Hence $(\naturals,0,S)$ is a Peano system.
+\end{proof}
+
+
+\begin{corollary}[Well-ordering of $\naturals$]
+    The set $\naturals$ is well-ordered, i.e. any nonempty subset $A \subseteq \naturals$ has a minimum.
+\end{corollary}
+
+\begin{proof}
+    Let $L$ be the subset of $\naturals$ consisting of lower bounds of $A$. Then clearly $0 \in L$, and if $a \in A$ then $a+1 \not\in L$. Hence $L \neq \naturals$, so since $\naturals$ is a Peano system there is an $m \in L$ such that $m+1 \not\in L$. We must then have $m \in A$, since otherwise $m+1 \in L$. Thus $m$ is the minimum of $A$.
+\end{proof}
+
+Furthermore, the \emph{integers} is the set $\ints = \naturals \union (-\naturals)$. We further denote by $\posints$ the subset of strictly positive integers, which is just the set $\naturals \setminus \{0\}$. Finally, the \emph{rational numbers} is the set $\rationals$ of numbers on the form $m/n$, where $m,n \in \ints$ and $n > 0$. This is easily seen to be a countable subfield of $\reals$.
+
+
+\begin{proposition}[The Archimedean property of $\reals$]
+    The set $\naturals$ is unbounded in $\reals$. In particular, for any $r > 0$ there is an $n \in \posints$ such that $1/n < r$. Furthermore, for $x,y \in \reals$ with $x > 0$ there exists an $n \in \posints$ such that $nx > y$.
+\end{proposition}
+
+\begin{proof}
+    Assume towards a contradiction that $\naturals$ is bounded. Then it has a supremum $s = \sup \naturals$, so $n \leq s$ for all $n \in \naturals$. But then also $n+1 \leq s$ for all $n \in \naturals$ since $\naturals$ is inductive, so $n \leq s-1$ for all $n \in \naturals$, contradicting that $s$ is the supremum of $\naturals$.
+
+    If $r > 0$ then there is an $n \in \posints$ with $n > 1/r$. Since both $r$ and $n$ are positive, this implies that $1/n < r$.
+
+    Finally let $x,y \in \reals$ with $x > 0$. There is an $n \in \posints$ with $n > y/x$, so since $x$ is positive this implies that $nx > y$ as desired.
+\end{proof}
+
+
+\begin{corollary}[Density of $\rationals$ in $\reals$]
+    For each $a,b \in \reals$ with $a < b$ there is a rational number in the interval $(a,b)$. In particular, the set $\rationals$ is dense in $\reals$.
+\end{corollary}
+
+\begin{proof}
+    First assume that $a \geq 0$. By [TODO Archimedes] there is an $n \in \posints$ with $1/n < b-a$. Furthermore, there is an $m \in \naturals$ such that $m/n > a$, so choose the smallest such $m$ in accordance with [TODO well-ordered]. Then $(m-1)/n \leq a$, and so
+    %
+    \begin{equation*}
+        \frac{m}{n}
+            = \frac{m-1}{n} + \frac{1}{n}
+            < a + (b-a)
+            = b,
+    \end{equation*}
+    %
+    as desired.
+
+    Instead assume that $a < 0$, and choose an $n \in \naturals$ with $n \geq -a$. The above then yields a rational number $q \in (a+n,b+n)$, so $q-n \in (a,b)$ is the desired rational number.
+\end{proof}
+
+
+\begin{lemma}[Bernoulli's inequality]
+    Let $r \geq -1$. Then for all $n \in \naturals$,
+    %
+    \begin{equation*}
+        (1+r)^n \geq 1 + nr,
+    \end{equation*}
+    %
+    with equality iff $n \in \{0,1\}$ or $r = 0$.
+\end{lemma}
+
+\begin{proof}
+    This is obvious if $n = 0$, so assume that the inequality holds for some $n \in \naturals$. Then
+    %
+    \begin{equation*}
+        (1+r)^{n+1}
+            = (1+r)(1+r)^n
+            \geq (1+r)(1+nr)
+            = 1 + (n+1)r + nr^2
+            \geq 1 + (n+1)r,
+    \end{equation*}
+    %
+    as desired. Notice that the final inequality is strict if $r \neq 0$ and $n \geq 1$.
+\end{proof}
+
+
+\begin{theorem}[Existence of roots]
+    For all $a > 0$ and $n \in \posints$ there is a unique $r > 0$ such that $r^n = a$.
 \end{theorem}
 
 \begin{proof}
-    We first assume that $b > 1$. The proof of the theorem in this case is by the following stages:
+    Consider the function $f \colon \reals \to \reals$ given by $f(x) = x^n$. By [TODO Bernoulli + Archimedes], $f(x) \to \infty$ as $x \to \infty$, so there is an $x_0 > 0$ such that $x_0^n \geq a$. Furthermore, since $f(0) = 0$ and $f$ is continuous, the intermediate value theorem yields an $r \in [0,x_0]$ such that $r^n = a$ as desired.
+\end{proof}
+
+
+\section{The exponential function}
+
+\begin{lemma}
+    Consider the functional equation
+    %
+    \begin{equation*}
+        f(x+y) = f(x)f(y),
+    \end{equation*}
+    %
+    where $x,y \in \reals$, and $f \colon G \to \reals$ where $G$ is a subgroup of $\reals$. Any solution is either identically zero or everywhere nonzero. In particular, any nonzero solution is a group homomorphism $G \to R^*$.
+    
+    Let $a \in [0,\infty)$. If $G = \rationals$, then the equation has a unique solution $f \colon \rationals \to \reals$ given the restriction $f(1) = a$.
+
+    Furthermore, if $f \colon G \to \reals$ solves the equation and $f$ is continuous at some point in $G$, then $f$ is continuous. Hence the equation has a unique solution $f \colon G \to \reals$ with $f(1) = a$ among the functions $G \to \reals$ that are continuous at any point.
+\end{lemma}
+
+\begin{proof}
+    Let $f \colon G \to \reals$ be a solution. First notice that $f(0) = f(0+0) = f(0)f(0)$, so either $f(0) = 0$ or $f(0) = 1$. In the former case we have $f(x) = f(x+0) = f(x)f(0) = 0$ for all $x \in G$, so $f$ is identically zero. Hence assume that $f(0) = 1$. Then $1 = f(x-x) = f(x)f(-x)$, so $f(x)\inv = f(-x)$. In particular, $f$ is everywhere nonzero, hence a group homomorphism $G \to \reals^*$.
+    
+    Assume that $G = \rationals$ and let $g \colon \rationals \to \reals$ be another solution. For $n \in \posints$ we have
+    %
+    \begin{equation*}
+        f(n)
+            = f(\underbrace{1 + \cdots + 1}_{n})
+            = \underbrace{f(1) \cdots f(1)}_{n}
+            = f(1)^n
+            = g(1)^n
+            = \cdots
+            = g(n).
+    \end{equation*}
+    %
+    Furthermore, since $f(-n) = f(n)\inv = g(n)\inv = g(-n)$, $f$ and $g$ agree on $\ints$. Next let $m \in \ints$ and notice that
+    %
+    \begin{equation*}
+        f(\tfrac{m}{n})^n
+            = f(n \tfrac{m}{n})
+            = f(m)
+            = g(m)
+            = g(\tfrac{m}{n})^n.
+    \end{equation*}
+    %
+    Hence $f$ and $g$ agree on $\rationals$ as claimed.
+
+    Next assume that $f \colon G \to \reals$ is a solution that is continuous at some point. If $f$ is identically zero then it is obviously continuous, and if not then it is a group homomorphism. But both $G$ and $\reals^*$ are topological groups, so this implies that $f$ is continuous everywhere.
+\end{proof}
+
+
+\begin{theorem}
+    Given $b > 0$ there exists a continuous function $E_b \colon \reals \to \reals$ such that $E_b(m/n) = (b^m)^{1/n}$ for all $m,n \in \ints$ with $n > 0$. This function has the property that
+    %
+    \begin{equation*}
+        E_b(x+y) = E_b(x) E_b(y)
+    \end{equation*}
+    %
+    for $x,y \in \reals$. Furthermore, $E_b$ is strictly increasing if $b > 1$, strictly decreasing if $b < 1$. If $b \neq 1$, then $E_{1/b}(x) = E_b(-x)$ and $E_b(\reals) = (0,\infty)$.
+    
+    The function $E_b$ is the unique function that satisfies $E_b(m/n) = (b^m)^{1/n}$ and that is continuous at $0$. We write $b^x = E_b(x)$ for $x \in \reals$.
+\end{theorem}
+%
+The function $E_b$ is also denoted $\exp_b$ and is called the \emph{exponential function with base $b$}.
+
+\begin{proof}
+    We first assume that $b > 1$. The proof of the existence of the function $E_b$ in this case is by the following stages:
     %
     \begin{enumerate}
         \item Given $m,n,p,q \in \ints$ with $n,q > 0$ and $r = m/n = p/q$, then
@@ -132,7 +312,7 @@
         %
         Thus defining $E_b(r) = (b^m)^{1/n}$ makes sense.
 
-        \item If $r,s \in \rationals$, then $E_b(r+s) = E_b(r) E_b(s)$. In particular, $E_b$ is increasing on $\rationals$.
+        \item If $r,s \in \rationals$, then $E_b(r+s) = E_b(r) E_b(s)$. In particular, $E_b$ is strictly increasing on $\rationals$. Furthermore, $E_b(r) \to \infty$ as $r \to \infty$, and $E_b(r) \to 0$ as $r \to -\infty$.
         
         \item The map $E_b$ is continuous on $\rationals$.
         
@@ -140,107 +320,190 @@
         %
         \begin{equation*}
             L_x
-                = \set{E_b(r)}{t \in \rationals, t \leq x}.
+                = \set{E_b(t)}{t \in \rationals, t \leq x}.
         \end{equation*}
         %
-        Then $E_b(r) = \sup L_r$ for $r \in \rationals$, so it makes sense to define $E_b(x) = \sup L_x$ for all $x \in \reals$. Hence $E_b$ is increasing and therefore continuous on $\reals$.
+        Then $E_b(r) = \sup L_r$ for $r \in \rationals$, so it makes sense to define $E_b(x) = \sup L_x$ for all $x \in \reals$. Hence $E_b$ is strictly increasing and therefore continuous on $\reals$. In particular, $E_b(\reals) = (0,\infty)$.
 
         \item For $x,y \in \reals$ we have $E_b(x+y) = E_b(x) E_b(y)$.
     \end{enumerate}
-    %
-    (1) Notice that $mq = pn$, so
-    %
-    \begin{equation*}
-        \bigl[ (b^m)^{1/n} \bigr]^{pn}
-            = (b^m)^p
-            = (b^p)^m
-            = \bigl[ (b^p)^{1/q} \bigr]^{mq}
-            = \bigl[ (b^p)^{1/q} \bigr]^{pn}.
-    \end{equation*}
-    %
-    The (positive) $pn$th root of this number is unique, so $(b^m)^{1/n} = (b^p)^{1/q}$.
-
-    (2) Write $r = m/n$ and $s = p/q$ for appropriate $m,n,p,q \in \ints$ with $n,q > 0$. Then
-    %
-    \begin{equation*}
-        [ (b^m)^{1/n} (b^p)^{1/q} ]^{nq}
-            = b^{mq} b^{pn}
-            = b^{mq + pn}.
-    \end{equation*}
-    %
-    Taking the $nq$th root implies that
-    %
-    \begin{equation*}
-        E_b(r) E_b(s)
-            = (b^m)^{1/n} (b^p)^{1/q}
-            = (b^{mq+pn})^{1/nq}
-            = E_b(r + s),
-    \end{equation*}
-    %
-    where we in the last equality use that
-    %
-    \begin{equation*}
-        r + s
-            = \frac{m}{n} + \frac{p}{q}
-            = \frac{mq + pn}{nq}.
-    \end{equation*}
-    %
-    To see that $E_b$ is increasing on $\rationals$, notice that the assumption that $b > 1$ implies that $E_b(s) > 1$ for $s > 0$. If also $r \in \rationals$, then
-    %
-    \begin{equation*}
-        E_b(r + s)
-            = E_b(r) E_b(s)
-            \geq E_b(r),
-    \end{equation*}
-    %
-    so $E_b$ is increasing.
     
-    (3) We begin by showing that $E_b$ is continuous from above at $0$. Since $E_b$ is monotonic and $E_b(0) = 1$, it suffices to show that $\lim_{n\to\infty} E_b(r_n) = 1$ for some sequence $(r_n)_{n\in\naturals}$ in $\rationals$ that decreases to $0$. We claim that the sequence given by $r_n = 1/n$ has this property. Clearly $1/n \downarrow 0$, so assume that $E_b(1/n)$ did not converge to $1$. Then there would be some $\epsilon > 0$ such that $E_b(1/n) \geq 1 + \epsilon$, i.e. $b \geq (1 + \epsilon)^n$, for all $n \in \naturals$. But by [Bernoulli's inequality] this is impossible, so we must have $E_b(1/n) \to 1$. A similar argument shows that $E_b$ is continuous from below at $0$, using the fact that $E_b(-1/n) = (1/b)^n$.
+    \begin{proofsec}
+        \item[Part (1)]
+        Notice that $mq = pn$, so
+        %
+        \begin{equation*}
+            \bigl[ (b^m)^{1/n} \bigr]^{pn}
+                = (b^m)^p
+                = (b^p)^m
+                = \bigl[ (b^p)^{1/q} \bigr]^{mq}
+                = \bigl[ (b^p)^{1/q} \bigr]^{pn}.
+        \end{equation*}
+        %
+        The (positive) $pn$th root of this number is unique, so $(b^m)^{1/n} = (b^p)^{1/q}$.
 
-    Finally let $r,h \in \rationals$, and notice that
+        \item[Part (2)]
+        Write $r = m/n$ and $s = p/q$ for appropriate $m,n,p,q \in \ints$ with $n,q > 0$. Then
+        %
+        \begin{equation*}
+            [ (b^m)^{1/n} (b^p)^{1/q} ]^{nq}
+                = b^{mq} b^{pn}
+                = b^{mq + pn}.
+        \end{equation*}
+        %
+        Taking the $nq$th root implies that
+        %
+        \begin{equation*}
+            E_b(r) E_b(s)
+                = (b^m)^{1/n} (b^p)^{1/q}
+                = (b^{mq+pn})^{1/nq}
+                = E_b(r + s),
+        \end{equation*}
+        %
+        where we in the last equality use that
+        %
+        \begin{equation*}
+            r + s
+                = \frac{m}{n} + \frac{p}{q}
+                = \frac{mq + pn}{nq}.
+        \end{equation*}
+        %
+        To see that $E_b$ is increasing on $\rationals$, notice that the assumption that $b > 1$ implies that $E_b(s) > 1$ for $s > 0$. If also $r \in \rationals$, then since $E_b(r) \neq 0$ by [TODO lemma], we have
+        %
+        \begin{equation*}
+            E_b(r + s)
+                = E_b(r) E_b(s)
+                > E_b(r),
+        \end{equation*}
+        %
+        so $E_b$ is strictly increasing.
+
+        Finally, by [TODO Bernoulli] $b^m \to \infty$ as $m \to \infty$. Since $1 = b^m b^{-m}$, this implies that $b^m \to 0$ as $m \to -\infty$.
+        
+        \item[Part (3)]
+        We begin by showing that $E_b$ is continuous from above at $0$. Since $E_b$ is monotonic and $E_b(0) = 1$, it suffices to show that $\lim_{n\to\infty} E_b(1/n) = 1$. Clearly $1/n \downarrow 0$, so assume that $E_b(1/n)$ did not converge to $1$. Then there would be some $\epsilon > 0$ such that $E_b(1/n) \geq 1 + \epsilon$, i.e. $b \geq (1 + \epsilon)^n$, for all $n \in \naturals$. But by [TODO Bernoulli's inequality] this is impossible, so we must have $E_b(1/n) \to 1$. Since $E_b(-m/n) = (b^{-m})^{1/n} = E_{1/b}(m/n)$, $E_b$ is also continuous from below at $0$. [TODO lemma] then implies that $E_b$ is continuous everywhere.
+
+        \item[Part (4)]
+        Since $E_b$ is increasing on $(\infty,r] \intersect \rationals$, it obtains its maximum at $r$. Hence we obviously have $E_b(r) = \sup L_r$.
+
+        If $x \leq y$ then $L_x \subseteq L_y$, and hence $E_b(x) \leq E_b(y)$. Thus $E_b$ is increasing on $\reals$. It is in fact strictly increasing, since if $x < y$ and $p < q$ are rational numbers in the interval $(x,y)$, then since $E_b$ is strictly increasing on $\rationals$ we have
+        %
+        \begin{equation*}
+            E_b(x)
+                \leq E_b(p)
+                < E_b(q)
+                \leq E_b(y).
+        \end{equation*}
+        %
+        Furthermore, since $E_b$ continuous on a dense subset of $\reals$, it is clearly also continuous on $\reals$. Finally, the claim $E_b(\reals) = (0,\infty)$ follows from the limit results in part (2).
+
+        \item[Part (5)]
+        Let $(r_n)$ and $(s_n)$ be sequences in $\rationals$ with limits $x$ and $y$ respectively. Then $r_n+s_n$ converges to $x+y$, so
+        %
+        \begin{equation*}
+            E_b(x+y)
+                = \lim_{n\to\infty} E_b(r_n + s_n)
+                = \lim_{n\to\infty} E_b(r_n) E_b(s_n)
+                = E_b(x) E_b(y),
+        \end{equation*}
+        %
+        as desired.
+    \end{proofsec}
+
+    This proves existence when $b > 1$. If $b = 1$ then existence is obvious, so assume that $b < 1$. In this case we simply define $E_b(x) = E_{1/b}(-x)$. This clearly has the desired properties. Uniqueness is immediate from [TODO lemma].
+\end{proof}
+%
+Let $b \neq 1$. Then $E_b$ is a bijection onto $(0,\infty)$, so it has an inverse $L_b \colon (0,\infty) \to \reals$. This is called the \emph{logarithm with base $b$}, and is also denoted $\log_b$. This satisfies a functional equation similar to the one satisfied by $E_b$: For $x,y \in (0,\infty)$ we have
+%
+\begin{equation*}
+    xy
+        = E_b(L_b(x)) E_b(L_b(y))
+        = E_b(L_b(x) + L_b(y)),
+\end{equation*}
+%
+and applying $L_b$ to both sides yields
+%
+\begin{equation*}
+    L_b(xy) = L_b(x) + L_b(y).
+\end{equation*}
+%
+For $n \in \naturals$ this in particular implies that $L_b(x^n) = n L_b(x)$.
+
+\fleuronbreak
+
+We next turn to alternative characterisations of the exponential function. We first define the number
+%
+\begin{equation*}
+    \e = \sum_{n=0}^\infty \frac{1}{n!}.
+\end{equation*}
+%
+The exponential function $E_{\e} = \exp_{\e}$ with base $\e$ is simply called the \emph{exponential function} and is denoted $\exp$. Similarly, the logarithm $L_{\e} = \log_{\e}$ with base $\e$ is called the \emph{natural logarithm} and is denoted $\log$.
+
+\begin{proposition}
+    For $x \in \reals$ we have
     %
     \begin{equation*}
-        E_b(r+h)
-            = E_b(r) E_b(h)
-            \to E_b(r) E_b(0)
-            = E_b(r)
+        \exp x
+            = \sum_{n=0}^\infty \frac{x^n}{n!}.
     \end{equation*}
     %
-    as $n \to \infty$. Thus $E_b$ is also continuous at $r$.
+    In particular $\exp' = \exp$ and $\log' x = 1/x$ for $x \in (0,\infty)$.
+\end{proposition}
 
-    (4) We clearly have $E_b(r) \leq \sup L_r$. For the opposite inequality, notice that $E_b(r)$ is an upper bound for $L_r$ since $E_b$ is increasing on $\rationals$. Hence also $\sup L_r \leq E_b(r)$.
-
-    If $x \leq y$ then $L_x \subseteq L_y$, and hence $E_b(x) \leq E_b(y)$. Thus $E_b$ is monotonic on $\reals$. But then since $E_b$ continuous on a dense subset of $\reals$, it is clearly also continuous on $\reals$.
-
-    (5) Let $(r_n)$ and $(s_n)$ be sequences in $\rationals$ with limits $x$ and $y$ respectively. Then $r_n+s_n$ converges to $x+y$, so
-    %
-    \begin{equation*}
-        E_b(x+y)
-            = \lim_{n\to\infty} E_b(r_n + s_n)
-            = \lim_{n\to\infty} E_b(r_n) E_b(s_n)
-            = E_b(x) E_b(y).
-    \end{equation*}
+\begin{proof}
+    Denote the right-hand side by $E(x)$. First let $f(x) = E(x)E(-x)$ and notice that, since $E' = E$, $f' = 0$. Hence $E(x)E(-x) = 1$. Next define $g(x) = E(x)E(y)E(-(x+y))$ for $y \in \reals$. Using the above, one easily sees that $g' = 0$, so $g(x) = g(0) = 1$. Hence $E(x)E(y) = E(x+y)$, so [TODO lemma] and [TODO $\e^x$ satisfies func eq] implies that $\exp e = E(x)$ as claimed.
 \end{proof}
 
 
-\chapter{Introduction}
+\begin{proposition}
+    Let $x \in \reals$. Then
+    %
+    \begin{equation*}
+        \exp x
+            = \lim_{n \to \infty} \biggl( 1 + \frac{x}{n} \biggr)^n.
+    \end{equation*}
+\end{proposition}
 
-\begin{definition}
-    Let $X$ be a set. A \emph{sequence} in $X$ is a map $a \colon \naturals \to X$. For $n \in \naturals$, we usually write $a_n$ for $a(n)$ and denote $a$ by $(a_n)_{n\in\naturals}$ or simply $(a_n)$.
-\end{definition}
+\begin{proof}
+    This is obvious if $x = 0$, so assume that $x \neq 0$. Then we have
+    %
+    \begin{equation*}
+        \lim_{n \to \infty} n \log(1 + \tfrac{x}{n})
+            = x \lim_{n \to \infty} \frac{\log(1 + \tfrac{x}{n}) - \log 1}{x/n}
+            = x \log' 1
+            = x.
+    \end{equation*}
+    %
+    (Notice that $1 + \tfrac{x}{n} > 0$ if $n$ is large enough.) Continuity of $\exp$ then implies that
+    %
+    \begin{equation*}
+        \lim_{n \to \infty} \biggl( 1 + \frac{x}{n} \biggr)^n
+            = \exp \biggl( \lim_{n \to \infty} n \log(1 + \tfrac{x}{n}) \biggr)
+            = \exp x,
+    \end{equation*}
+    %
+    as desired.
+\end{proof}
 
 
-\begin{definition}
-    Let $(S,\rho)$ be a metric space, and let $(a_n)_{n\in\naturals}$ be a sequence in $S$. We say that $(a_n)$ \emph{converges} to a point $a \in S$ if for every $\epsilon > 0$ there exists an $N \in \naturals$ such that $n \geq N$ implies that $\rho(a_n,a) < \epsilon$. In this case we call $a$ the \emph{limit} of $(a_n)$ and write $a_n \to a$ as $n \to \infty$, and we say that $(a_n)$ is \emph{convergent}.
+\section{Sequences of real numbers}
 
-    Furthermore, $(a_n)$ is called a \emph{Cauchy sequence} if for every $\epsilon > 0$ there exists an $N \in \naturals$ such that $m,n \geq N$ implies that $\rho(a_m,a_n) < \epsilon$. If every Cauchy sequence in $S$ is convergent, then $S$ is said to be \emph{complete}.
-\end{definition}
-%
-Notice that limits of sequences in metric spaces are unique. It is also clear that convergent sequences are Cauchy, and that Cauchy sequences are bounded: We say that a sequence $(a_n)_{n\in\naturals}$ in a metric space is \emph{bounded} if the set $\set{a_n}{n\in\naturals}$ is bounded.
+% \begin{definition}
+%     Let $X$ be a set. A \emph{sequence} in $X$ is a map $a \colon \naturals \to X$. For $n \in \naturals$, we usually write $a_n$ for $a(n)$ and denote $a$ by $(a_n)_{n\in\naturals}$ or simply $(a_n)$.
+% \end{definition}
 
-If $(X,\leq)$ is a poset, a sequence $(a_n)_{n\in\naturals}$ in $X$ is \emph{increasing} (\emph{decreasing}) if $m \leq n$ implies $a_m \leq a_n$ ($a_m \geq a_n$) for all $m,n \in \naturals$. If $m < n$ implies $a_m < a_n$ ($a_m > a_n$), then $(a_n)$ is \emph{strictly} increasing (decreasing). A sequence that is either (strictly) increasing or (strictly) decreasing is called \emph{(strictly) monotonic}.
 
-Given a sequence $(a_n)_{n\in\naturals}$ in a set $X$ and a strictly increasing sequence $(n_k)_{k\in\naturals}$ in $\naturals$, the sequence $(a_{n_k})_{k\in\naturals}$ is called a \emph{subsequence} of $(a_n)$. In particular, every sequence is a subsequence of itself.
+% \begin{definition}
+%     Let $(S,\rho)$ be a metric space, and let $(a_n)_{n\in\naturals}$ be a sequence in $S$. We say that $(a_n)$ \emph{converges} to a point $a \in S$ if for every $\epsilon > 0$ there exists an $N \in \naturals$ such that $n \geq N$ implies that $\rho(a_n,a) < \epsilon$. In this case we call $a$ the \emph{limit} of $(a_n)$ and write $a_n \to a$ as $n \to \infty$, and we say that $(a_n)$ is \emph{convergent}.
+
+%     Furthermore, $(a_n)$ is called a \emph{Cauchy sequence} if for every $\epsilon > 0$ there exists an $N \in \naturals$ such that $m,n \geq N$ implies that $\rho(a_m,a_n) < \epsilon$. If every Cauchy sequence in $S$ is convergent, then $S$ is said to be \emph{complete}.
+% \end{definition}
+% %
+% Notice that limits of sequences in metric spaces are unique. It is also clear that convergent sequences are Cauchy, and that Cauchy sequences are bounded: We say that a sequence $(a_n)_{n\in\naturals}$ in a metric space is \emph{bounded} if the set $\set{a_n}{n\in\naturals}$ is bounded.
+
+% If $(X,\leq)$ is a poset, a sequence $(a_n)_{n\in\naturals}$ in $X$ is \emph{increasing} (\emph{decreasing}) if $m \leq n$ implies $a_m \leq a_n$ ($a_m \geq a_n$) for all $m,n \in \naturals$. If $m < n$ implies $a_m < a_n$ ($a_m > a_n$), then $(a_n)$ is \emph{strictly} increasing (decreasing). A sequence that is either (strictly) increasing or (strictly) decreasing is called \emph{(strictly) monotonic}.
+
+% Given a sequence $(a_n)_{n\in\naturals}$ in a set $X$ and a strictly increasing sequence $(n_k)_{k\in\naturals}$ in $\naturals$, the sequence $(a_{n_k})_{k\in\naturals}$ is called a \emph{subsequence} of $(a_n)$. In particular, every sequence is a subsequence of itself.
 
 \begin{lemma}
     Let $(a_n)_{n\in\naturals}$ be a sequence in a metric space $(S,\rho)$. If $(a_n)$ is both Cauchy and has a convergent subsequence, then $(a_n)$ itself is convergent.
@@ -275,8 +538,6 @@ Given a sequence $(a_n)_{n\in\naturals}$ in a set $X$ and a strictly increasing 
     showing that $a_n \to a$ as $n \to \infty$.
 \end{proof}
 
-
-\section{Sequences of real numbers}
 
 \begin{proposition}
     Let $(a_n)_{n\in\naturals}$ be a monotonic sequence in $\reals$. Then $(a_n)$ is convergent if and only if it is bounded, in which case it converges to $\sup_{n\in\naturals} a_n$ if it is increasing and $\inf_{n\in\naturals} a_n$ if it is decreasing.
@@ -313,7 +574,7 @@ We recall that a topological space $X$ is \emph{sequentially compact} if every s
 
     The case for general $d$ follows by induction in $d$, by noticing that a sequence in $\reals^d$ converges if and only if each coordinate sequence converges.
 
-    For the converse, let $A \subseteq \reals^d$ be sequentially compact. If $A$ were not bounded we could choose $a_n \in A \intersect B(0,n)$ for all $n \in \naturals$, yielding a sequence $(a_n)$ with no convergent subsequence. Furthermore, if $(a_n)$ is a sequence in $A$ converging to a point $a \in \reals^d$, it is in particular a Cauchy sequence. Since it has a subsequence converging to a point $a' \in A$, and by [lemma] we must have $a = a'$. Thus $A$ is also closed.
+    For the converse, let $A \subseteq \reals^d$ be sequentially compact. If $A$ were not bounded we could choose $a_n \in A \intersect B(0,n)$ for all $n \in \naturals$, yielding a sequence $(a_n)$ with no convergent subsequence. Furthermore, if $(a_n)$ is a sequence in $A$ converging to a point $a \in \reals^d$, then it has a subsequence converging to a point $a' \in A$, and by [lemma] we must have $a = a'$. Thus $A$ is also closed.
 \end{proof}
 
 
@@ -348,91 +609,294 @@ We recall that a topological space $X$ is \emph{sequentially compact} if every s
 \end{proof}
 
 
-If $A$ is a subset of a metric space $S$, recall that $A$ is \emph{totally bounded} if, for every $\epsilon > 0$, $A$ can be covered by finitely many open balls of radius $\epsilon$.
+% If $A$ is a subset of a metric space $S$, recall that $A$ is \emph{totally bounded} if, for every $\epsilon > 0$, $A$ can be covered by finitely many open balls of radius $\epsilon$.
 
-\begin{theorem}
-    If $A$ is a subset of a metric space $(S,\rho)$, then the following are equivalent:
+% \begin{theorem}
+%     If $A$ is a subset of a metric space $(S,\rho)$, then the following are equivalent:
+%     %
+%     \begin{enumthm}
+%         \item \label{enum:complete-totally-bounded} $A$ is complete and totally bounded.
+%         \item \label{enum:sequentially-compact} $A$ is sequentially compact.
+%         \item \label{enum:compact} $A$ is compact.
+%     \end{enumthm}
+% \end{theorem}
+
+% \begin{proof}
+% \begin{proofsec}
+%     \item[\subcref{enum:complete-totally-bounded} $\implies$ \subcref{enum:sequentially-compact}]
+%     Assume that $A$ is complete and totally bounded, and let $(x_n)_{n\in\naturals}$ be a sequence in $A$. Now $A$ can be covered by finitely many balls of radius $1$, at least one of which, say $B_1$, contains $x_n$ for infinitely many $n$, say for $n \in N_1 \subseteq \naturals$. Similarly, $A \intersect B_1$ may be covered by finitely many balls of radius $1/2$, and again there is a ball $B_2$ containing $x_n$ for infinitely many $n \in N_1$, say for $n \in N_2$. Continuing recursively we obtain a sequence of balls $B_i$ of radius $1/i$ and a decreasing sequence $(N_i)_{i\in\naturals}$ of infinite subsets of $\naturals$ such that $x_n \in B_i$ for $n \in N_i$.
+
+%     Next, choose a strictly increasing sequence $(n_i)_{i\in\naturals}$ of naturals numbers such that $n_i \in N_i$. Then $\rho(x_{n_i}, x_{n_j}) < 2/i$ for $i \leq j$, so $(x_{n_i})_{i\in\naturals}$ is a Cauchy sequence., and since $A$ is complete it has a limit in $A$.
+
+%     \item[\subcref{enum:sequentially-compact} $\implies$ \subcref{enum:complete-totally-bounded}]
+%     Assume that $A$ is sequentially compact. We first show that $A$ is complete, so let $(x_n)_{n\in\naturals}$ be a Cauchy sequence in $A$. This has a subsequence that converges to a point $x$ in $A$, so [lemma] implies that $(x_n)$ also converges to $x$.
+    
+%     Now suppose that $A$ is not totally bounded, and let $\epsilon > 0$ be such that $A$ cannot be covered by finitely many $\epsilon$-balls. We construct a sequence $(x_n)_{n\in\naturals}$ in $A$ as follows: Choose any $x_1 \in A$, and given $x_1, \ldots, x_n$ choose $x_{n+1} \in A \setminus \bigunion_{i=1}^n B(x_i,\epsilon)$. Then $\rho(x_m,x_n) \geq \epsilon$ for all $m,n \in \naturals$ with $m \neq n$, so $(x_n)$ has no convergent subsequence.
+    
+%     \item[\subcref{enum:complete-totally-bounded} \& \subcref{enum:sequentially-compact} $\implies$ \subcref{enum:compact}]
+%     Suppose that $A$ is complete, totally bounded and sequentially compact, and let $\calU$ be an open cover of $A$. It suffices to show that there some $\epsilon > 0$ such that any $\epsilon$-ball intersecting $A$ is contained in some $U \in \calU$, since $A$ can be covered by finitely many such balls.
+
+%     Assume towards a contradiction that for every $n \in \naturals$ there is a ball $B_n$ of radius $1/n$ intersecting $A$ such that $B_n$ is contained in no $U \in \calU$. Picking $x_n \in B_n$ for $n \in \naturals$, we may assume that the sequence $(x_n)_{n\in\naturals}$ converges to some $x \in A$ by passing to an appropriate subsequence. Then $x \in U$ for some $U \in \calU$, and since $U$ is open there is an $\epsilon > 0$ such that $B(x,\epsilon) \subseteq U$. Choosing $n \in \naturals$ large enough that $\rho(x_n,x) < \epsilon/2$ and $1/n < \epsilon/2$, we have $B_n \subseteq B(x,\epsilon) \subseteq U$, which is a contradiction.
+
+%     \item[\subcref{enum:compact} $\implies$ \subcref{enum:sequentially-compact}]
+%     We prove the contrapositive, so assume that $A$ is not sequentially compact, and let $(x_n)_{n\in\naturals}$ be a sequence in $A$ with no convergent subsequence. Every $x \in A$ is then contained in an open ball $B_x$ containing $x_n$ for only finitely many $n$. Thus $\{B_x\}_{x \in A}$ is an open cover of $A$ with no finite subcover, and $A$ is not compact.
+% \end{proofsec}
+% \end{proof}
+
+
+% \section{Limit superior and limit inferior}
+
+% \begin{proposition}
+%     Let $(x_n)_{n \in \naturals}$ and $(y_n)_{n \in \naturals}$ be sequences in $\exreals$.
+%     %
+%     \begin{enumprop}
+%         \item $ \limsup_{n \to \infty} (-x_n) = - \limsup_{n \to \infty} x_n$.
+
+%         \item $\limsup_{n \to \infty} x_n$ is the largest subsequential limit of $(x_n)$, and $\liminf_{n \to \infty} x_n$ is the smallest. In particular, $(x_n)$ is convergent if and only if
+%         %
+%         \begin{equation*}
+%             x
+%                 \defn \limsup_{n \to \infty} x_n
+%                 = \liminf_{n \to \infty} x_n,
+%         \end{equation*}
+%         %
+%         in which case the limit of $(x_n)$ is $x$.
+        
+%         \item We have the inequalities
+%         %
+%         \begin{equation*}
+%             \limsup_{n \to \infty} (x_n + y_n)
+%                 \leq \limsup_{n \to \infty} x_n + \limsup_{n \to \infty} y_n,
+%         \end{equation*}
+%         %
+%         and
+%         %
+%         \begin{equation*}
+%             \liminf_{n \to \infty} (x_n + y_n)
+%                 \geq \liminf_{n \to \infty} x_n + \liminf_{n \to \infty} y_n.
+%         \end{equation*}
+
+%         \item If $(y_n)$ converges to a point in $\reals$, then
+%         %
+%         \begin{equation*}
+%             \limsup_{n \to \infty} (x_n + y_n)
+%                 = \limsup_{n \to \infty} x_n + \lim_{n \to \infty} y_n,
+%         \end{equation*}
+%         %
+%         and
+%         %
+%         \begin{equation*}
+%             \liminf_{n \to \infty} (x_n + y_n)
+%                 = \liminf_{n \to \infty} x_n + \lim_{n \to \infty} y_n.
+%         \end{equation*}
+%     \end{enumprop}
+% \end{proposition}
+
+% \begin{proof}
+%     Notice that all claims about limits inferior will follow by [TODO ref] from the corresponding properties of limits superior.
+    
+%     - This follows from basic properties of limits, suprema and infima.
+
+%     - Let $s = \limsup_{n \to \infty} x_n$. We first show that $s$ is greater than any subsequential limit of $(x_n)$, so let $(x_{n_k})_{k \in \naturals}$ be a subsequence converging to $x \in \reals$. Notice that $n_k \geq k$ for all $k$. For $K \in \naturals$ and $k \geq K$ we thus have
+%     %
+%     \begin{equation*}
+%         x_{n_k}
+%             \leq \sup_{m \geq n_k} x_m
+%             \leq \sup_{m \geq n_K} x_m
+%             \leq \sup_{m \geq K} x_m,
+%     \end{equation*}
+%     %
+%     which implies that $x \leq \sup_{m \geq K} x_m$. Taking the limit $K \to \infty$ implies that $x \leq s$ as claimed.
+
+%     Next we show that $(x_n)$ has a subsequence converging to $s$. First let $n_0 = 0$. For $k \in \naturals$ we then recursively choose $n_k \in \naturals$ such that $n_k > n_{k-1}$, and such that
+%     %
+%     \begin{equation*}
+%         - \frac{1}{k} + \sup_{n > n_{k-1}} x_n
+%             < x_{n_k}
+%             \leq \sup_{n > n_{k-1}} x_n.
+%     \end{equation*}
+%     %
+%     It then easily follows that $x_{n_k} \to s$.
+
+%     - This follows from the inequality
+%     %
+%     \begin{equation*}
+%         \sup_{n \geq k} (x_n + y_n)
+%             \leq \sup_{n \geq k} x_n + \sup_{n \geq k} y_n.
+%     \end{equation*}
+
+%     - By [TODO ref] it suffices to show the inequality \enquote{$\geq$}. Let $(x_{n_k})$ be a subsequence of $(x_n)$ converging to $\limsup_{n \to \infty} x_n$. Then $(x_{n_k} + y_{n_k})$ is a subsequence of $(x_n + y_n)$, so
+%     %
+%     \begin{align*}
+%         \limsup_{n \to \infty} (x_n + y_n)
+%             &\geq \lim_{k \to \infty} (x_{n_k} + y_{n_k})
+%              = \lim_{k \to \infty} x_{n_k} + \lim_{k \to \infty} y_{n_k} \\
+%             &= \limsup_{n \to \infty} x_n + \lim_{n \to \infty} y_n.
+%     \end{align*}
+% \end{proof}
+
+
+\section{Infinite series}
+
+\begin{proposition}[Cauchy criterion for series]
+    Any series $\sum_{n=1}^\infty a_n$ with complex terms converges if and only if for every $\epsilon > 0$ there exists an $N \in \naturals$ such that
     %
-    \begin{enumthm}
-        \item \label{enum:complete-totally-bounded} $A$ is complete and totally bounded.
-        \item \label{enum:sequentially-compact} $A$ is sequentially compact.
-        \item \label{enum:compact} $A$ is compact.
-    \end{enumthm}
-\end{theorem}
+    \begin{equation*}
+        m \geq n \geq N
+        \quad \implies \quad
+        \abs[\bigg]{ \sum_{k=n}^m a_k } < \epsilon.
+    \end{equation*}
+\end{proposition}
 
 \begin{proof}
-\begin{proofsec}
-    \item[\subcref{enum:complete-totally-bounded} $\implies$ \subcref{enum:sequentially-compact}]
-    Assume that $A$ is complete and totally bounded, and let $(x_n)_{n\in\naturals}$ be a sequence in $A$. Now $A$ can be covered by finitely many balls of radius $1$, at least one of which, say $B_1$, contains $x_n$ for infinitely many $n$, say for $n \in N_1 \subseteq \naturals$. Similarly, $A \intersect B_1$ may be covered by finitely many balls of radius $1/2$, and again there is a ball $B_2$ containing $x_n$ for infinitely many $n \in N_1$, say for $n \in N_2$. Continuing recursively we obtain a sequence of balls $B_i$ of radius $1/i$ and a decreasing sequence $(N_i)_{i\in\naturals}$ of infinite subsets of $\naturals$ such that $x_n \in B_i$ for $n \in N_i$.
-
-    Next, choose a strictly increasing sequence $(n_i)_{i\in\naturals}$ of naturals numbers such that $n_i \in N_i$. Then $\rho(x_{n_i}, x_{n_j}) < 2/i$ for $i \leq j$, so $(x_{n_i})_{i\in\naturals}$ is a Cauchy sequence., and since $A$ is complete it has a limit in $A$.
-
-    \item[\subcref{enum:sequentially-compact} $\implies$ \subcref{enum:complete-totally-bounded}]
-    Assume that $A$ is sequentially compact. We first show that $A$ is complete, so let $(x_n)_{n\in\naturals}$ be a Cauchy sequence in $A$. This has a subsequence that converges to a point $x$ in $A$, so [lemma] implies that $(x_n)$ also converges to $x$.
-    
-    Now suppose that $A$ is not totally bounded, and let $\epsilon > 0$ be such that $A$ cannot be covered by finitely many $\epsilon$-balls. We construct a sequence $(x_n)_{n\in\naturals}$ in $A$ as follows: Choose any $x_1 \in A$, and given $x_1, \ldots, x_n$ choose $x_{n+1} \in A \setminus \bigunion_{i=1}^n B(x_i,\epsilon)$. Then $\rho(x_m,x_n) \geq \epsilon$ for all $m,n \in \naturals$ with $m \neq n$, so $(x_n)$ has no convergent subsequence.
-    
-    \item[\subcref{enum:complete-totally-bounded} \& \subcref{enum:sequentially-compact} $\implies$ \subcref{enum:compact}]
-    Suppose that $A$ is complete, totally bounded and sequentially compact, and let $\calU$ be an open cover of $A$. It suffices to show that there some $\epsilon > 0$ such that any $\epsilon$-ball intersecting $A$ is contained in some $U \in \calU$, since $A$ can be covered by finitely many such balls.
-
-    Assume towards a contradiction that for every $n \in \naturals$ there is a ball $B_n$ of radius $1/n$ intersecting $A$ such that $B_n$ is contained in no $U \in \calU$. Picking $x_n \in B_n$ for $n \in \naturals$, we may assume that the sequence $(x_n)_{n\in\naturals}$ converges to some $x \in A$ by passing to an appropriate subsequence. Then $x \in U$ for some $U \in \calU$, and since $U$ is open there is an $\epsilon > 0$ such that $B(x,\epsilon) \subseteq U$. Choosing $n \in \naturals$ large enough that $\rho(x_n,x) < \epsilon/2$ and $1/n < \epsilon/2$, we have $B_n \subseteq B(x,\epsilon) \subseteq U$, which is a contradiction.
-
-    \item[\subcref{enum:compact} $\implies$ \subcref{enum:sequentially-compact}]
-    We prove the contrapositive, so assume that $A$ is not sequentially compact, and let $(x_n)_{n\in\naturals}$ be a sequence in $A$ with no convergent subsequence. Every $x \in A$ is then contained in an open ball $B_x$ containing $x_n$ for only finitely many $n$. Thus $\{B_x\}_{x \in A}$ is an open cover of $A$ with no finite subcover, and $A$ is not compact.
-\end{proofsec}
+    Let $s_n = \sum_{k=1}^n a_n$. By completeness of $\complex$, the series converges if and only if $(s_n)_{n \in \naturals}$ is a Cauchy sequence. This is the case just when for every $\epsilon > 0$ there exists an $N \in \naturals$ such that $m \geq n \geq N$ implies that
+    %
+    \begin{equation*}
+        \epsilon
+            > \abs{s_m - s_n}
+            = \abs[\bigg]{ \sum_{k=n+1}^m a_k },
+    \end{equation*}
+    %
+    as claimed.
 \end{proof}
 
 
-% \chapter{Differentiation}
+\begin{corollary}
+    If a series $\sum_{n=1}^\infty a_n$ with complex terms converges, then $a_n \to 0$ as $n \to \infty$.
+\end{corollary}
 
-% \begin{definition}[Derivatives]
-%     Let $I$ be an interval, and let $f \colon I \to \reals$. We say that $f$ is \emph{differentiable} at a point $a \in I$ if the limit
-%     %
-%     \begin{equation*}
-%         \lim_{x \to a} \frac{f(x) - f(a)}{x-a}
-%     \end{equation*}
-%     %
-%     exists. If so, the limit is called the \emph{derivative} of $f$ at $a$ and is denoted $f'(a)$ or $Df(a)$.
-% \end{definition}
-
-% \begin{lemma}
-%     Let $f \colon I \to \reals$ and $a \in I$. Then the following are equivalent:
-%     %
-%     \begin{enumlem}
-%         \item $f$ is differentiable at $a$.
-        
-%         \item There exists a function $\phi_a \colon I \to \reals$, continuous at $a$, such that
-%         %
-%         \begin{equation*}
-%             f(x)
-%                 = f(a) + \phi_a(x) (x-a)
-%         \end{equation*}
-%         %
-%         for all $x \in I$.
-        
-%         \item There exists a number $A \in \reals$ and a function $\epsilon_a \colon U \to \reals$, where $U \subseteq \reals$ is an open neighbourhood of $0$, such that, for all $h \in \reals$ with $a + h \in I$,
-%         %
-%         \begin{equation*}
-%             f(a+h)
-%                 = f(a) + Ah + \epsilon_a(h),
-%             \quad \text{and} \quad
-%             \lim_{h \to 0} \frac{\epsilon_a(h)}{h} = 0. 
-%         \end{equation*}
-%     \end{enumlem}
-%     %
-%     In this case we have
-% \end{lemma}
+\begin{proof}
+    Let $m = n + 1$ in [TODO ref].
+\end{proof}
 
 
-\chapter{Differentiation}
+\begin{corollary}
+    An absolutely convergent series with complex terms is convergent.
+\end{corollary}
 
-\section{Limits of functions} % [TODO move somewhere else?]
+\begin{proof}
+    This follows from [TODO ref] by noting that
+    %
+    \begin{equation*}
+        \abs[\bigg]{ \sum_{k=n}^m a_k }
+            \leq \sum_{k=n}^m \abs{a_k}
+    \end{equation*}
+    %
+    for all $m,n \in \naturals$ with $m \geq n$.
+\end{proof}
+
+
+\section{Unordered sums}
+
+\newcommand{\finsubsets}[1]{\calF(#1)}
+
+If $X$ is a set, then we denote by $\finsubsets{X}$ the collection of finite subsets of $X$. This is directed by set inclusion.
+
+\begin{definition}
+    Let $g \colon I \to G$ be a map from a set $I$ into an abelian topological group $G$, and write $g(i) = g_i$. Define a net $S \colon \finsubsets{I} \to G$ by $S(J) = \sum_{i \in J} g_i$. If $S$ has a limit, then such a limit is called an \emph{unordered sum} of $g$ over $I$, and if this is unique then it is denoted
+    %
+    \begin{equation*}
+        \sum_{i \in I} g_i.
+    \end{equation*}
+\end{definition}
+%
+Notice that since the sum is \emph{unordered}, we cannot generalise this definition to nonabelian groups. Also since the sum is unordered, we would expect that if we rearrange the terms in the sum, its convergence properties should stay the same. More precisely, if the unordered sum $\sum_{i \in I} g_i$ converges to $g \in G$ and $\phi \colon I \to I$ is a bijection, then we would expect that $\sum_{i \in I} g_{\phi(i)}$ also converges to $g$. But in the notation above, $S \circ \phi$ is clearly a (Willard) subnet of $S$, so this follows.
+
+\begin{lemma}
+    \label{lem:unordered-sum-subsequence}
+    Let $G$ be an abelian topological group, and assume that the unordered sum $\sum_{i \in I} g_i$ converges to $g \in G$. If $(J_n)_{n\in\naturals}$ is an increasing sequence in $\finsubsets{I}$ with $I = \bigunion_{n\in\naturals} J_n$, then the sequence $(\sum_{i \in J_n} g_i)_{n\in\naturals}$ converges to $g$.
+\end{lemma}
+
+\begin{proof}
+    Simply notice that the sequence $(\sum_{i \in J_n} g_i)_{n\in\naturals}$ is a (Willard) subnet of $\sum_{i \in I} g_i$.
+\end{proof}
+
+
+\begin{proposition}
+    Let $G$ be an abelian topological group. If the unordered sum $\sum_{n \in \naturals} g_n$ converges to $g$, then the series $\sum_{n=1}^\infty g_n$ converges to $g$. Furthermore, every rearrangement of $\sum_{n=1}^\infty g_n$ converges to $g$.
+\end{proposition}
+
+\begin{proof}
+    For $n \in \naturals$ let $J_n = \{1, \ldots, n\}$ and consider the sequence $(s_n)_{n\in\naturals}$ given by $s_n = \sum_{i \in I_n} g_i$. Notice that $s_n = \sum_{i=1}^n g_i$, so the claim follows from \cref{lem:unordered-sum-subsequence}.
+\end{proof}
+
 
 \newcommand{\calN}{\mathcal{N}}
 \newcommand{\nhoods}[1]{\calN_{#1}}
 \newcommand{\pnhoods}[1]{\calN'_{#1}}
 \newcommand{\limitval}{\calL}
 % [TODO: consider giving \nhoods an optional parameter for the topological space. E.g. \calN_space(point).]
+
+\begin{lemma}
+    An unordered sum $\sum_{i \in I} g_i$ in $G$ is Cauchy if and only if the sum has the following property: For every neighbourhood $N$ of $0$ there exists a $J \in \finsubsets{I}$ such that if $K \in \finsubsets{I}$ with $J \intersect K = \emptyset$, then $\sum_{i \in K} g_i \in N$. In other words,
+    %
+    \begin{equation*}
+        \forall N \in \nhoods{0} \,
+            \exists J \in \finsubsets{I} \,
+            \forall K \in \finsubsets{I}\colon
+            J \intersect K = \emptyset
+            \quad \implies \quad
+            \sum_{i \in K} g_i \in N.
+    \end{equation*}
+\end{lemma}
+
+\begin{proof}
+    Suppose the unordered sum is Cauchy. Let $N$ be a neighbourhood of $0$. Since the sum is Cauchy there exists a $J \in \finsubsets{I}$ such that $J \subseteq L,L'$ implies that
+    %
+    \begin{equation*}
+        \sum_{i \in L} g_i - \sum_{i \in L'} g_i
+            \in N,
+    \end{equation*}
+    %
+    for $L,L' \in \finsubsets{I}$. Hence if $K \in \finsubsets{I}$ is disjoint from $J$, then
+    %
+    \begin{equation*}
+        \sum_{i \in K} g_i
+            = \sum_{i \in J \union K} g_i - \sum_{i \in J} g_i
+            \in N,
+    \end{equation*}
+    %
+    as desired.
+
+    Conversely assume that the sum has the property above, let $U$ be an open neighbourhood of $0$, and let $V$ be a symmetric open neighbourhood of $0$ with $V + V \subseteq U$. Let $J \in \finsubsets{I}$ be such that $J \intersect K = \emptyset$ implies that $\sum_{i \in K} g_i \in V$ for $K \in \finsubsets{I}$. If $J \subseteq L,L'$, then
+    %
+    \begin{equation*}
+        \sum_{i \in L} g_i - \sum_{i \in L'} g_i
+            = \sum_{i \in L \setminus J} g_i - \sum_{i \in L' \setminus J} g_i
+            \in V - V
+            \subseteq U.
+    \end{equation*}
+    %
+    Thus the sum is Cauchy as claimed. % TODO: Don't use explicitly open neighbourhoods, there's no reason for it.
+\end{proof}
+
+
+Since the topology on a topological group $G$ is homogeneous, $G$ is automatically $R_0$. That is, if $g,h \in G$ and $g$ has a neighbourhood not containing $h$, then $h$ has a neighbourhood not containing $g$. In other words, topologically distinguishable points are separated. In particular, the specialisation preorder $\leq$ is symmetric, so that $g \leq h$ implies $g \equiv h$.
+
+\begin{lemma}
+    Let $G$ be an abelian topological group that is also first countable. If the unordered sum $\sum_{i \in I} g_i$ is Cauchy, then the set $\set{i \in I}{g_i \not\equiv 0}$ is countable.
+\end{lemma}
+
+\begin{proof}
+    Let $\calB$ be a countable neighbourhood basis at $0$. By taking intersections we may assume that the neighbourhoods in $\calB$ form a decreasing sequence $(N_n)_{n\in\naturals}$. For each $n \in \naturals$, choose $J_n \in \finsubsets{I}$ such that $J_n \intersect K = \emptyset$ implies that $\sum_{i \in K} g_i \in N_n$. Now let $J = \bigunion_{n\in\naturals} J_n$. For any $i \in I \setminus J$ the set $\{i\}$ is disjoint from each $J_n$, so
+    %
+    \begin{equation*}
+        g_i
+            = \sum_{j \in \{i\}} g_j \in N_n.
+    \end{equation*}
+    %
+    Since the $N_n$ form a neighbourhood basis at $0$, every neighbourhood of $0$ intersects $g_i$, i.e. $g_i \in \closure{\{0\}}$. But this means that $g_i \leq 0$ in the specialisation preorder, so $g_i \equiv 0$ since $G$ is $R_0$. Hence it follows that
+    %
+    \begin{equation*}
+        \set{i \in I}{g_i \not\equiv 0}
+            \subseteq J,
+    \end{equation*}
+    %
+    so the former set is countable since $J$ is, as desired.
+\end{proof}
+
+
+\section{Limits of functions} % [TODO move somewhere else?]
 
 Let $X$ be a topological space, and let $A \subseteq X$. A subset $N$ is a \emph{neighbourhood} of $A$ if there is an open set $U$ such that $A \subseteq U \subseteq N$. The set of neighbourhoods of $A$ is denoted $\nhoods{A}$ and is called the \emph{neighbourhood filter} of $A$ (since it is indeed a filter). If $A = \{x\}$ is a singleton we also write $\nhoods{x}$ for the neighbourhood filter of $x$. A \emph{punctured neighbourhood} of $x \in X$ is a set on the form $N \setminus \{x\}$, where $N \in \nhoods{x}$. The set of punctured neighbourhoods of $x$ is denoted $\pnhoods{x}$.
 
@@ -593,6 +1057,8 @@ A point $a \in X$ is called an \emph{adherent point} of $A \subseteq X$ if every
 \end{proof}
 
 
+\chapter{Differentiation}
+
 \section{Differentiability}
 
 % \begin{definition}[Differentiability on $\reals$]
@@ -736,9 +1202,9 @@ A point $a \in X$ is called an \emph{adherent point} of $A \subseteq X$ if every
             = 0,
     \end{equation}
     %
-    then $f$ is said to be \emph{differentiable} at $a$. The map $L$ is called the \emph{derivative} of $f$ at $a$ and is denoted $f'(a)$. If $E \subseteq A$ and $f$ is differentiable at $a$ for all $a \in E$, then we say that $f$ is \emph{differentiable on $E$}. If $f$ is differentiable on $A$, then we simply say that $f$ is \emph{differentiable}.
+    then $f$ is said to be \emph{differentiable} at $a$. The map $L$ is called a \emph{derivative of $f$ at $a$}. If this is unique, then we denote it by $f'(a)$. If $E \subseteq A$ and $f$ is differentiable at $a$ for all $a \in E$, then we say that $f$ is \emph{differentiable on $E$}. If $f$ is differentiable on $A$, then we simply say that $f$ is \emph{differentiable}.
     
-    If $f$ is differentiable, then the map $f' \colon A to \calL(\reals^d,\reals^m)$ is called the \emph{derivative} of $f$.
+    If $f$ is differentiable and its derivative is unique everywhere, then the map $f' \colon A \to \calL(\reals^d,\reals^m)$ is called the \emph{derivative of $f$}.
 \end{definition}
 %
 Note that for $f$ to be differentiable on $E$, every point in $E$ must be a limit point of $A$. In particular, for $f$ to be differentiable every point in $A$ must be a limit point of $A$. This is for instance the case when $A$ is open or when $A$ is an interval.
@@ -755,12 +1221,12 @@ Note that for $f$ to be differentiable on $E$, every point in $E$ must be a limi
     goes to zero, i.e. the difference quotient converges to $L$. Furthermore, if also $m = 1$ then $L$ is multiplication by a scalar, so in this case \cref{def:differentiability} is equivalent to the usual definition of the derivative.
 \end{remarkbreak}
 
-[TODO uniqueness]
-
 
 \begin{lemma}
     \label{lem:differentiability-coordinate-functions}
     Let $A \subseteq \reals^d$, let $a \in A$ be a limit point of $A$, and let $f = (f_1, \ldots, f_m) \colon A \to \reals^m$. Then $f$ is differentiable at $a$ if and only if each $f_i$ is differentiable at $a$, and $f'(a) = (f_1'(a), \ldots, f_m'(a))$.
+
+    [TODO inner points??]
 \end{lemma}
 
 \begin{proof}
@@ -795,12 +1261,13 @@ Note that for $f$ to be differentiable on $E$, every point in $E$ must be a limi
 
         \item There exists a linear map $L(a) \in \calL(\reals^d,\reals^m)$ and a function $\epsilon_a \colon A-a \to \reals^m$ such that
         %
-        \begin{equation*}
+        \begin{equation}
+            \label{eq:epsilon_a-properties}
             \lim_{h \to 0} \frac{\norm{\epsilon_a(h)}}{\norm{h}} = 0,
             \quad \text{and} \quad
             f(a+h) - f(a)
                 = L(a)h + \epsilon_a(h)
-        \end{equation*}
+        \end{equation}
         %
         for all $h \in A-a$.
 
@@ -814,16 +1281,16 @@ Note that for $f$ to be differentiable on $E$, every point in $E$ must be a limi
         for all $x \in A$.
     \end{enumlem}
     %
-    If any of these conditions are satisfied, then
+    If any of these conditions are satisfied, then $L(a)$ and $\phi_a(a)$ are derivatives of $f$ at $a$. Conversely, to any derivative $L(a)$ of $f$ at $a$ there exists a function $\epsilon_a \colon A-a \to \reals^m$ with the properties in \cref{eq:epsilon_a-properties}.
     %
-    \begin{equation*}
-        f'(a) = \phi_a(a) = L(a),
-        \quad \text{and} \quad
-        \phi_a(x)
-            = f'(a) + \frac{1}{\norm{x-a}^2} \epsilon_a(x-a)(x-a)\trans,
-    \end{equation*}
-    %
-    for all $x \in A \setminus \{a\}$.
+    % \begin{equation*}
+    %     f'(a) = \phi_a(a) = L(a),
+    %     \quad \text{and} \quad
+    %     \phi_a(x)
+    %         = f'(a) + \frac{1}{\norm{x-a}^2} \epsilon_a(x-a)(x-a)\trans,
+    % \end{equation*}
+    % %
+    % for all $x \in A \setminus \{a\}$.
 \end{lemma}
 %
 We will call the function $\phi = \phi_a$ an \emph{Hadamard function} for $f$ at $a$.
@@ -831,22 +1298,22 @@ We will call the function $\phi = \phi_a$ an \emph{Hadamard function} for $f$ at
 \begin{proof}
     \begin{proofsec}
         \item[(i) $\implies$ (ii)]
-        Let $L(a) = f'(a)$ and put
+        Let $L(a)$ be a derivative of $f$ at $a$ and put
         %
         \begin{equation*}
             \epsilon_a(h)
-                = f(a+h) - f(a) - f'(a)h
+                = f(a+h) - f(a) - L(a)h
         \end{equation*}
         %
         for $h \in A - a$. Then we have
         %
         \begin{equation*}
             \frac{\norm{\epsilon_a(h)}}{\norm{h}}
-                = \frac{\norm{f(a+h) - f(a) - f'(a)h}}{\norm{h}}
+                = \frac{\norm{f(a+h) - f(a) - L(a)h}}{\norm{h}}
                 \xrightarrow[h \to 0]{} 0
         \end{equation*}
         %
-        as required.
+        as required, since $L(a)$ is a derivative.
     
         \item[(ii) $\implies$ (iii)]
         Define
@@ -899,12 +1366,13 @@ We will call the function $\phi = \phi_a$ an \emph{Hadamard function} for $f$ at
                 \xrightarrow[x \to a]{} 0,
         \end{align*}
         %
-        by continuity of $\phi_a$ at $a$, and continuity of the operator norm, so $f$ is differentiable at $a$.
+        by continuity of $\phi_a$ at $a$, and continuity of the operator norm, so $f$ is differentiable at $a$, and $\phi_a(a)$ is a derivative of $f$ at $a$.
     \end{proofsec}
 \end{proof}
 
 
 \begin{proposition}
+    \label{prop:differentiable-implies-continuous}
     Let $A \subseteq \reals^d$, let $a \in A$ be a limit point of $A$, and let $f \colon A \to \reals^m$. If $f$ is differentiable at $a$, then $f$ is continuous at $a$.
 \end{proposition}
 
@@ -921,7 +1389,9 @@ We will call the function $\phi = \phi_a$ an \emph{Hadamard function} for $f$ at
 
 
 \begin{theorem}[The chain rule]
-    Let $A \subseteq \reals^d$ and $B \subseteq \reals^m$, and let $f \colon A \to \reals^m$ and $g \colon B \to \reals^p$ with $f(A) \subseteq B$. Assume that $a \in A$ is a limit point of $A$, that $f(a) \in B$ is a limit point of $B$, that $f$ is differentiable at $a$, and that $g$ is differentiable at $f(a)$. Then $g \circ f$ is differentiable at $a$ with
+    Let $A \subseteq \reals^d$ and $B \subseteq \reals^m$, and let $f \colon A \to \reals^m$ and $g \colon B \to \reals^p$ with $f(A) \subseteq B$. Assume that $a \in A$ is a limit point of $A$, that $f(a) \in B$ is a limit point of $B$ with derivative $L(a)$, that $f$ is differentiable at $a$, and that $g$ is differentiable at $f(a)$ with derivative $M(f(a))$. Then $g \circ f$ is differentiable at $a$, and $M(f(a)) \circ L(a)$ is a derivative of $g \circ f$ at $a$.
+
+    In particular, if the above derivatives of $f$, $g$ and $g \circ f$ are uniquely determined, then
     %
     \begin{equation*}
         (g \circ f)'(a)
@@ -948,15 +1418,67 @@ We will call the function $\phi = \phi_a$ an \emph{Hadamard function} for $f$ at
             = \psi(f(x))\phi(x)(x - a).
     \end{equation*}
     %
-    Notice that the map $x \mapsto \psi(f(x))\phi(x)$ is continuous at $a$, so it is an Hadamard function for $g \circ f$ at $a$. Thus \cref{lem:Hadamard-multiD} implies that $g \circ f$ is differentiable at $a$ with
+    Notice that the map $x \mapsto \psi(f(x))\phi(x)$ is continuous at $a$ by \cref{prop:differentiable-implies-continuous}, so it is an Hadamard function for $g \circ f$ at $a$. Thus \cref{lem:Hadamard-multiD} implies that $g \circ f$ is differentiable at $a$ with derivative
     %
     \begin{equation*}
-        (g \circ f)'(a)
-            = \psi(f(a)) \phi(a)
-            = g'(f(a)) f'(a),
+        \psi(f(a)) \phi(a)
+            = M(f(a)) \circ L(a),
     \end{equation*}
     %
     as claimed.
+\end{proof}
+
+\fleuronbreak
+
+We finally turn to uniqueness of derivatives. First a definition:
+
+\begin{definition}[Directional limit points]
+    \label{def:directional-limit-points}
+    Let $V$ be a topological vector space, and let $A \subseteq V$. For $a,h \in V$ with $h \neq 0$ we have the following:
+    \begin{enumdef}
+        \item We say that $a$ is a \emph{limit point of $A$ in the direction of $h$} if $a$ is a limit point of the set\footnotemark{} $A \intersect (a, a + \delta h)$ for some $\delta > 0$.
+
+        \item If $a$ is a limit point of $A$ in the direction of both $h$ and $-h$, then we say that $a$ is a \emph{two-sided limit point of $A$ in the direction of $h$}.
+
+        \item If $a$ is a limit point of $A$ in the direction of $h$ for all $h \in V \setminus \{0\}$, then we say that $a$ is a limit point of $A$ \emph{in every direction}.
+    \end{enumdef}
+\end{definition}
+\footnotetext{Recall that if $x,y \in V$, then we define the \enquote{intervals}
+%
+\begin{equation*}
+    [x,y] = \set{(t-1)x + ty}{t \in [0,1]}
+    \quad \text{and} \quad
+    (x,y) = \set{(t-1)x + ty}{t \in (0,1)}.
+\end{equation*}}
+%
+Notice that the value of $\delta$ is irrelevant. Notice furthermore that if $h$ and $h'$ are parallel and point in the same direction (i.e. if $h = sh'$ for some $s > 0$), then $a$ is a limit point of $A$ in the direction of $h$ if and only if $a$ is a limit point of $A$ in the direction of $h'$. Finally notice that if $a$ is a limit point of $A$ in the direction of some $h$, then $A$ is a limit point of $A$ in the usual sense (this is clear since $A \intersect (a, a + \delta h)$ is a subset of $A$). [TODO is there any issue in complex vector spaces?]
+
+\begin{lemma}[Uniqueness of derivatives]
+    \label{lem:uniqueness-of-derivatives}
+    Let $A \subseteq \reals^d$, let $a \in A$ be a limit point of $A$, and let $f \colon A \to \reals^m$ be differentiable at $a$. If $\calB$ is a basis for $\reals^d$ and $a$ is a limit point of $A$ in the direction of each element in $\calB$, then the derivative of $f$ at $a$ is uniquely determined. This is the case in particular if either
+    %
+    \begin{enumlem}
+        \item $d = 1$, or
+        \item $a$ is an inner point of $A$.
+    \end{enumlem}
+\end{lemma}
+
+\begin{proof}
+    Let $L(a)$ be a derivative of $f$ at $a$, and let $\epsilon_a$ be as in \cref{lem:Hadamard-multiD}. For $b \in \calB$ consider the set $I_b = \set{t \geq 0}{a+tb \in A}$, and notice that $0$ is a limit point of $I$ since $a$ is a limit point of $A$ in the direction of $b$. Next notice that, by \cref{eq:epsilon_a-properties}, we have
+    %
+    \begin{equation*}
+        L(a)b
+            = \frac{1}{t} \bigl( f(a + tb) - f(a) \bigr) - \frac{1}{t} \epsilon_a(tb)
+    \end{equation*}
+    %
+    for $t \in I \setminus \{0\}$. Also by \cref{eq:epsilon_a-properties} the right-most term above goes to zero as $t \downarrow 0$ on $I \setminus \{0\}$, so this implies that
+    %
+    \begin{equation*}
+        L(a)b
+            = \lim_{t \downarrow 0} \frac{1}{t} \bigl( f(a + tb) - f(a) \bigr).
+    \end{equation*}
+    %
+    In particular, $L(a)b$ is uniquely determined by $f$ and $a$. But since $\calB$ is a basis for $\reals^d$, this implies that $L(a)$ is uniquely determined by $f$ and $a$.
 \end{proof}
 
 
@@ -1030,10 +1552,10 @@ We will call the function $\phi = \phi_a$ an \emph{Hadamard function} for $f$ at
 \section{Directional and partial derivatives}
 
 \begin{definition}[Directional and partial derivatives]
-    Let $A \subseteq \reals^d$, and let $f \colon A \to \reals^m$. If $a$ is an interior point of $A$ and $v \in \reals^d$, then we say that $f$ has a \emph{directional derivative} at $a$ in the direction of $v$ if the limit
+    Let $A \subseteq \reals^d$, and let $f \colon A \to \reals^m$. If $a \in A$ is a limit point [TODO do I want to require two-sided limit points, and below limits from both directions?] of $A$ in the direction of $v \in \reals^d \setminus \{0\}$, then we say that $f$ has a \emph{directional derivative} at $a$ in the direction of $v$ if the limit
     %
     \begin{equation*}
-        \lim_{t \to 0} \frac{f(a + tv) - f(a)}{t}
+        \lim_{t \downarrow 0} \frac{f(a + tv) - f(a)}{t}
     \end{equation*}
     %
     exists. The value of this limit is denoted $D_v f(a)$ and is called the \emph{directional derivative} of $f$ at $a$ in the direction of $v$.
@@ -1044,9 +1566,10 @@ We will call the function $\phi = \phi_a$ an \emph{Hadamard function} for $f$ at
 \end{definition}
 
 \begin{proposition}
-    If $f$ is differentiable at an inner point $a$
+    Let $A \subseteq \reals^d$, and let $f \colon A \to \reals^m$. If $a \in A$ is a limit point of $A$ in every direction, and if $f$ is differentiable at $a$, then the following hold:
+    %
     \begin{enumprop}
-        \item then the directional derivative $D_v f(a)$ exists for all $v \in \reals^d$, and
+        \item The directional derivative $D_v f(a)$ exists for all $v \in \reals^d$, and
         %
         \begin{equation*}
             D_v f(a)
@@ -1063,14 +1586,16 @@ We will call the function $\phi = \phi_a$ an \emph{Hadamard function} for $f$ at
         for all $v = (v_1, \ldots v_d) \in \reals^d$. In particular, writing $f = (f_1, \ldots, f_m)$ the standard matrix representation $J_f(a)$ of $f'(a)$ is given by $J_f(a) = (D_j f_i(a))_{ij}$.
     \end{enumprop}
 \end{proposition}
+%
+Notice that the derivative of $f$ at $a$ is uniquely determined by \cref{lem:uniqueness-of-derivatives}, so the notation $f'(a)$ for the derivative is justified.
 
 \begin{proof}
 \begin{proofsec}
     \item[Proof of (i)]
-    Let $U$ be an open neighbourhood of $a$ contained in $A$, and define the function $g \colon U \to \reals$ by $g(t) = f(a + tv)$. Then since the function $t \mapsto a+tv$ is differentiable at $0$ with derivative $v$, the chain rule implies that
+    Let $I_v = \set{t \geq 0}{a+tv \in A}$ and define the function $g \colon I_v \to \reals$ by $g(t) = f(a + tv)$. Then since the function $t \mapsto a+tv$ is differentiable at $0$ with derivative $v$, the chain rule implies that
     %
     \begin{equation*}
-        \lim_{t \to 0} \frac{f(a + tv) - f(a)}{t}
+        \lim_{t \downarrow 0} \frac{f(a + tv) - f(a)}{t}
             = g'(0)
             = f'(a)v.
     \end{equation*}
@@ -1094,7 +1619,7 @@ We will call the function $\phi = \phi_a$ an \emph{Hadamard function} for $f$ at
 \end{theorem}
 
 \begin{proof}
-    We may assume that $m = 1$ by \cref{lem:differentiability-coordinate-functions}. Let $U$ be an open neighbourhood of $a$ on which $f$ is partially differentiable. Let $h = (h_1, \ldots, h_d) \in \reals^d$, and for $k = 1, \ldots, d$ let $h^{(k)} = \sum_{j=1}^k h_j e_j$. Notice that $h^{(d)} = h$. Choose $h$ small enough such that $h^{(k)} \in U$ for all $k$. Next let $I_k \subseteq \reals$ be an open interval containing $0$ and $h_k$ such that the map
+    We may assume that $m = 1$ by \cref{lem:differentiability-coordinate-functions}. Let $U$ be an open neighbourhood of $a$ on which $f$ is partially differentiable. Let $h = (h_1, \ldots, h_d) \in \reals^d$, and for $k = 1, \ldots, d$ let $h^{(k)} = \sum_{j=1}^k h_j e_j$. Notice that $h^{(d)} = h$. Choose $h$ small enough such that $a + h^{(k)} \in U$ for all $k$. Next let $I_k \subseteq \reals$ be an open interval containing $0$ and $h_k$ such that the map
     %
     \begin{align*}
         g_k \colon I_k &\to \reals, \\
@@ -1150,7 +1675,7 @@ Since $\calL(\reals^d,\reals^m)$ is a finite-dimensional vector space, it has a 
 \section{Higher-order derivatives}
 
 \begin{theorem}[Clairaut's Theorem]
-    Let $A \subseteq \reals^d$ be open, let $a$ be an inner point of $U$, and let $f \colon A \to \reals^m$. For $i,j \in \{1, \ldots, d\}$, if $D_j D_i f$ and $D_i D_j f$ exist in a neighbourhood of $a$ and are continuous at $a$, then
+    Let $A \subseteq \reals^d$ be open, let $a$ be an inner point of $A$, and let $f \colon A \to \reals^m$. For $i,j \in \{1, \ldots, d\}$, if $D_j D_i f$ and $D_i D_j f$ exist in a neighbourhood of $a$ and are continuous at $a$, then
     %
     \begin{equation*}
         D_j D_i f(a)
@@ -1161,14 +1686,14 @@ Since $\calL(\reals^d,\reals^m)$ is a finite-dimensional vector space, it has a 
 \begin{proof}
     By permuting indices, we may assume that $i = 1$ and $j = 2$, and indeed that $d = 2$. Furthermore, by \cref{lem:differentiability-coordinate-functions} it suffices to prove the theorem for $m = 1$.
 
-    Let $U$ be an open convex neighbourhood of $a$ on which $D_j D_i f$ and $D_i D_j f$ exist, and let $x \in U$. Writing $a = (a_1,a_2)$ and $x = (x_1,x_2)$, define
+    Let $U$ be an open neighbourhood of $a$ on which $D_j D_i f$ and $D_i D_j f$ exist, and let $x \in U$. We may assume that $U$ is on the form $U_1 \prod U_2$ for open sets $U_1, U_2 \subseteq \reals$. Writing $a = (a_1,a_2)$ and $x = (x_1,x_2)$, define
     %
     \begin{equation*}
         r(x)
             = \frac{f(x) - f(a_1,x_2) - f(x_1,a_2) + f(a)}{(x_1 - a_1)(x_2 - a_2)}
     \end{equation*}
     %
-    for $x \neq a$. Let $I$ be an open interval containing $a_1$ and $x_1$, and define $g \colon I \to \reals$ by $g(t) = f(t,x_2) - f(t,a_2)$. Notice that $g$ is well-defined by convexity of $U$. Then
+    for $x \neq a$. Let $I \subseteq U_1$ be an open interval containing $a_1$ and $x_1$, and define $g \colon I \to \reals$ by $g(t) = f(t,x_2) - f(t,a_2)$. Then
     %
     \begin{equation*}
         r(x)
@@ -1183,7 +1708,7 @@ Since $\calL(\reals^d,\reals^m)$ is a finite-dimensional vector space, it has a 
             = \frac{D_1 f(s_1,x_2) - D_1 f(s_1,a_2)}{x_2 - a_2}.
     \end{equation*}
     %
-    Similarly, let $J$ be an open interval containing $a_2$ and $x_2$, and define $h \colon J \to \reals$ by $h(t) = D_1 f(s_1,t)$. Again the mean value theorem yields an $s_2 \in \reals$ between $x_2$ and $a_2$ such that
+    Similarly, let $J \subseteq U_2$ be an open interval containing $a_2$ and $x_2$, and define $h \colon J \to \reals$ by $h(t) = D_1 f(s_1,t)$. Again the mean value theorem yields an $s_2 \in \reals$ between $x_2$ and $a_2$ such that
     %
     \begin{equation*}
         r(x)
@@ -1298,33 +1823,30 @@ Also note that monotonic functions are of bounded variation on any compact inter
     %
     so $f$ is right-continuous at $c$. Similarly for left-continuity.
 
-    We prove the converse, so assume that $f$ is continuous at $c$ and let $\epsilon > 0$. There exists a $\delta > 0$ such that $0 < \abs{x - c} < \delta$ implies $\abs{f(x) - f(c)} < \epsilon$. Further choose a partition $P = \{x_0, \ldots, x_n\}$ of $[c,b]$ such that
+    We prove the converse, so assume that $f$ is continuous at $c$, and let $\epsilon > 0$. There exists a $\delta > 0$ such that $0 < \abs{x - c} < \delta$ implies $\abs{f(x) - f(c)} < \epsilon$. For any partition $P$ of $[c,b]$ we have
+    %
+    \begin{equation*}
+        0
+            \leq V(x_1) - V(c)
+            = V_f(c,b) - V_f(x_1,b).
+    \end{equation*}
+    %
+    To bound the right-hand side, choose $P = \{x_0, \ldots, x_n\}$ such that
     %
     \begin{equation*}
         V_f(c,b) - \epsilon
-            < \sum_{i=1}^n \abs{\Delta f_k}.
+            < \sum_{i=1}^n \abs{\Delta f_i}.
     \end{equation*}
     %
     This inequality is conserved when adding points to $P$, so we may assume that $x_1 - x_0 < \delta$, implying that $\abs{\Delta f_1} < \epsilon$. The inequality above then becomes
     %
     \begin{equation*}
         V_f(c,b) - \epsilon
-            < \epsilon + \sum_{i=2}^n \abs{\Delta f_k}
+            < \epsilon + \sum_{i=2}^n \abs{\Delta f_i}
             \leq \epsilon + V_f(x_1,b),
     \end{equation*}
     %
-    so that $V_f(c,b) - V_f(x_1,b) < 2\epsilon$. This implies that
-    %
-    \begin{align*}
-        0
-            &\leq V(x_1) - V(c)
-             = V_f(a,x_1) - V_f(a,c) \\
-            &= V_f(c,x_1)
-             = V_f(c,b) - V_f(x_1,b)
-             < 2\epsilon,
-    \end{align*}
-    %
-    showing that $V(c+) = V(c)$. A similar argument yields $V(c-) = V(c)$, so $V$ is continuous at $c$.
+    so that $V_f(c,b) - V_f(x_1,b) < 2\epsilon$. Hence $V(x_1) - V(c) \leq 2\epsilon$, so $V(c+) = V(c)$ since $\epsilon$ was arbitrary and $V$ is increasing. A similar argument yields $V(c-) = V(c)$, so $V$ is continuous at $c$.
 \end{proof}
 
 
@@ -1521,6 +2043,7 @@ Below we fix an interval $[a,b]$ and (bounded) integrators $\alpha$ and $\beta$ 
 
 
 \begin{proposition}[Reduction to a Riemann integral]
+    \label{prop:reduction-to-Riemann-integral}
     Let $\alpha \in C^1[a,b]$ and $f \in \integrable[\alpha]{a,b}$. Then $f \alpha' \in \integrable{a,b}$, and
     %
     \begin{equation*}
@@ -1732,17 +2255,19 @@ We also use the notations $\overline{I}(f,\alpha)$ and $\underline{I}(f,\alpha)$
 \end{proof}
 
 
-\section{Mean value theorems}
+\section{Mean value theorems for Riemann--Stieltjes integrals}
 
 \begin{proposition}[The first mean value theorem]
-    \label{prop:mean-value-1}
+    \label{prop:integral-MVT1}
     Let $\alpha \colon [a,b] \to \reals$ be increasing, and let $f \in \integrable[\alpha]{a,b}$. Let $m = \inf_{x \in [a,b]} f(x)$ and $M = \sup_{x \in [a,b]} f(x)$. Then there exists a $c \in \reals$ with $m \leq c \leq M$ such that
     %
     \begin{equation*}
         \int_a^b f \dif\alpha
             = c \int_a^b \dif\alpha
-            = c (\alpha(y) - \alpha(x)).
+            = c (\alpha(b) - \alpha(a)).
     \end{equation*}
+    %
+    In particular, if $f$ is continuous then $c = f(x_0)$ for some $x_0 \in [a,b]$.
 \end{proposition}
 
 \begin{proof}
@@ -1765,7 +2290,40 @@ We also use the notations $\overline{I}(f,\alpha)$ and $\underline{I}(f,\alpha)$
     so defining $c$ as the middle term, the claim follows.
 \end{proof}
 
-% [TODO MVT2?]
+
+\begin{proposition}[The second mean value theorem]
+    \label{prop:integral-MVT2}
+    Let $f,\alpha \colon [a,b] \to \reals$ with $f$ monotonic and $\alpha$ continuous. Then there exists a point $x_0 \in [a,b]$ such that
+    %
+    \begin{equation*}
+        \int_a^b f \dif\alpha
+            = f(a) \int_a^{x_0} \dif\alpha + f(b) \int_{x_0}^b \dif\alpha.
+    \end{equation*}
+\end{proposition}
+
+\begin{proof}
+    By replacing $f$ with $-f$ we may assume that $f$ is increasing. Then $f$ is of bounded variation, so \cref{prop:integration-by-parts} implies that $f \in \integrable[\alpha]{a,b}$. Another application of this proposition along with \cref{prop:integral-MVT1} yields a $x_0 \in [a,b]$
+    %
+    \begin{align*}
+        \int_a^b f \dif\alpha
+            &= f(b)\alpha(b) - f(a)\alpha(a) - \int_a^b \alpha \dif f \\
+            &= f(b)\alpha(b) - f(a)\alpha(a) - \alpha(x_0)(f(b) - f(a)) \\
+            &= f(a) (\alpha(x_0) - \alpha(a)) + f(b)(\alpha(b) - \alpha(x_0)),
+    \end{align*}
+    %
+    as desired.
+\end{proof}
+
+
+We attempt to understand the two mean value theorems. In the case where $\alpha(a) < \alpha(b)$, the first essentially says that the \enquote{$\alpha$-average} of $f$, given by
+%
+\begin{equation*}
+    \frac{1}{\alpha(b) - \alpha(a)} \int_a^b f \dif\alpha,
+\end{equation*}
+%
+lies between the minimum and maximum of $f$, as we would expect. Notice that the theorem yields an element $c$ of the \emph{codomain} of $f$ that serves as the \enquote{mean value} of $f$.
+
+As for the second theorem, if $f$ is monotonic then the integral of $f$ is a weighted sum of the values of $f$ at the endpoints. The theorem says that there is an element $x_0$ of the \emph{domain} that splits up the interval $[a,b]$ such that the corresponding integrals gives the desired weights. This element $x_0$ in some sense serves as a \enquote{mean} of $f$.
 
 
 \section{Integrators of bounded variation}
@@ -1924,6 +2482,7 @@ For any function $f \colon X \to \reals$, recall that the \emph{positive and neg
 
 
 \begin{corollary}
+    \label{cor:product-abs-integrable}
     Let $\alpha \colon [a,b] \to \reals$ be of bounded variation, and let $f,g \in \integrable[\alpha]{a,b}$. Then the functions $\abs{f}$ and $fg$ are also $\alpha$-integrable. In particular, $\integrable[\alpha]{a,b}$ is an $\reals$-algebra.
     
     If $\alpha$ is increasing we also have
@@ -1950,36 +2509,119 @@ Recall from \cref{prop:integral-linearity} that $\integrable[\alpha]{a,b}$ is al
 \end{proof}
 
 
-\section{The fundamental theorems of calculus}
-
-\begin{theorem}[The first fundamental theorem of calculus]
-    Let $\alpha \colon [a,b] \to \reals$ be of bounded variation, and let $f \in \integrable[\alpha]{a,b}$. Define a function $F \colon [a,b] \to \reals$ by
+\begin{proposition}
+    \label{prop:integral-as-integrator}
+    Let $\alpha \colon [a,b] \to \reals$ be of bounded variation, let $f,g \in \integrable[\alpha]{a,b}$, and define
     %
     \begin{equation*}
         F(x)
-            = \int_a^x f \dif\alpha.
+            = \int_a^x f \dif\alpha
     \end{equation*}
+    %
+    for $x \in [a,b]$. Then $g \in \integrable[F]{a,b}$ and
+    %
+    \begin{equation*}
+        \int_a^b fg \dif\alpha
+            = \int_a^b g \dif F.
+    \end{equation*}
+\end{proposition}
+
+\begin{remark}
+    It suffices to assume that $fg$ is integrable instead of $f$. Conversely, notice that $fg \in \integrable[\alpha]{a,b}$ by \cref{cor:product-abs-integrable} under the assumptions in \cref{prop:integral-as-integrator}.
+    
+    If $f$ is continuous and $\alpha$ is continuously differentiable, then this result follows from the first fundamental theorem of calculus, which we prove in \cref{enum:first-fundamental-theorem-of-calculus}. For in this case $F$ is continuously differentiable with $F'(x) = f(x)\alpha'(x)$ (as we show below, we may assume that $\alpha$ is increasing), so applying \cref{prop:reduction-to-Riemann-integral} twice yields
+    %
+    \begin{equation*}
+        \int_a^b g \dif F
+            = \int_a^b g F'
+            = \int_a^b fg \alpha'
+            = \int_a^b fg \dif\alpha.
+    \end{equation*}
+    %
+    However, the claim holds more generally, as we now show.
+\end{remark}
+
+\begin{proofof}[Proof of \cref{prop:integral-as-integrator}]
+    We may assume that $\alpha$ is increasing: Define $V$ as in \cref{thm:alpha-integrable-implies-V-integrable}, and let
+    %
+    \begin{equation*}
+        F_1(x)
+            = \int_a^x f \dif V,
+        \quad \text{and} \quad
+        F_2(x)
+            = \int_a^x f \dif (V - \alpha),
+    \end{equation*}
+    %
+    so that $F = F_1 - F_2$. Then assuming that the proposition holds for increasing integrators, we have
+    %
+    \begin{align*}
+        \int_a^b fg \dif\alpha
+            &= \int_a^b fg \dif V - \int_a^b fg \dif (V-\alpha)
+             = \int_a^b g \dif F_1 - \int_a^b g \dif F_2 \\
+            &= \int_a^b g \dif (F_1 - F_2)
+             = \int_a^b g \dif F.
+    \end{align*}
+    %
+    Hence we assume below that $\alpha$ is increasing.
+    
+    Let $(P,T)$ be a tagged partition of $[a,b]$ with $P = \{x_0, \ldots, x_n\}$ and $T = \{t_1, \ldots, t_n\}$. Then
+    %
+    \begin{equation*}
+        S_{g,F}(P,T)
+            = \sum_{i=1}^n g(t_i) \int_{x_{i-1}}^{x_i} f(t) \dif\alpha(t)
+            = \sum_{i=1}^n \int_{x_{i-1}}^{x_i} f(t) g(t_i) \dif\alpha(t),
+    \end{equation*}
+    %
+    and
+    %
+    \begin{equation*}
+        \int_a^b fg \dif\alpha
+            = \sum_{i=1}^n \int_{x_{i-1}}^{x_i} f(t) g(t) \dif\alpha(t).
+    \end{equation*}
+    %
+    Letting $M = \sup_{x \in [a,b]} \abs{f(x)}$ we thus have
+    %
+    \begin{align*}
+        \abs[\bigg]{ S_{g,F}(P,T) - \int_a^b fg \dif\alpha }
+            &= \abs[\bigg]{ \sum_{i=1}^n \int_{x_{i-1}}^{x_i} f(t) \bigl( g(t_i) - g(t) \bigr) \dif\alpha(t) } \\
+            &\leq M \sum_{i=1}^n \int_{x_{i-1}}^{x_i} \abs{ g(t_i) - g(t) } \dif\alpha(t) \\
+            &\leq M \sum_{i=1}^n \int_{x_{i-1}}^{x_i} \bigl( M_i(g) - m_i(g) \bigr) \dif\alpha \\
+            &= M \bigl( U_{g,\alpha}(P) - L_{g,\alpha}(P) \bigr).
+    \end{align*}
+    %
+    Since $g$ is $\alpha$-integrable, this can be made as small as desired. This proves the claim.
+\end{proofof}
+
+
+\section{The fundamental theorems of calculus}
+
+\begin{theorem}[The integral as a function of the interval]
+    Let $\alpha \colon [a,b] \to \reals$ be of bounded variation, and let $f \in \integrable[\alpha]{a,b}$. Define a function $F \colon [a,b] \to \reals$ by
+    %
+    \begin{equation}
+        \label{eq:integral-function-of-interval}
+        F(x)
+            = \int_a^x f \dif\alpha.
+    \end{equation}
     %
     Then the following hold:
     %
     \begin{enumthm}
         \item \label{enum:integral-is-BV} $F$ is of bounded variation.
         \item \label{enum:continuity-of-integral} Every point of continuity of $\alpha$ is also a point of continuity of $F$.
-        \item \label{enum:derivative-of-integral} Assume that $\alpha$ is increasing. If $f$ is continuous and $\alpha$ differentiable at $x \in (a,b)$, then $F$ is differentiable at $x$ with $F'(x) = f(x) \alpha'(x)$.
+        \item \label{enum:first-fundamental-theorem-of-calculus} Assume that $\alpha$ is increasing. If $f$ is continuous and $\alpha$ differentiable at $x \in [a,b]$, then $F$ is differentiable at $x$ with $F'(x) = f(x) \alpha'(x)$.
     \end{enumthm}
 \end{theorem}
 %
-Notice that the integral above exists by \cref{cor:integrable-on-subinterval}, and so do the integrals in the proof below.
-
-% [TODO (ii) requires that alpha continuous implies V continuous!]
+The result \cref{enum:first-fundamental-theorem-of-calculus} is known as \emph{the first fundamental theorem of calculus}. Notice that the integral in \cref{eq:integral-function-of-interval} exists by \cref{cor:integrable-on-subinterval}, and so do the integrals in the proof below.
 
 \begin{proof}
 \begin{proofsec}
     \item[Proof of \subcref{enum:integral-is-BV}]
-    Since $\boundedvar{a,b}$ is a vector space, we may assume that $\alpha$ is increasing. By \cref{cor:positive-negative-part} we may further assume that $f$ is positive. Then $F$ is increasing, hence of bounded variation.\footnote{E.g. Apostol [TODO ref] attempt to prove this using \cref{prop:mean-value-1}, but his argument is not, as far as I can tell, correct as stated. Hence we use a different argument, more in the spirit of Lebesgue.}
+    Since $\boundedvar{a,b}$ is a vector space, we may assume that $\alpha$ is increasing. By \cref{cor:positive-negative-part} we may further assume that $f$ is positive. Then $F$ is increasing, hence of bounded variation.\footnote{E.g. \textcite[Theorem~7.32]{apostolanalysis} attempts to prove this using \cref{prop:integral-MVT1}, but his argument is not, as far as I can tell, correct as stated. Hence we use a different argument, more in the spirit of Lebesgue.}
     
     \item[Proof of \subcref{enum:continuity-of-integral}]
-    By \cref{prop:total-variation-continuity} we may assume that $\alpha$ is increasing. Let $x,y \in [a,b]$ with $x \neq y$, and let $I$ denote the closed interval between $x$ and $y$. \Cref{prop:mean-value-1} now furnishes a $c_{xy} \in \reals$ with
+    By \cref{prop:total-variation-continuity} we may assume that $\alpha$ is increasing. Let $x,y \in [a,b]$ with $x \neq y$, and let $I$ denote the closed interval between $x$ and $y$. \Cref{prop:integral-MVT1} now furnishes a $c_{xy} \in \reals$ with
     %
     \begin{equation*}
         \inf_{t \in [a,b]} f(t)
@@ -2000,7 +2642,7 @@ Notice that the integral above exists by \cref{cor:integrable-on-subinterval}, a
     %
     Assume now that $\alpha$ is continuous at $x$. Since $y \mapsto c_{xy}$ is bounded on $[a,b]$ (since $f$ is), letting $y \to x$ thus yields continuity of $F$ at $x$.
 
-    \item[Proof of \subcref{enum:derivative-of-integral}]
+    \item[Proof of \subcref{enum:first-fundamental-theorem-of-calculus}]
     If $f$ is continuous at $x$, then $c_{xy} \to f(x)$ as $y \to x$, since $c_{xy}$ is bounded by the supremum and infimum of $f$ in a neighbourhood of $x$. Now \cref{eq:fundamental-theorem-difference} implies that
     %
     \begin{equation*}
@@ -2016,7 +2658,7 @@ Notice that the integral above exists by \cref{cor:integrable-on-subinterval}, a
 
 
 \begin{remark}
-    In the case $\alpha(x) = x$, \subcref{enum:derivative-of-integral} has a proof that does not use \cref{prop:mean-value-1}: Simply note that
+    In the case $\alpha(x) = x$, \subcref{enum:first-fundamental-theorem-of-calculus} has a proof that does not use \cref{prop:integral-MVT1}: Simply note that
     %
     \begin{equation*}
         \frac{F(y)-F(x)}{y-x} - f(x)
@@ -2049,8 +2691,43 @@ Notice that the integral above exists by \cref{cor:integrable-on-subinterval}, a
 \end{proof}
 
 
-\section{Limit and continuity theorems}
+\section{Further results on Riemann integrals}
 
+\begin{corollary}[The second mean value theorem for Riemann integrals]
+    Let $f,g \colon [a,b] \to \reals$ with $f$ monotonic and $g \in \integrable{a,b}$. Then there exists a point $x_0 \in [a,b]$ such that
+    %
+    \begin{equation*}
+        \int_a^b fg
+            = f(a) \int_a^{x_0} g + f(b) \int_{x_0}^b g.
+    \end{equation*}
+\end{corollary}
+%
+Both \textcite[Theorem~7.37]{apostolanalysis} and \textcite[Lemma~8.41]{folland2007} assume that $g$ is continuous (the latter even assumes that $f$ is right-continuous), but as far as I can tell the argument below goes through without this assumption.
+
+\begin{proof}
+    Define $\alpha(x) = \int_a^x g$. Then $\alpha$ is continuous by \cref{enum:continuity-of-integral}, so \cref{prop:integral-MVT2} yields an $x_0 \in [a,b]$ such that
+    %
+    \begin{equation*}
+        \int_a^b f \dif\alpha
+            = f(a) \int_a^{x_0} \dif\alpha + f(b) \int_{x_0}^b \dif\alpha.
+    \end{equation*}
+    %
+    Furthermore, since both $f$ and $g$ is Riemann-integrable ($f$ since it is monotonic), \cref{prop:integral-as-integrator} implies that
+    %
+    \begin{align*}
+        \int_a^b fg
+            &= \int_a^b f \dif\alpha
+             = f(a) \int_a^{x_0} \dif\alpha + f(b) \int_{x_0}^b \dif\alpha \\
+            &= f(a) \int_a^{x_0} g + f(b) \int_{x_0}^b g,
+    \end{align*}
+    %
+    as desired.
+\end{proof}
+
+[TODO change of variables]
+
+
+\section{Limit and continuity theorems}
 
 \begin{proposition}
     \label{thm:integral-continuity}
@@ -2124,6 +2801,8 @@ Notice that the integral above exists by \cref{cor:integrable-on-subinterval}, a
     \end{equation*}
     %
     In particular, $\integrable[\alpha]{a,b}$ is a closed subspace of $C[a,b]$ equipped with the uniform norm.
+
+    [TODO $\alpha$ must be increasing! Or at least BV.]
 \end{proposition}
 
 \begin{proof}
@@ -2850,8 +3529,6 @@ If $V \subseteq \complex$ is open and $f \colon V \to \complex$ is differentiabl
 
 
 \chapter{The extended real line}
-
-\newcommand{\exreals}{\closure{\reals}}
 
 Let $+\infty$ (or simply $\infty$) and $-\infty$ denote elements disjoint from $\reals$. The \emph{extended real line}, as a set, is then the union $\exreals = \reals \union \{\pm\infty\}$. We extend the ordering on $\reals$ to $\exreals$ by declaring that $-\infty < a$ for all $a \neq -\infty$ and that $\infty > a$ for all $a \neq \infty$. This clearly makes $\exreals$ into a totally ordered set. We further equip it with order topology, i.e. the topology generated by open rays $\set{x \in \exreals}{a < x}$ and $\set{x \in \exreals}{x < b}$ for all $a,b \in \exreals$. One easily sees that this is a Hausdorff topology (in fact it is $T_5$, which all order topologies are), so in particular singletons are closed and $\reals$ is open.
 
