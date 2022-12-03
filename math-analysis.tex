@@ -132,6 +132,22 @@
         \item For all $A \subseteq X$, if $0_X \in A$ and $x \in A$ implies $S(x) \in A$, then $A = X$.
     \end{enumdef}
 \end{definition}
+%
+We define a strict total order $<$ on a Peano system by declaring that $x < S(x)$, and that $x < y$ implies $S(x) < S(y)$, for all $x,y \in X$. Notice that with this ordering, $0_X$ is the minimum of $X$.
+
+\begin{remark}
+    Recall that an ordered set $X$ is \emph{well-ordered} if any nonempty subset of $X$ has a minimum. Contrary to what many textbook authors seem to suggest, the induction principle (3) is \emph{not} equivalent to being well-ordered, given the other axioms. While any Peano system is well-ordered, as we prove below, the converse does not hold: For instance, if $\naturals$ are the natural numbers (as we define below), the linear sum $\naturals \oplus \naturals$ is well-ordered but does not satisfy the induction principle (compare the ordinal $\omega + \omega$).
+
+    The usual \enquote{proof} that being well-ordered implies the induction principle uses that the element $0_X$ above is the only element of $X$ without a predecessor, and with this modification to the Peano axioms well-ordering does imply the induction principle (and vice-versa).
+\end{remark}
+
+\begin{corollary}[Well-ordering of Peano systems]
+    Any Peano system $(X,0_X,S)$ is well-ordered.
+\end{corollary}
+
+\begin{proof}
+    Let $A \subseteq X$ be nonempty, and let $L$ be the subset of $X$ consisting of lower bounds of $A$. Then clearly $0_X \in L$, and if $a \in A$ then $S(a) \not\in L$. Hence $L \neq X$, so since $X$ is a Peano system there is an $m \in L$ such that $S(m) \not\in L$. We must then have $m \in A$, since otherwise $S(m) \in L$. Thus $m$ is the minimum of $A$.
+\end{proof}
 
 
 \begin{definition}[The real numbers]
@@ -159,14 +175,6 @@ A subset $A$ of $\reals$ is said to be \emph{inductive} if $0 \in A$, and if $a 
     Clearly $0 \in \naturals$, and $S$ is injective by cancellation of addition. Also, notice that $S(n) = n+1 > n \geq 0$ for all $n \in \naturals$, so $0$ is not in the image of $S$. Finally, let $A \subseteq \naturals$ be such that $0 \in A$ and $n \in A$ implies $S(n) \in A$. Then $A$ is an inductive subset of $\reals$, so $\naturals \subseteq A$. Hence $(\naturals,0,S)$ is a Peano system.
 \end{proof}
 
-
-\begin{corollary}[Well-ordering of $\naturals$]
-    The set $\naturals$ is well-ordered, i.e. any nonempty subset $A \subseteq \naturals$ has a minimum.
-\end{corollary}
-
-\begin{proof}
-    Let $L$ be the subset of $\naturals$ consisting of lower bounds of $A$. Then clearly $0 \in L$, and if $a \in A$ then $a+1 \not\in L$. Hence $L \neq \naturals$, so since $\naturals$ is a Peano system there is an $m \in L$ such that $m+1 \not\in L$. We must then have $m \in A$, since otherwise $m+1 \in L$. Thus $m$ is the minimum of $A$.
-\end{proof}
 
 Furthermore, the \emph{integers} is the set $\ints = \naturals \union (-\naturals)$. We further denote by $\posints$ the subset of strictly positive integers, which is just the set $\naturals \setminus \{0\}$. Finally, the \emph{rational numbers} is the set $\rationals$ of numbers on the form $m/n$, where $m,n \in \ints$ and $n > 0$. This is easily seen to be a countable subfield of $\reals$.
 
