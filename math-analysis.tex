@@ -794,6 +794,80 @@ We recall that a topological space $X$ is \emph{sequentially compact} if every s
 \end{proof}
 
 
+\begin{proposition}[The ratio test]
+    Let $\sum_{n=1}^\infty a_n$ be a series with complex terms such that $a_n \neq 0$ for large enough $n$. Define
+    %
+    \begin{equation*}
+        r
+            = \liminf_{n \to \infty} \abs[\bigg]{ \frac{a_{n+1}}{a_n} }
+        \quad \text{and} \quad
+        R
+            = \limsup_{n \to \infty} \abs[\bigg]{ \frac{a_{n+1}}{a_n} }.
+    \end{equation*}
+    %
+    If $R < 1$ then the series converges absolutely, and if $r > 1$ then the series diverges.
+\end{proposition}
+
+\begin{proof}
+    First assume that $R < 1$ and choose $\rho \in (R,1)$. Then there exists an $N \in \naturals$ such that $n \geq N$ implies that $\abs{a_{n+1}} \leq \rho \abs{a_n}$. In particular we have $\abs{a_{N+n}} \leq \rho^n \abs{a_N}$, so
+    %
+    \begin{equation*}
+        \sum_{n=N+1}^\infty \abs{a_n}
+            = \sum_{n=1}^\infty \abs{a_{N+n}}
+            \leq \sum_{n=1}^\infty \rho^n \abs{a_N}
+            = \abs{a_N} \frac{\rho}{1-\rho}
+            < \infty.
+    \end{equation*}
+    %
+    Hence the series converges.
+
+    Next assume that $r > 1$. Then there exists an $N \in \naturals$ such that $n \geq N$ implies that $\abs{a_{n+1}} > \abs{a_n}$, so the terms do not approach zero. Hence the series diverges by [TODO cor ref].
+\end{proof}
+
+
+\begin{proposition}[The root test]
+    Consider a series $\sum_{n=1}^\infty a_n$ with complex terms, and let
+    %
+    \begin{equation*}
+        C
+            = \limsup_{n \to \infty} \sqrt[n]{\abs{a_n}}.
+    \end{equation*}
+    %
+    If $C < 1$ then the series converges absolutely, and if $C > 1$ then the series diverges.
+\end{proposition}
+
+\begin{proof}
+    First assume that $C < 1$. Let $\rho \in (C,1)$ and choose $N \in \naturals$ such that $n \geq N$ implies $\sqrt[n]{\abs{a_n}} \leq \rho$. This implies that $\abs{a_n} \leq \rho^n$, but since the geometric series $\sum_{n=N}^\infty \rho^n$ converges, so does the original series.
+
+    On the other hand, if $C > 1$ then $\sqrt[n]{\abs{a_n}} > 1$ for infinitely many $n$. But then the terms $a_n$ cannot go to zero, so [TODO cor ref] implies that the series diverges.
+\end{proof}
+
+
+\begin{corollary}[The Cauchy--Hadamard theorem]
+    Let $\sum_{n=0}^\infty c_n(z - a)^n$ be a power series with complex coefficients and $a \in \complex$, and let
+    %
+    \begin{equation*}
+        R
+            = \frac{1}{ \limsup_{n \to \infty} \sqrt[n]{\abs{c_n}} },
+    \end{equation*}
+    %
+    where $R = \infty$ if the denominator is zero. The series then converges when $\abs{z-a} < R$ and diverges when $\abs{z-a} > R$.
+\end{corollary}
+
+\begin{proof}
+    Let $C$ be as in [TODO ref root test], and notice that
+    %
+    \begin{equation*}
+        C
+            = \limsup_{n \to \infty} \sqrt[n]{\abs{c_n(z-a)^n}}
+            = \abs{z-a} \limsup_{n \to \infty} \sqrt[n]{\abs{c_n}}
+            = \frac{\abs{z-a}}{R},
+    \end{equation*}
+    %
+    where $C = 0$ if $R = \infty$ and $C = \infty$ if $R = 0$. The claim immediately follows.
+\end{proof}
+
+
 \section{Unordered sums}
 
 \newcommand{\finsubsets}[1]{\calF(#1)}
