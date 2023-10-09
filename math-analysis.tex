@@ -1756,57 +1756,81 @@ Since $\calL(\reals^d,\reals^m)$ is a finite-dimensional vector space, it has a 
 
 \section{Higher-order derivatives}
 
-\begin{theorem}[Clairaut's Theorem]
-    Let $A \subseteq \reals^d$ be open, let $a$ be an inner point of $A$, and let $f \colon A \to \reals^m$. For $i,j \in \{1, \ldots, d\}$, if $D_j D_i f$ and $D_i D_j f$ exist in a neighbourhood of $a$ and are continuous at $a$, then
+\begin{lemma}
+    \label{lem:iterated-limit}
+    Let $A \subset \reals^2$, let $a \in A$ be an inner point, and consider a function $f \colon A \to \reals$. If the limit $\lim_{x \to a} f(x)$ exists, and the limit $\lim_{x_2 \to a_2} f(x_1,x_2)$ exists for all $x_1$ in a neighbourhood of $a_1$, then the iterated limit exists with
     %
     \begin{equation*}
-        D_j D_i f(a)
-            = D_i D_j f(a).
+        \lim_{x_1 \to a_1} \lim_{x_2 \to a_2} f(x_1,x_2)
+            = \lim_{x \to a} f(x).
     \end{equation*}
+\end{lemma}
+
+\begin{proof}
+    Let $L = \lim_{x \to a} f(x)$. Let $\epsilon > 0$. Choose $\delta > 0$ such that $\abs{x_1 - a_1}, \abs{x_2 - a_2} < \delta$ implies that $(x_1,x_2) \in A$, and that $\abs{f(x_1,x_2) - L} < \epsilon$. Also choose $\delta$ small enough that the limit $\lim_{x_2 \to a_2} f(x_1,x_2)$ exists for all such $x_1$. Then
+    %
+    \begin{equation*}
+        \abs[\Big]{\lim_{x_2 \to a_2} f(x_1,x_2) - L}
+            = \lim_{x_2 \to a_2} \abs{f(x_1,x_2) - L}
+            \leq \epsilon
+    \end{equation*}
+    %
+    whenever $\abs{x_1 - a_1} < \delta$, proving the claim.
+\end{proof}
+
+
+
+\begin{theorem}[Clairaut's Theorem]
+    Let $A \subset \reals^d$, let $a \in A$ be an inner point, and consider a function $f \colon A \to \reals^m$. Assume that $D_i f$ and $D_j f$ exist in a neighbourhood of $a$, that $D_i D_j f$ exists in a punctured neighbourhood of $a$, and that the limit $\lim_{x \to a} D_i D_j f(x)$ exists and is finite. Then both $D_i D_j f$ and $D_j D_i f$ exist at $a$ and are equal at this point.
 \end{theorem}
 
 \begin{proof}
     By permuting indices, we may assume that $i = 1$ and $j = 2$, and indeed that $d = 2$. Furthermore, by \cref{lem:differentiability-coordinate-functions} it suffices to prove the theorem for $m = 1$.
 
-    Let $U$ be an open neighbourhood of $a$ on which $D_j D_i f$ and $D_i D_j f$ exist, and let $x \in U$. We may assume that $U$ is on the form $U_1 \prod U_2$ for open sets $U_1, U_2 \subseteq \reals$. Writing $a = (a_1,a_2)$ and $x = (x_1,x_2)$, define
+    Define a function $W$ by
+    %
+    \begin{align*}
+        W(h_1,h_2)
+            &= \frac{1}{h_1} \biggl( \frac{f(a_1 + h_1, a_2 + h_2) - f(a_1 + h_1, a_2)}{h_2} - \frac{f(a_1, a_2 + h_2) - f(a_1, a_2)}{h_2} \biggr) \\
+            &= \frac{1}{h_2} \biggl( \frac{f(a_1 + h_1, a_2 + h_2) - f(a_1, a_2 + h_2)}{h_1} - \frac{f(a_1 + h_1, a_2) - f(a_1, a_2)}{h_1} \biggr).
+    \end{align*}
+    %
+    The existence of $D_1 f$ and $D_2 f$ then implies that
     %
     \begin{equation*}
-        r(x)
-            = \frac{f(x) - f(a_1,x_2) - f(x_1,a_2) + f(a)}{(x_1 - a_1)(x_2 - a_2)}
+        \lim_{h_2 \to 0} W(h_1,h_2)
+            = \frac{D_2 f(a_1 + h_1, a_2) - D_2 f(a_1, a_2)}{h_1}
     \end{equation*}
     %
-    for $x \neq a$. Let $I \subseteq U_1$ be an open interval containing $a_1$ and $x_1$, and define $g \colon I \to \reals$ by $g(t) = f(t,x_2) - f(t,a_2)$. Then
+    and
     %
     \begin{equation*}
-        r(x)
-            = \frac{g(x_1) - g(a_1)}{(x_1 - a_1)(x_2 - a_2)}.
+        \lim_{h_1 \to 0} W(h_1,h_2)
+            = \frac{D_1 f(a_1, a_2 + h_2) - D_1 f(a_1, a_2)}{h_2}.
     \end{equation*}
     %
-    Since $g$ is differentiable on $I$, the mean value theorem yields an $s_1 \in \reals$ between $a_1$ and $x_1$ such that
+    It the iterated limits exist, this implies that
     %
     \begin{equation*}
-        r_(x)
-            = \frac{g'(s_1)}{x_2 - a_2}
-            = \frac{D_1 f(s_1,x_2) - D_1 f(s_1,a_2)}{x_2 - a_2}.
+        D_1 D_2 f(a)
+            = \lim_{h_1 \to 0} \lim_{h_2 \to 0} W(h_1,h_2)
     \end{equation*}
     %
-    Similarly, let $J \subseteq U_2$ be an open interval containing $a_2$ and $x_2$, and define $h \colon J \to \reals$ by $h(t) = D_1 f(s_1,t)$. Again the mean value theorem yields an $s_2 \in \reals$ between $x_2$ and $a_2$ such that
+    and
     %
     \begin{equation*}
-        r(x)
-            = h'(s_2)
-            = D_2 D_1 f(s_1, s_2).
+        D_2 D_1 f(a)
+            = \lim_{h_2 \to 0} \lim_{h_1 \to 0} W(h_1,h_2).
     \end{equation*}
     %
-    Let $s = (s_1,s_2)$. Since $\norm{s - a} \leq \norm{x - a}$, when $x \to a$ we also have $s \to a$. Continuity of $D_2 D_1 f$ at $a$ thus implies that
+    Hence the theorem follows from \cref{lem:iterated-limit} if we can show the existence and finiteness of the limit $\lim_{h \to 0} W(h)$. But applying the mean value theorem twice, there exist numbers $0 < t_i < h_i$ such that
     %
     \begin{equation*}
-        \lim_{x \to a} r(x)
-            = \lim_{s \to a} D_2 D_1 f(s)
-            = D_2 D_1 f(a).
+        W(h_1,h_2)
+            = D_1 D_2 f(a_1 + t_1, a_2 + t_2).
     \end{equation*}
     %
-    Finally notice that the above argument is symmetric in the indices $1$ and $2$, so we similarly find that $\lim_{x \to a} r(x) = D_1 D_2 f(a)$.
+    Letting $h \to 0$, the right-hand side approaches some finite number by assumption, so the left-hand side does as well. [TODO can even assume $t_i \neq 0$ when taking the limit.]
 \end{proof}
 
 
