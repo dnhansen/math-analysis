@@ -1810,6 +1810,17 @@ Since $\calL(\reals^d,\reals^m)$ is a finite-dimensional vector space, it has a 
 \end{proof}
 
 
+\section{The inverse function theorem}
+
+\begin{theorem}
+    Let $A \subseteq \reals^d$ be an open set, and let $a \in A$. Consider a function $f \in C^k(A,\reals^d)$. If $f'(a)$ is invertible, then there exist open neighbourhoods $U$ of $a$ and $V$ of $f(a)$ such that $f \colon U \to V$ is bijective, and $f\inv$ is $C^k$.
+\end{theorem}
+%
+We begin by giving some motivation for the proof of the theorem. We wish to find a local inverse of $f$, and since $f'(a)$ is invertible the linearisation $L \colon \reals^d \to \reals^d$ of $f$ given by $L(x) = f(a) + f'(a)(x - a)$ is invertible with inverse $L\inv(y) = a + f'(a)\inv(y - f(a))$. 
+
+????????? TODO
+
+
 \chapter{Integration}
 
 \section{Functions of bounded variation}
@@ -3105,6 +3116,85 @@ Furthermore, Markov's inequality implies that convergence in mean is stronger th
     \end{equation*}
 \end{definition}
 
+
+\begin{proposition}
+    Let $(X,\calE,\mu)$ be a measure space. The map
+    %
+    \begin{equation*}
+        \rho(f,g)
+            = \inf_{\epsilon > 0} \mu\bigl( \{ \abs{f - g} > \epsilon \}\bigr) + \epsilon
+    \end{equation*}
+    %
+    is a pseudometric on $\measurable(\calE)$, and convergence in $\mu$-measure is equivalent to convergence with respect to $\rho$.
+\end{proposition}
+
+\begin{proof}
+    The map $\rho$ is clearly non-negative and symmetric, so we prove the triangle inequality. For $f,g,h \in \measurable(\calE)$ and $\epsilon, \epsilon' > 0$, we have
+    %
+    \begin{equation*}
+        \abs{f-g} \leq \epsilon
+        \quad \text{and} \quad
+        \abs{g-h} \leq \epsilon'
+        \quad \implies \quad
+        \abs{f-h} \leq \epsilon + \epsilon'.
+    \end{equation*}
+    %
+    It thus follows that
+    %
+    \begin{align*}
+        \rho(f,h)
+            &\leq \mu\bigl( \{ \abs{f-h} > \epsilon + \epsilon' \}\bigr) + \epsilon + \epsilon' \\
+            &\leq
+                 \mu\bigl( \{ \abs{f-g} > \epsilon \}\bigr) + \epsilon
+                +
+                 \mu\bigl( \{ \abs{g-h} > \epsilon' \}\bigr)+ \epsilon',
+    \end{align*}
+    %
+    which implies the triangle inequality.
+
+    Now let $(f_n)$ be a sequence and $f$ a function in $\measurable(\calE)$, and assume that $\rho(f_n,f) \to 0$. Let $R > 0$ and $\epsilon > 0$, and choose $N \in \naturals$ such that $n \geq N$ implies that $\rho(f_n,f) < \epsilon \meet R$. For each such $n$, choose $\epsilon_n > 0$ such that
+    %
+    \begin{equation*}
+        \mu\bigl( \{ \abs{f_n-f} > \epsilon_n \}\bigr) + \epsilon_n
+            < \epsilon \meet R.
+    \end{equation*}
+    %
+    Since both terms on the left-hand side are non-negative, it follows that $\epsilon_n < \epsilon$, and that
+    %
+    \begin{equation*}
+        \mu\bigl( \{ \abs{f_n-f} > \epsilon \}\bigr)
+            \leq \mu\bigl( \{ \abs{f_n-f} > \epsilon_n \}\bigr)
+            < R.
+    \end{equation*}
+    %
+    Hence $f_n$ converges to $f$ in $\mu$-measure.
+
+    Conversely assume that $f_n \to f$ in $\mu$-measure, and let $R > 0$. Let $\epsilon = R/2$, and choose $N \in \naturals$ such that $n \geq N$ implies that $\mu (\{ \abs{f_n-f} > \epsilon \}) < R/2$. For such $n$ we thus have
+    %
+    \begin{equation*}
+        \rho(f_n,f)
+            \leq \mu\bigl( \{ \abs{f_n-f} > \epsilon \}\bigr) + \epsilon
+            < \frac{R}{2} + \frac{R}{2}
+            = R,
+    \end{equation*}
+    %
+    so $\rho(f_n,f) \to 0$ as desired.
+\end{proof}
+
+For $A \in \calE$, define the concentration of $\mu$ to $A$ by $\mu_A(B) = \mu(B \intersect A)$, and define the map $\rho_A \colon \measurable(\calE) \prod \measurable(\calE) \to [0,\infty]$ by
+%
+\begin{equation*}
+    \rho_A(f,g)
+        = \int_X \abs{f-g} \meet 1 \dif\mu_A
+        = \int_A \abs{f-g} \meet 1 \dif\mu.
+\end{equation*}
+%
+If $\mu$ is finite, then it is well-known that $\rho_X$ is a pseudometric, and that convergence in $\mu$-measure is given by convergence with respect to $\rho_X$. More generally, if $\mu(A) < \infty$ then convergence in $\mu_A$-measure is given by $\rho_A$. Notice that if $A \subseteq B$, then convergence with respect to $\rho_B$ implies convergence with respect to $\rho_A$.
+
+Let $\calF = \set{A \in \calE}{\mu(A) < \infty}$. If a sequence $(f_n)$ in $\measurable(\calE)$ converges to $f \in \measurable(\calE)$ with respect to $\rho_A$ for all $A \in \calF$, then we say that $(f_n)$ \emph{converges locally in $\mu$-measure} to $f$. In other words, local convergence in $\mu$-measure is given by the topology induced by the family $\set{\rho_A}{A \in \calF}$ of pseudometrics.
+
+If $\mu$ is finite, then global and local convergence in $\mu$-measure agree, and convergence is given either by $\rho$ or $\rho_X$.
+
 We prove that convergence in $\mu$-measure is complete.
 
 \begin{lemma}
@@ -3651,6 +3741,226 @@ This easily implies the following result:
 \begin{proof}
     To prove the first equality we only need to verify that $\borel(\{\pm\infty\}) = 2^{\{\pm\infty\}}$. But this is obvious since both sets $\{\infty\}$ and $\{-\infty\}$ are closed. The second equality easily follows from the first. (Note that we cannot simply use the fact that we can characterise $\borel(\reals)$ in terms of $\borel(\exreals)$, which we can do since $\reals$ is a subset of $\exreals$, since we are trying to do the exact opposite.)
 \end{proof}
+
+
+\chapter{Probability theory}
+
+For $\xi \in \reals$ and $\sigma^2 > 0$ define the function $g_{\xi,\sigma^2} \colon \reals \to \reals$ by
+%
+\begin{equation*}
+    g_{\xi,\sigma^2}(x)
+        = \frac{1}{\sqrt{2\pi \sigma^2}} \e^{\frac{(x-\xi)^2}{2}}.
+\end{equation*}
+%
+Notice that $g_{0,\sigma^2}(x) = \sigma\inv g_{0,1}(\sigma\inv x)$. The measure $\nu_{\xi,\sigma^2} = g_{\xi,\sigma^2} \lambda$ is called the \emph{normal distribution} with mean $\xi$ and variance $\sigma^2$. Here $\lambda$ denotes the Lebesgue measure on $\reals$.
+
+\begin{lemma}
+    The normal distribution $\nu_{\xi,\sigma^2}$ is a probability measure for all $\xi \in \reals$ and $\sigma^2 > 0$.
+\end{lemma}
+
+\begin{proof}
+    First consider the maps $\eta \colon \reals^2 \to \reals$ given by $\eta(x,y) = \sqrt{x^2 + y^2}$, and $f \colon \reals \to \reals$ given by $f(r) = 2\pi r \indicator{(0,\infty)}(r)$. We claim that $\lambda^2 \circ \eta\inv = f \lambda$. For $t \in \reals$, notice that
+    %
+    \begin{equation*}
+        (\lambda^2 \circ \eta\inv)((\infty,t])
+            = \lambda^2 \bigl( \eta\preim((\infty,t]) \bigr)
+            = \lambda^2(\cball{0}{t})
+            = \pi t^2,
+    \end{equation*}
+    %
+    and that
+    %
+    \begin{equation*}
+        (f\lambda)((\infty,t])
+            = \int_\infty^t f \dif \lambda
+            = 2\pi \int_0^t r \dif \lambda(r)
+            = \pi t^2.
+    \end{equation*}
+    %
+    Since the collection of intervals $(\infty,t]$ is a generating set for the Borel $\sigma$-algebra on $\reals$ that is closed under intersection, the two measures agree everywhere.
+
+    Next we compute the following integral:
+    %
+    \begin{align*}
+        \int_{\reals^2} \e^{-x^2 - y^2} \dif \lambda^2(x,y)
+            &= \int_{\reals^2} \e^{-\eta(x,y)^2} \dif \lambda^2(x,y)
+             = \int_\reals \e^{-r^2} \dif (\lambda^2 \circ \eta\inv)(r) \\
+            &= \int_\reals \e^{-r^2} \dif (f\lambda)(r)
+             = 2\pi \int_0^\infty r \e^{-r^2} \dif \lambda(r) \\
+            &= 2\pi \cdot \frac{1}{2}
+             = \pi.
+    \end{align*}
+    %
+    By Tonelli's theorem we thus find that
+    %
+    \begin{align*}
+        \pi
+            &= \int_{\reals^2} \e^{-x^2 - y^2} \dif \lambda^2(x,y)
+             = \int_\reals \e^{-x^2} \e^{-y^2} \dif \lambda(x) \dif \lambda(y) \\
+            &= \int_\reals \e^{-x^2} \dif \lambda(x) \int_\reals \e^{-y^2} \dif \lambda(y),
+    \end{align*}
+    %
+    which implies that
+    %
+    \begin{equation*}
+        \int_\reals \e^{-x^2} \dif \lambda(x)
+            = \sqrt{\pi}.
+    \end{equation*}
+    %
+    Now let $\sigma > 0$. Since we for $B \in \borel(\reals)$ have $\lambda(\sqrt{2\sigma^2} B) = \sqrt{2\sigma^2} \lambda(B)$, it follows that
+    %
+    \begin{equation*}
+        \int_\reals \e^{-\frac{x^2}{2\sigma^2}} \dif \lambda(x)
+            = \int_\reals \e^{-x^2} \dif \bigl( \sqrt{2\sigma^2}\lambda \bigr)(x)
+            = \sqrt{2\sigma^2} \int_\reals \e^{-x^2} \dif \lambda(x)
+            = \sqrt{2\pi\sigma^2}.
+    \end{equation*}
+    %
+    Finally, since the Lebesgue measure is translation invariant, for $\xi \in \reals$ it follows that
+    %
+    \begin{equation*}
+        \int_\reals \e^{-\frac{(x-\xi)^2}{2\sigma^2}} \dif \lambda(x)
+            = \sqrt{2\pi\sigma^2},
+    \end{equation*}
+    %
+    which shows that $\nu_{\xi,\sigma^2}$ is a probability measure as claimed.
+\end{proof}
+
+Next we wish to compute the Fourier transform of $\nu_{\xi,\sigma^2}$. To this end, we compute the Fourier transform of the density $g_{\xi,\sigma^2}$, in that we use the convention that the Fourier transform of a function $f \in \calL^1(\reals)$ is
+%
+\begin{equation*}
+    \hat{f}(t)
+        = \frac{1}{\sqrt{2\pi}} \int_\reals f(x) \e^{-\iu xt} \dif\lambda(t)
+\end{equation*}
+%
+for $t \in \reals$. With this convention, if $\mu = f \lambda$, then $\hat{\mu}(t) = \sqrt{2\pi} \hat{f}(-t)$.
+
+We begin by computing the following Fourier transform:
+
+\begin{proposition}
+    The Fourier transform of $g_{0,1}$ is $g_{0,1}$ itself, i.e. $\hat{g}_{0,1} = g_{0,1}$. In particular, for all $\xi \in \reals$ and $\sigma > 0$ we have
+    %
+    \begin{equation*}
+        \hat{g}_{\xi,\sigma^2}(t)
+            = \frac{1}{\sqrt{2\pi}} \e^{-\sigma^2 t^2 / 2} \e^{-\iu \xi t}
+    \end{equation*}
+    %
+    for $t \in \reals$.
+\end{proposition}
+
+\begin{proof}
+    For notational simplicity we write
+    %
+    \begin{equation*}
+        F(t)
+            = \hat{g}_{0,1}(t)
+            = \frac{1}{2\pi} \int_\reals \e^{-\frac{1}{2}x^2} \e^{-\iu xt} \dif\lambda(x),
+        \quad \text{and} \quad
+        G(t)
+            = g_{0,1}(t)
+            = \frac{1}{\sqrt{2\pi}} \e^{-\frac{1}{2}t^2}.
+    \end{equation*}
+    %
+    Notice that $G'(t) = -t G(t)$, and that we by differentiating under the integral sign get
+    %
+    \begin{equation*}
+        F'(t)
+            = \frac{\iu}{\sqrt{2\pi}} \int_\reals x G(x) \e^{-\iu xt} \dif\lambda(x).
+    \end{equation*}
+    %
+    By partial integration we thus find that
+    %
+    \begin{align*}
+        \sqrt{2\pi} t F(t)
+            &= \int_\reals t G(t) \e^{-\iu xt} \dif\lambda(x)
+             = \bigl[ \iu \e^{-\iu xt} \bigr]_{-\infty}^\infty - \int_\reals \iu G'(x) \e^{-\iu xt} \dif\lambda(x) \\
+            &= \int_\reals \iu x G(x) \e^{-\iu xt} \dif\lambda(x)
+             = -\sqrt{2\pi} F'(t).
+    \end{align*}
+    %
+    That is, $F'(t) = -t F(t)$. Now notice that
+    %
+    \begin{equation*}
+        \frac{\dif}{\dif t} \bigl( \e^{\frac{1}{2}t^2} F(t) \bigr)
+            = t \e^{\frac{1}{2}t^2} F(t) + \e^{\frac{1}{2}t^2} F'(t)
+            = 0,
+    \end{equation*}
+    %
+    which implies that the ratio $F/G$ is constant. But we clearly have $G(0) = 1/\sqrt{2\pi}$, and
+    %
+    \begin{equation*}
+        F(0)
+            = \frac{1}{2\pi} \int_\reals \e^{-\frac{1}{2}x^2}\dif\lambda(x)
+            = \frac{1}{\sqrt{2\pi}} \int_\reals g_{0,1} \dif\lambda
+            = \frac{1}{\sqrt{2\pi}}.
+    \end{equation*}
+    %
+    Hence $F/G = 1$, so $F = G$ as desired.
+
+    Now let $\sigma > 0$ and recall that $g_{0,\sigma^2}(x) = \sigma\inv g_{0,1}(\sigma\inv x)$. By basic properties of the Fourier transform, this implies that
+    %
+    \begin{equation*}
+        \hat{g}_{0,\sigma^2}(t)
+            = \sigma\inv \bigl( \sigma \hat{g}_{0,1}(\sigma t) \bigr)
+            = \hat{g}_{0,1}(\sigma t)
+            = g_{0,1}(\sigma t)
+    \end{equation*}
+    %
+    Next let $\xi \in \reals$ and notice that $g_{\xi,\sigma^2}(x) = g_{0,\sigma^2}(x - \xi)$. Again using basic properties of the Fourier transform we find that
+    %
+    \begin{equation*}
+        \hat{g}_{\xi,\sigma^2}(t)
+            = \hat{g}_{0,\sigma^2}(t) \e^{-\iu \xi t}
+            = g_{0,1}(\sigma t) \e^{-\iu \xi t}
+            = \frac{1}{\sqrt{2\pi}} \e^{-\sigma^2 t^2 / 2} \e^{-\iu \xi t},
+    \end{equation*}
+    %
+    as claimed.
+\end{proof}
+
+
+\begin{theorem}
+    The Fourier transform of the normal distribution is given by
+    %
+    \begin{equation*}
+        \hat{\nu}_{\xi,\sigma^2}(t)
+            = \exp\Bigl( \iu \xi t - \frac{1}{2} \sigma^2 t^2 \Bigr)
+    \end{equation*}
+    %
+    for $\xi \in \reals$, $\sigma > 0$ and $t \in \reals$.
+\end{theorem}
+
+\begin{proof}
+    This is an immediate consequence of [TODO ref] and the fact that $\hat{\nu}_{\xi,\sigma^2}(t) = \sqrt{2\pi} \hat{g}_{\xi,\sigma^2}(-t)$.
+\end{proof}
+
+This result motivates the following: If $\sigma = 0$ then we formally have
+%
+\begin{equation}
+    \label{eq:degenerate-normal}
+    \hat{\nu}_{\xi,0}(t)
+        = \e^{\iu \xi t}.
+\end{equation}
+%
+Since a finite measure on $\reals$ is uniquely determined by its Fourier transform, we \emph{define} the normal distribution with mean $\xi \in \reals$ and variance $0$ as the measure $\nu_{\xi,0}$ whose Fourier transform is given by \cref{eq:degenerate-normal}. Notice that this is precisely the Dirac measure $\delta_\xi$. This distribution is also known as the \emph{degenerate} normal distribution.
+
+% TODO: Degenerate, multivariate, independence stuff, the stuff from stochastic processes.
+
+This also helps motivate the following definition:
+
+\begin{definition}[Multivariate normal distribution]
+    Let $\xi \in \reals^d$, and let $\Sigma \in \mathrm{Mat}_d(\reals)$ be a positive semidefinite matrix. The $d$-dimensional normal distribution with parameters $\xi$ and $\Sigma$ is the Borel measure $\nu_{\xi,\Sigma}$ on $\reals^d$ whose Fourier transform is given by
+    %
+    \begin{equation*}
+        \hat{\nu}_{\xi,\Sigma}(t)
+            = \exp \Bigl( \iu \inner{\xi}{t} - \frac{1}{2} t\trans \Sigma t \Bigr),
+    \end{equation*}
+    %
+    for $t \in \reals^d$.
+\end{definition}
+%
+Since every nonnegative number is a $1 \times 1$ positive semidefinite matrix, this definition agrees with the previous one in the $1$-dimensional case.
+
 
 \nocite{*}
 
