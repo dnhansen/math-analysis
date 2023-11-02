@@ -3990,6 +3990,34 @@ Since every nonnegative number is a $1 \times 1$ positive semidefinite matrix, t
 
 % $f = \sum_{x \in S} \alpha_x \indicator{\{x\}}$
 
+\begin{lemma}
+    Let $(X,\calE)$ be a measurable space with measurable singletons, and let $\mu$ be a complex measure on $(X,\calE)$. Then $\mu(\{x\}) \neq 0$ for countably many $x \in X$.
+\end{lemma}
+%
+The set $\set{x \in X}{\mu(\{x\}) \neq 0}$ is called the \emph{discrete support} of $\mu$.
+
+\begin{proof}
+    Let $S = \set{x \in X}{\mu(\{x\}) \neq 0}$, and consider the subset
+    %
+    \begin{equation*}
+        S_n
+            = \set[\big]{x \in X}{\abs{\mu(\{x\})} \geq \tfrac{1}{n}}.
+    \end{equation*}
+    %
+    If $x_1, \ldots, x_k$ are distinct elements from $S_n$, then
+    %
+    \begin{equation*}
+        \frac{k}{n}
+            \leq \sum_{i=1}^k \abs{\mu(\{x_i\})}
+            = \sum_{i=1}^k \abs{\mu}(\{x_i\})
+            = \abs{\mu}(\{x_1, \ldots, x_k\})
+            \leq \abs{\mu}(X).
+    \end{equation*}
+    %
+    Hence $k \leq n \abs{\mu}(X)$, and so $S_n$ is finite. It follows that $S = \bigunion_{n \in \naturals} S_n$ is countable.
+\end{proof}
+
+
 
 \begin{proposition}
     Let $(X,\calE)$ be a measurable space with measurable singletons, and let $\tau$ be the counting measure thereon. If $\mu$ is a complex measure on $(X,\calE)$, then the following are equivalent:
@@ -4050,25 +4078,7 @@ Since every nonnegative number is a $1 \times 1$ positive semidefinite matrix, t
     as desired.
 
     \item[(iii) implies (i)]
-    Consider the set
-    %
-    \begin{equation*}
-        S
-            = \{ f \neq 0 \}
-            = \bigunion_{n \in \naturals} \bigl\{ \abs{f} \geq \tfrac{1}{n} \bigr\}.
-    \end{equation*}
-    %
-    If $x_1, \ldots, x_k$ are distinct elements from $\{ \abs{f} \geq \tfrac{1}{n} \}$, then
-    %
-    \begin{equation*}
-        \abs{\mu}(X)
-            = \int_X \abs{f} \dif\tau
-            \geq \int_{\{x_1, \ldots, x_k\}} \abs{f} \dif\tau
-            \geq \int_{\{x_1, \ldots, x_k\}} \tfrac{1}{n} \dif\tau
-            = \tfrac{k}{n},
-    \end{equation*}
-    %
-    implying that $k \leq n \abs{\mu}(X)$, so $\{ \abs{f} \geq \tfrac{1}{n} \}$ contains finitely many elements. Hence $S$ is countable. Now notice that
+    Notice that $\mu(\{x\}) = 0$ if and only if $f(x) = 0$, so [TODO lemma] implies that the set $S = \{ f \neq 0 \}$ is countable. We furthermore have
     %
     \begin{equation*}
         \mu(X \setminus S)
@@ -4079,6 +4089,39 @@ Since every nonnegative number is a $1 \times 1$ positive semidefinite matrix, t
     %
     and similarly $\abs{\mu}(X \setminus S) = 0$. Hence $\mu(S) = \mu(X)$ and $\abs{\mu}(S) = \abs{\mu}(X)$.
 \end{proofsec}
+\end{proof}
+
+
+\begin{definition}
+    Let $(X,\calE)$ be a measurable space with measurable singletons, and let $\mu$ be a complex measure on $(X,\calE)$. We say that $\mu$ is
+    %
+    \begin{enumdef}
+        \item \emph{discrete} if it satisfies any of the equivalent properties in [TODO ref], and
+        \item \emph{continuous} if $\mu(\{x\}) = 0$ for all $x \in X$.
+    \end{enumdef}
+\end{definition}
+%
+Notice that a complex measure is continuous just when its discrete support is empty. Furthermore, if $\mu$ is continuous then $\mu(A) = 0$ whenever $A \subseteq X$ is countable.
+
+
+\begin{proposition}
+    Let $(X,\calE)$ be a measurable space with measurable singletons, and let $\mu$ be a complex measure on $(X,\calE)$. Then there exist unique complex measures $\mu_d$ and $\mu_c$ on $(X,\calE)$ such that $\mu_d$ is discrete, $\mu_c$ is continuous, and $\mu = \mu_d + \mu_c$.
+\end{proposition}
+
+\begin{proof}
+    Let $S$ be the discrete support of $\mu$, and define $\mu_d(A) = \mu(A \intersect S)$ and $\mu_c(A) = \mu(A \setminus S)$. To see that these are unique, notice that if $\mu = \nu_d + \nu_c$ is another such decomposition, then $S$ is also the discrete support of both $\mu_d$ and $\nu_d$. But then
+    %
+    \begin{align*}
+        \mu_d(A)
+             = \mu_d(A \intersect S)
+            &= \mu_d(A \intersect S) + \mu_c((A \intersect S) \setminus S) \\
+            &= \mu(A \intersect S) \\
+            &= \nu_d(A \intersect S) + \nu_c((A \intersect S) \setminus S)
+             = \nu_d(A \intersect S)
+             = \nu_d(A)
+    \end{align*}
+    %
+    for all $A \in \calE$.
 \end{proof}
 
 
