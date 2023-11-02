@@ -3986,6 +3986,103 @@ This also helps motivate the following definition:
 Since every nonnegative number is a $1 \times 1$ positive semidefinite matrix, this definition agrees with the previous one in the $1$-dimensional case.
 
 
+\chapter{Measure theory}
+
+% $f = \sum_{x \in S} \alpha_x \indicator{\{x\}}$
+
+
+\begin{proposition}
+    Let $(X,\calE)$ be a measurable space with measurable singletons, and let $\tau$ be the counting measure thereon. If $\mu$ is a complex measure on $(X,\calE)$, then the following are equivalent:
+    %
+    \begin{enumprop}
+        \item There is a countable set $S \subseteq X$ such that $\mu(S) = \mu(X)$ and $\abs{\mu}(S) = \abs{\mu}(X)$.
+        
+        \item There exists a countable subset $S \subseteq X$ and numbers $\alpha_x \in \complex$ for $x \in S$ such that $\mu = \sum_{x \in S} \alpha_x \delta_x$ and $\sum_{x \in S} \abs{\alpha_x} < \infty$.
+        
+        \item There is a function $f \in \calL^1(\tau)$ such that $\mu = f \tau$.
+    \end{enumprop}
+    %
+    In this case, $\abs{\mu} = \sum_{x \in S} \abs{\alpha_x} \delta_x$.
+\end{proposition}
+
+\begin{proof}
+\begin{proofsec}
+    \item[(i) implies (ii)]
+    For $A \in \calE$ we have
+    %
+    \begin{equation*}
+        \mu(A)
+            = \mu(A \intersect S)
+            = \mu \Bigl( \bigunion_{x \in A \intersect S} \{x\} \Bigr)
+            = \sum_{x \in A \intersect S} \mu(\{x\})
+            = \sum_{x \in S} \mu(\{x\}) \delta_x(A),
+    \end{equation*}
+    %
+    implying that $\mu = \sum_{x \in S} \mu(\{x\}) \delta_x$. An analogous calculation shows that $\abs{\mu} = \sum_{x \in S} \abs{\mu}(\{x\}) \delta_x$. In particular,
+    %
+    \begin{equation*}
+        \infty
+            > \abs{\mu}(X)
+            = \sum_{x \in S} \abs{\mu}(\{x\}) \delta_x(X)
+            = \sum_{x \in S} \abs{\mu}(\{x\}).
+    \end{equation*}
+    %
+    Also notice that $\abs{\mu}(\{x\}) = \abs{\mu(\{x\})}$, so $\abs{\mu} = \sum_{x \in S} \abs{\mu(\{x\})} \delta_x$.
+
+    \item[(ii) implies (iii)]
+    Define $f \colon X \to \complex$ by $f(x) = \alpha_x$ for $x \in S$ and $f(x) = 0$ otherwise. Then $f \in \calM(\calE)$ and
+    %
+    \begin{equation*}
+        \int_X \abs{f} \dif\tau
+            = \sum_{x \in S} \abs{\alpha_x}
+            < \infty
+    \end{equation*}
+    %
+    by [TODO], so $f \in \calL^1(\tau)$. The same lemma [TODO] also implies that, for $A \in \calE$,
+    %
+    \begin{equation*}
+        \int_A f \dif\tau
+            = \sum_{x \in A \intersect S} \abs{\alpha_x}
+            = \sum_{x \in S} \alpha_x \delta_x(A)
+            = \mu(A),
+    \end{equation*}
+    %
+    as desired.
+
+    \item[(iii) implies (i)]
+    Consider the set
+    %
+    \begin{equation*}
+        S
+            = \{ f \neq 0 \}
+            = \bigunion_{n \in \naturals} \bigl\{ \abs{f} \geq \tfrac{1}{n} \bigr\}.
+    \end{equation*}
+    %
+    If $x_1, \ldots, x_k$ are distinct elements from $\{ \abs{f} \geq \tfrac{1}{n} \}$, then
+    %
+    \begin{equation*}
+        \abs{\mu}(X)
+            = \int_X \abs{f} \dif\tau
+            \geq \int_{\{x_1, \ldots, x_k\}} \abs{f} \dif\tau
+            \geq \int_{\{x_1, \ldots, x_k\}} \tfrac{1}{n} \dif\tau
+            = \tfrac{k}{n},
+    \end{equation*}
+    %
+    implying that $k \leq n \abs{\mu}(X)$, so $\{ \abs{f} \geq \tfrac{1}{n} \}$ contains finitely many elements. Hence $S$ is countable. Now notice that
+    %
+    \begin{equation*}
+        \mu(X \setminus S)
+            = \int_{X \setminus S} f \dif\tau
+            = \int_{X \setminus S} 0 \dif\tau
+            = 0,
+    \end{equation*}
+    %
+    and similarly $\abs{\mu}(X \setminus S) = 0$. Hence $\mu(S) = \mu(X)$ and $\abs{\mu}(S) = \abs{\mu}(X)$.
+\end{proofsec}
+\end{proof}
+
+
+
 \nocite{*}
 
 \printbibliography
