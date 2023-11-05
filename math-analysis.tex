@@ -1616,6 +1616,7 @@ Notice that the value of $\delta$ is irrelevant. Notice furthermore that if $h$ 
 
 
 \begin{corollary}[The mean value theorem]
+    \label{cor:MVT}
     Let $f \colon [a,b] \to \reals$ be a continuous function that is differentiable on $(a,b)$. Then there is a $c \in (a,b)$ such that
     %
     \begin{equation*}
@@ -1629,6 +1630,63 @@ Notice that the value of $\delta$ is irrelevant. Notice furthermore that if $h$ 
 \end{proof}
 
 [TODO monotonicity]
+
+
+\begin{theorem}[The multidimensional mean value theorem]
+    \label{thm:multidimensional-MVT}
+    Let $U \subseteq \reals^d$ be open, and let $f \colon U \to \reals^m$ be differentiable. If $[x,y] \subseteq U$, then for each $a \in \reals^m$ there is a $z \in (x,y)$ such that
+    %
+    \begin{equation*}
+        \inner{a}{f(y) - f(x)}
+            = \inner{a}{f'(z)(y - x)}.
+    \end{equation*}
+\end{theorem}
+
+\begin{proof}
+    Let $P_a \colon \reals^m \to \reals$ be the linear map $P_a(x) = \inner{a}{x}$, and define $\phi \colon [0,1] \to U$ by $\phi(t) = (1-t)x + ty$. Then $P_a \circ f \circ \phi$ is continuous on $[0,1]$ and differentiable on $(0,1)$, so \cref{cor:MVT} implies the existence of an $s \in (0,1)$ such that, with $z = \phi(s)$,
+    %
+    \begin{equation*}
+        \inner{a}{f(y) - f(x)}
+            = (P_a \circ f \circ \phi)'(s)(1 - 0)
+            = P_a f'(z) (y - x)
+            = \inner{a}{f'(z)(y - x)},
+    \end{equation*}
+    %
+    as desired.
+\end{proof}
+
+
+\newcommand{\defeq}{\coloneqq}
+
+\begin{corollary}
+    Let $U \subseteq \reals^d$ be convex and open, and let $f \colon U \to \reals^m$ be differentiable. If $K \defeq \sup_{z \in U} \norm{f'(z)} < \infty$, then $f$ is Lipschitz continuous with Lipschitz constant $K$, i.e.,
+    %
+    \begin{equation*}
+        \norm{f(y) - f(x)}
+            \leq K \norm{y - x}
+    \end{equation*}
+    %
+    for all $x,y \in U$.
+\end{corollary}
+
+\begin{proof}
+    Letting $a = f(y) - f(x)$ in \cref{thm:multidimensional-MVT} there is a $z \in U$ such that
+    %
+    \begin{equation*}
+        \norm{f(y)-f(x)}^2
+            \leq \norm{f(y) - f(x)} \, \norm{f'(z)} \, \norm{y - x},
+    \end{equation*}
+    %
+    which implies that
+    %
+    \begin{equation*}
+        \norm{f(y)-f(x)}
+            \leq \norm{f'(z)} \, \norm{y - x}
+            \leq K \norm{y - x},
+    \end{equation*}
+    %
+    as claimed.
+\end{proof}
 
 
 \section{Directional and partial derivatives}
