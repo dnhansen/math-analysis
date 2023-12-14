@@ -91,6 +91,7 @@
 \newcommand{\calR}{\mathcal{R}}
 \newcommand{\calL}{\mathcal{L}}
 \newcommand{\calS}{\mathcal{S}}
+\newcommand{\calJ}{\mathcal{J}}
 \newcommand{\borel}{\mathcal{B}}
 \newcommand{\measurable}{\mathcal{M}}
 \newcommand{\wto}{\Rightarrow}
@@ -1894,13 +1895,81 @@ Since $\calL(\reals^d,\reals^m)$ is a finite-dimensional vector space, it has a 
 
 \section{The inverse function theorem}
 
-\begin{theorem}
-    Let $A \subseteq \reals^d$ be an open set, and let $a \in A$. Consider a function $f \in C^k(A,\reals^d)$. If $f'(a)$ is invertible, then there exist open neighbourhoods $U$ of $a$ and $V$ of $f(a)$ such that $f \colon U \to V$ is bijective, and $f\inv$ is $C^k$.
-\end{theorem}
-%
-We begin by giving some motivation for the proof of the theorem. We wish to find a local inverse of $f$, and since $f'(a)$ is invertible the linearisation $L \colon \reals^d \to \reals^d$ of $f$ given by $L(x) = f(a) + f'(a)(x - a)$ is invertible with inverse $L\inv(y) = a + f'(a)\inv(y - f(a))$. 
+Let $A \subseteq \reals^d$ be an open set, and let $f \colon A \to \reals^d$ be a map. We say that $f$ is a \emph{local $C_1$ diffeomorphism} at $a \in A$ if there are open sets $U,V \subseteq \reals^d$ with $a \in U$ such that $f(U) = V$ and both the map $f_1 \colon U \to V$ given by $f_1(x) = f(x)$ and the inverse $f_1\inv$ are $C_1$.
 
-????????? TODO
+
+\begin{lemma}
+    Let $U, V \subseteq \reals^d$ be open sets such that $f \colon U \to V$ is a bijection, and let $a \in U$. If $f$ is differentiable at $a$, $f'(a)$ is invertible, and $f\inv$ is continuous at $f(a)$, then $f\inv$ is differentiable at $f(a)$ with $(f\inv)'(f(a)) = f'(a)\inv$.
+\end{lemma}
+
+\begin{proof}
+    Let $g = f\inv$ and $b = f(a)$, and let $\phi \colon U \to \calL(\reals^d,\reals^d)$ be an Hadamard function for $f$ at $a$. Since [TODO Aut] is open in [TODO Hom] and $\phi$ is continuous at $a$, there is a neighbourhood $U_1 \subseteq U$ of $a$ such that $\phi(x)$ is invertible for all $x \in U_1$. Since $g$ is continuous at $b$, there is a neighbourhood $V_1 \subseteq V$ of $b$ such that $g(V_1) \subseteq U_1$. If $\iota$ [TODO Aut] denotes the map $A \mapsto A\inv$, the composition $\iota \circ \phi \circ g$ is thus well-defined on $V_1$ and continuous at $b$.
+
+    Now notice that if $y \in V_1$ and $x = g(y)$, then
+    %
+    \begin{equation*}
+        y - b
+            = f(x) - f(a)
+            = \phi(x) (x - a)
+            = \phi(g(y)) \bigl( g(y) - g(b) \bigr),
+    \end{equation*}
+    %
+    which implies that
+    %
+    \begin{equation*}
+        g(y) - g(b)
+            = \phi(g(y))\inv (y - b)
+            = (\iota \circ \phi \circ g)(y) (y - b).
+    \end{equation*}
+    %
+    That is, $\iota \circ \phi \circ g$ is an Hadamard function for $g$ at $b$, so $g$ is differentiable at $b$ with
+    %
+    \begin{equation*}
+        g'(b)
+            = (\iota \circ \phi \circ g)(b)
+            = \iota(\phi(a))
+            = f'(a)\inv,
+    \end{equation*}
+    %
+    as desired.
+\end{proof}
+
+
+\begin{proposition}
+    Let $U, V \subseteq \reals^d$ be open sets such that $f \colon U \to V$ is a $C^1$ homeomorphism. If $f'(x)$ is invertible for all $x \in U$, then $f$ is a $C^1$ diffeomorphism.
+\end{proposition}
+
+\begin{proof}
+    Let $g = f\inv$. It follows from [TODO lemma] that $g$ is differentiable on $V$, so it remains to be shown that $g'$ is continuous. But same lemma implies that $g' = \iota \circ f' \circ g$, where $\iota$ denotes the map $A \mapsto A\inv$, and this is continuous.
+\end{proof}
+
+
+\begin{theorem}
+    Let $A \subseteq \reals^d$ be an open set, and let $a \in A$. Consider a function $f \in C^1(A,\reals^d)$. If $f'(a)$ is invertible, then $f$ is a local $C^1$ diffeomorphism at $a$.
+\end{theorem}
+
+\begin{proof}
+    By considering instead $f'(a)\inv \circ f$ we may assume that $f'(a)$ is the identity. Perfoming translations in both domain and codomain we may also assume that $a = 0$ and $f(a) = 0$.
+
+    Define $g \colon A \to \reals^d$ by $g(x) = x - f(x)$. Then $g'(0) = 0$, and since $g'$ is continuous at $a$, there exists an $r > 0$ such that $\norm{x} \leq 2r$ implies $\norm{g'(x)} \leq \tfrac{1}{2}$. Thus [TODO] implies that $g$ is Lipschitz on $\ball{0}{2r}$ with Lipschitz constant $\tfrac{1}{2}$. In particular, $\norm{g(x)} \leq \tfrac{1}{2} \norm{x}$, so $g$ maps $\cball{0}{r}$ into $\cball{0}{\tfrac{r}{2}}$.
+
+    Next let $y \in \cball{0}{\tfrac{r}{2}}$ and consider the map $g_y \colon A \to \reals^d$ given by $g_y(x) = y + g(x)$. If $\norm{x} \leq r$ then $\norm{g_y(x)} \leq r$, so $g_y$ is an endomorphism on the complete metric space $\cball{0}{r}$. Notice that since $g_y(x) - g_y(x') = g(x) - g(x')$, $g_y$ is also Lipschitz with Lipschitz constant $\tfrac{1}{2}$. Hence it is a contraction, so the Banach fixed-point theorem yields a unique fixed-point of $g_y$, say $x$. This means that
+    %
+    \begin{equation*}
+        x
+            = g_y(x)
+            = y + g(x)
+            = y + x - f(x),
+    \end{equation*}
+    %
+    or equivalently that $f(x) = y$. Conversely, any $x$ with this property is a fixed-point of $g_y$, which implies that $f$ induces a bijection $f_1 \colon \cball{0}{r} \to \cball{0}{\tfrac{r}{2}}$. And $f_1$ is automatically a homeomorphism since its domain is compact and its codomain is Hausdorff. [TODO is this right???]
+
+    Let $V' = \ball{0}{\tfrac{r}{2}}$, let $U = f_1\inv(V') \intersect \ball{0}{r}$, and let $V = f_1(U)$. By continuity $f_1\inv(V')$ is open in $\cball{0}{r}$, so $U$ is open in $\ball{0}{r}$ and hence in $A$. Since $f_1$ is open, $V$ is open in $\cball{0}{\tfrac{r}{2}}$, hence in $V'$ and thus also in $\reals^d$. Thus $f_1$ induces a homeomorphism $f_2 \colon U \to V$ between sets that are open in $\reals^d$.
+
+    Since $f_2$ is a $C_1$ homeomorphism, it follows from [TODO prop] that it is a $C_1$ diffeomorphism, which proves the theorem.
+\end{proof}
+
+
 
 
 \chapter{Integration}
@@ -4046,6 +4115,8 @@ Since every nonnegative number is a $1 \times 1$ positive semidefinite matrix, t
 
 \chapter{Measure theory}
 
+\section{Discrete and continuous measures}
+
 % $f = \sum_{x \in S} \alpha_x \indicator{\{x\}}$
 
 \begin{lemma}
@@ -4088,7 +4159,7 @@ The set $\set{x \in X}{\mu(\{x\}) \neq 0}$ is called the \emph{discrete support}
         \item There is a function $f \in \calL^1(\tau)$ such that $\mu = f \tau$.
     \end{enumprop}
     %
-    In this case, $\abs{\mu} = \sum_{x \in S} \abs{\alpha_x} \delta_x$.
+    In this case, $\abs{\mu} = \sum_{x \in S} \abs{\alpha_x} \delta_x$ and we may choose $f(x) = \alpha_x$.
 \end{proposition}
 
 \begin{proof}
@@ -4180,6 +4251,247 @@ Notice that a complex measure is continuous just when its discrete support is em
     \end{align*}
     %
     for all $A \in \calE$.
+\end{proof}
+
+
+\section{Construction of measures}
+
+\renewcommand{\powerset}[1]{\calP(#1)}
+
+
+\begin{definition}
+    Let $X$ be a set. A function $\mu^* \colon \powerset{X} \to [0,\infty]$ is called an \emph{outer measure} on $X$ if it satisfies the following properties:
+    %
+    \begin{enumdef}
+        \item $\mu^*(\emptyset) = 0$.
+        \item $\mu^*$ is increasing, i.e., if $A \subseteq B \subseteq X$ then $\mu^*(A) \leq \mu^*(B)$.
+        \item $\mu^*$ satisfies Boole's inequality, i.e.,
+        %
+        \begin{equation*}
+            \mu^* \Bigl( \bigunion_{n \in \naturals} A_n \Bigr)
+                \leq \sum_{n=1}^\infty \mu^*(A_n)
+        \end{equation*}
+        %
+        for all sequences $(A_n)_{n \in \naturals}$ in $\powerset{X}$.
+    \end{enumdef}
+\end{definition}
+
+\begin{remarkbreak}
+\begin{enumerate}
+    \item We distinguish between a set function $\mu \colon \calJ \to [0,\infty]$ being \emph{countably subadditive} and satisfying \emph{Boole's inequality}, in that in the former case the sequence $(A_n)$ is assumed to consist of disjoint sets. It is easy to show that for outer measures, we could replace Boole's inequality with countable subadditivity. Set functions that satisfy Boole's inequality are called \emph{strongly countable subadditive} in the sequel.
+
+    \item If $\calJ$ is a subset of $\powerset{X}$ and $\emptyset \in \calJ$, and if $\mu \colon \calJ \to [0,\infty]$ is a set function with $\mu(\emptyset) = 0$, then it is well-known that the formula
+    %
+    \begin{equation*}
+        \mu^*(A)
+            = \inf \set[\bigg]{ \sum_{n=1}^\infty \mu(A_n)}{ (A_n)_{n \in \naturals} \subseteq \calJ \text{ and } A \subseteq \bigunion_{n \in \naturals} A_n }
+    \end{equation*}
+    %
+    defines an outer measure $\mu^*$ on $X$. We say that $\mu^*$ is the outer measure \emph{generated by $\mu$}.
+\end{enumerate}
+\end{remarkbreak}
+
+
+
+\begin{definition}
+    Let $X$ be a set and $\calJ$ a subset of $\powerset{X}$ with $\emptyset \in \calJ$. A function $\mu \colon \calJ \to [0,\infty]$ with $\mu(\emptyset) = 0$ is called
+    %
+    \begin{enumdef}
+        \item a \emph{content} on $\calJ$ if it is finitely additive, i.e., if
+        %
+        \begin{equation*}
+            \mu(A_1 \union \cdots \union A_n)
+                = \mu(A_1) + \cdots + \mu(A_n)
+        \end{equation*}
+        %
+        whenever $A_1, \ldots, A_n$ are disjoint sets from $\calJ$ such that $A_1 \union \cdots \union A_n \in \calJ$.
+        
+        \item a \emph{premeasure} on $\calJ$ if it is a content on $\calJ$, and if
+        %
+        \begin{equation*}
+            \mu \Bigl( \bigunion_{n \in \naturals} A_n \Bigr)
+                = \sum_{n=1}^\infty \mu(A_n)
+        \end{equation*}
+        %
+        for all sequences $(A_n)$ of disjoint sets from $\calJ$ with $\bigunion_{n \in \naturals} A_n \in \calJ$.
+
+        \item a \emph{measure} on $\calJ$ if $\mu$ is a premeasure on $\calJ$ and $\calJ$ is a $\sigma$-ring.
+    \end{enumdef}
+\end{definition}
+
+
+\begin{remarkbreak}
+\begin{enumerate}
+    \item If $\mu$ is a content on a semiring $\calS$, then $\mu$ is increasing. TODO
+
+    \item If $\mu$ is a content on a ring $\calR$, then $\mu$ is automatically countably superadditive. In fact, we have
+    %
+    \begin{equation*}
+        \mu(A)
+            \geq \sum_{n=1}^\infty \mu(A_n)
+    \end{equation*}
+    %
+    for all sequences $(A_n)$ of disjoint sets in $\calR$ such that $\bigunion_{n \in \naturals} A_n \subseteq A$, and $A \in \calR$. Each finite union $\bigunion_{n=1}^k A_n$ lies in $\calR$ and is a subset of $A$, so by monotonicity and finite additivity we have
+    %
+    \begin{equation*}
+        \mu(A)
+            \geq \mu \Bigl( \bigunion_{n=1}^k A_n \Bigr)
+            = \sum_{n=1}^k \mu(A_n).
+    \end{equation*}
+    %
+    The claim then follows by letting $k \to \infty$. In particular, if $\bigunion_{n \in \naturals} A_n \in \calJ$ then
+    %
+    \begin{equation*}
+        \mu \Bigl( \bigunion_{n \in \naturals} A_n \Bigr)
+            \geq \sum_{n=1}^\infty \mu(A_n).
+    \end{equation*}
+    %
+    It follows that $\mu$ is a premeasure if and only if it is countable subadditive, i.e., if we also have the opposite inequality
+    %
+    \begin{equation*}
+        \mu \Bigl( \bigunion_{n \in \naturals} A_n \Bigr)
+            \leq \sum_{n=1}^\infty \mu(A_n).
+    \end{equation*}
+\end{enumerate}
+\end{remarkbreak}
+
+
+\begin{definition}
+    Let $X$ be a set, let $\calJ$ a subset of $\powerset{X}$ with $\emptyset \in \calJ$, and let $\mu \colon \calJ \to [0,\infty]$ be a map. A set $A \in \calJ$ is then said to have
+    %
+    \begin{enumdef}
+        \item \emph{finite $\mu$-measure} if $\mu(A) < \infty$,
+        
+        \item \emph{$\sigma$-finite $\mu$-measure} if there is a sequence $(A_n)_{n \in \naturals}$ of sets in $\calJ$ such that $A \subseteq \bigunion_{n \in \naturals} A_n$ and every $A_n$ has finite $\mu$-measure, and
+    \end{enumdef}
+    %
+    Furthermore, we say that $\mu$ itself is
+    %
+    \begin{enumdef}
+        \item \emph{finite} if every set in $\calJ$ has finite $\mu$-measure, i.e., if $\mu$ is finite as a map, and
+        \item \emph{$\sigma$-finite} if every set in $\calJ$ has $\sigma$-finite $\mu$-measure.
+    \end{enumdef}
+\end{definition}
+
+\begin{remarkbreak}
+\begin{enumerate}
+    \item If $\mu$ is a content and $\calJ$ is a semialgebra, then $\mu$ is finite (resp. $\sigma$-finite) just when $X$ has finite (resp. $\sigma$-finite) $\mu$-measure.
+
+    \item A subset $N \subseteq X$ is called a \emph{$\mu$-null set} if there is a set $A \in \calJ$ with $N \subseteq A$ and $\mu(A) = 0$. The set of $\mu$-null sets is denoted $\calN_\mu$.
+\end{enumerate}
+\end{remarkbreak}
+
+
+\begin{lemma}
+    Let $\calS$ be a semiring in a set $X$, let $\calR$ be the ring generated by $\calS$, and let $\mu$ be a content on $\calS$.
+    %
+    \begin{enumlem}
+        \item There exists a unique content $\overline{\mu}$ on $\calR$ such that $\overline{\mu}|_\calS = \mu$.
+        
+        \item $\mu$ and $\overline{\mu}$ generate the same outer measures.
+        
+        \item $\mu$ is countably subadditive just when $\overline{\mu}$ is. In particular, if $\mu$ is a premeasure then so is $\overline{\mu}$.
+
+        \item $\mu$ is ($\sigma$-)finite just when $\overline{\mu}$ is.
+    \end{enumlem}
+\end{lemma}
+%
+Since every content on $\calR$ of course restricts to a content on $\calS$, we may identify $\mu$ and $\overline{\mu}$, and we may always assume that contents defined on semirings are in fact defined on rings.
+
+\begin{proof}
+    If $A_1, \ldots, A_n$ are disjoint sets from $\calS$, then we let
+    %
+    \begin{equation*}
+        \overline{\mu}(A_1 \union \cdots \union A_n)
+            = \mu(A_1) + \cdots + \mu(A_n).
+    \end{equation*}
+    %
+    To show that this is well-defined, let $B_1, \ldots, B_m$ be disjoint sets from $\calS$ with the same union, and notice that since $\calS$ is a semiring, we have $A_i \intersect B_j \in \calS$. Hence
+    %
+    \begin{equation*}
+        \sum_{i=1}^n \mu(A_i)
+            = \sum_{i=1}^n \sum_{j=1}^m \mu(A_i \intersect B_j)
+            = \sum_{j=1}^m \sum_{i=1}^n \mu(A_i \intersect B_j)
+            = \sum_{j=1}^m \mu(B_j).
+    \end{equation*}
+    %
+    It is also clear that $\overline{\mu}$ is indeed a content on $\calR$.
+
+    To prove the second property, let $\mu^*$ and $\overline{\mu}^*$ be the outer measures they generate, and note that $\mu^* \geq \overline{\mu}^*$ since $\calS \subseteq \calR$. Conversely, let $A \subseteq X$ and let $A \subseteq \bigunion_{n \in \naturals} A_n$ for a sequence $(A_n)$ of sets in $\calR$. For each $n \in \naturals$ we have $A_n = B_{n,1} \union \cdots \union B_{n,k_n}$ for appropriate disjoint sets $B_{n,k}$ in $\calS$. But the collection of all $B_{n,k}$ is countable, so
+    %
+    \begin{equation*}
+        \mu^*(A)
+            \leq \sum_{n=1}^\infty \sum_{k=1}^{k_n} \mu(B_{n,k})
+            = \sum_{n=1}^\infty \overline{\mu}(A_n),
+    \end{equation*}
+    %
+    which implies that $\mu^*(A) \leq \overline{\mu}^*(A)$ as desired.
+
+    For the third property, assume that $\mu$ is countably subadditive and let $(A_n)_{n \in \naturals}$ be a sequence of disjoint sets from $\calR$ with $\bigunion_{n \in \naturals} A_n \in \calR$. For each $n \in \naturals$ we again write $A_n = B_{n,1} \union \cdots \union B_{n,k_n}$ for appropriate disjoint sets $B_{n,k_i}$ in $\calS$. But then
+    %
+    \begin{equation*}
+        \overline{\mu} \Bigl( \bigunion_{n \in \naturals} A_n \Bigr)
+            = \overline{\mu} \Bigl( \bigunion_{n \in \naturals} \bigunion_{k=1}^{k_n} B_{n,k} \Bigr)
+            \leq \sum_{n=1}^\infty \sum_{k=1}^{k_n} \mu(B_{n,k})
+            = \sum_{n=1}^\infty \overline{\mu}(A_n),
+    \end{equation*}
+    %
+    as desired. The converse is obvious.
+
+    The final property is obvious in the finite case, so assume that $\mu$ is $\sigma$-finite and let $A \in \calR$. Writing $A = B_1 \union \cdots \union B_n$ for disjoint sets $B_i$ from $\calS$, then each $B_i$ has $\sigma$-finite $\mu$-measure, and so there are sequences $(B_{i,k})_{k \in \naturals}$ of sets with finite $\mu$-measure whose union contains $B_i$. Letting $A_k = B_{1,k} \union \cdots \union B_{n,k}$, the sequence $(A_k)$ shows that $A$ has $\sigma$-finite $\overline{\mu}$-measure. The converse is easy.
+\end{proof}
+
+
+\begin{definition}
+    Let $X$ be a set, and let $\mu \colon \powerset{X} \to [0,\infty]$ be a function. A subset $A \subseteq X$ is called \emph{$\mu$-measurable} if
+    %
+    \begin{equation*}
+        \mu(E)
+            = \mu(E \intersect A) + \mu(E \intersect A^c)
+    \end{equation*}
+    %
+    for all $E \subseteq X$. The collection of all $\mu$-measurable sets is denoted $\calM(\mu)$.
+\end{definition}
+
+\begin{theorem}[Carathéodory]
+    Let $X$ be a set, and let $\mu \colon \powerset{X} \to [0,\infty]$ be a function with $\mu(\emptyset) = 0$.
+    %
+    \begin{enumthm}
+        \item The collection $\calM(\mu)$ is an algebra.
+        
+        \item If $A_1, \ldots, A_n$ are disjoint sets from $\calM(\mu)$, then
+        %
+        \begin{equation*}
+            \mu \Bigl( E \intersect \bigunion_{i=1}^n A_i \Bigr)
+                = \sum_{i=1}^n \mu(E \intersect A_i).
+        \end{equation*}
+        %
+        In particular, $\mu$ is a content on $\calM(\mu)$.
+
+        \item If $\mu$ is strongly subadditive, then $A \in \calM(\mu)$ if and only if
+        %
+        \begin{equation*}
+            \mu(E)
+                \geq \mu(E \intersect A) + \mu(E \intersect A^c)
+        \end{equation*}
+        %
+        holds for all $E \subseteq X$.
+
+        \item If $\mu$ is strongly subadditive and increasing, then $\calN_\mu \subseteq \calM(\mu)$.
+
+        \item If $\mu$ is an outer measure, then $\calM(\mu)$ is a $\sigma$-algebra and
+        %
+        \begin{equation*}
+            \mu \Bigl( E \intersect \bigunion_{n \in \naturals}^n A_n \Bigr)
+                = \sum_{n=1}^\infty \mu(E \intersect A_n)
+        \end{equation*}
+        %
+        for every sequence $(A_n)_{n \in \naturals}$ of disjoint sets from $\calM(\mu)$. In particular, $\mu|_{\calM(\mu)}$ is a complete measure.
+    \end{enumthm}
+\end{theorem}
+
+\begin{proof}
+    TODO Folland + Thorbjørnsen
 \end{proof}
 
 
