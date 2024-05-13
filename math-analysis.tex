@@ -3247,26 +3247,25 @@ Notice that since $U$ is connected, such polygonal paths exist between any pair 
 
 \chapter{Convergence}
 
-It is well-known that a Cauchy sequence $(x_n)_{n\in\naturals}$ in a metric space $S$ converges to some $x \in S$ if and only if $(x_n)$ has a \emph{subsequence} that converges to $x$.
-
-In this section we highlight a similar feature of convergence in measure and convergence in mean: If $(f_n)_{n\in\naturals}$ is a Cauchy sequence in measure, and if there is a subsequence that converges \emph{pointwise a.e.} to some function $f$, then $(f_n)$ also converges to $f$ in measure. Similarly for convergence in mean.
-
-Furthermore, Markov's inequality implies that convergence in mean is stronger than convergence in measure. In particular, a sequence that is Cauchy in mean is also Cauchy in measure. Hence when we show that convergence in measure and in mean are complete, it suffices to show that being Cauchy in measure implies the existence of a pointwise a.e. convergent subsequence.
+TODO can this be generalised to uniform spaces?
 
 \begin{definition}[Convergence in measure]
-    Let $(X,\calE,\mu)$ be a measure space. Let $(f_n)_{n\in\naturals}$ be a sequence in $\measurable(\calE)$, and let further $f \in \measurable(\calE)$. We say that $(f_n)$ \emph{converges to $f$ in $\mu$-measure} if for every $\epsilon > 0$,
+    Let $(X,\calE,\mu)$ be a measure space and $(S,\rho)$ a separable metric space. Let $f,f_1,f_2,\ldots$ be $\calE$-$\borel(S)$-measurable functions. We say that $(f_n)$ \emph{converges to $f$ in $\mu$-measure} if for every $\epsilon > 0$,
     %
     \begin{equation*}
-        \lim_{n\to\infty} \mu\bigl( \{ \abs{f_n - f} > \epsilon \}\bigr) = 0.
+        \lim_{n\to\infty} \mu\bigl( \{ \rho(f_n,f) > \epsilon \}\bigr) = 0.
     \end{equation*}
     %
     Furthermore, $(f_n)$ is called a \emph{Cauchy sequence in $\mu$-measure} if, for every $\epsilon > 0$,
     %
     \begin{equation*}
-        \lim_{m,n\to\infty} \mu\bigl( \{ \abs{f_m - f_n} > \epsilon \} \bigr) = 0.
+        \lim_{m,n\to\infty} \mu\bigl( \{ \rho(f_m,f_n) > \epsilon \} \bigr) = 0.
     \end{equation*}
 \end{definition}
+%
+Note that separability (i.e. second countability) of $S$ is necessary to ensure that the maps $\rho(f_n,f)$ and $\rho(f_m,f_n)$ are measurable.
 
+TODO generalise prop below
 
 \begin{proposition}
     Let $(X,\calE,\mu)$ be a measure space. The map
@@ -3332,77 +3331,77 @@ Furthermore, Markov's inequality implies that convergence in mean is stronger th
     so $\rho(f_n,f) \to 0$ as desired.
 \end{proof}
 
-For $A \in \calE$, define the concentration of $\mu$ to $A$ by $\mu_A(B) = \mu(B \intersect A)$, and define the map $\rho_A \colon \measurable(\calE) \prod \measurable(\calE) \to [0,\infty]$ by
-%
-\begin{equation*}
-    \rho_A(f,g)
-        = \int_X \abs{f-g} \meet 1 \dif\mu_A
-        = \int_A \abs{f-g} \meet 1 \dif\mu.
-\end{equation*}
-%
-If $\mu$ is finite, then it is well-known that $\rho_X$ is a pseudometric, and that convergence in $\mu$-measure is given by convergence with respect to $\rho_X$. More generally, if $\mu(A) < \infty$ then convergence in $\mu_A$-measure is given by $\rho_A$. Notice that if $A \subseteq B$, then convergence with respect to $\rho_B$ implies convergence with respect to $\rho_A$.
+% For $A \in \calE$, define the concentration of $\mu$ to $A$ by $\mu_A(B) = \mu(B \intersect A)$, and define the map $\rho_A \colon \measurable(\calE) \prod \measurable(\calE) \to [0,\infty]$ by
+% %
+% \begin{equation*}
+%     \rho_A(f,g)
+%         = \int_X \abs{f-g} \meet 1 \dif\mu_A
+%         = \int_A \abs{f-g} \meet 1 \dif\mu.
+% \end{equation*}
+% %
+% If $\mu$ is finite, then it is well-known that $\rho_X$ is a pseudometric, and that convergence in $\mu$-measure is given by convergence with respect to $\rho_X$. More generally, if $\mu(A) < \infty$ then convergence in $\mu_A$-measure is given by $\rho_A$. Notice that if $A \subseteq B$, then convergence with respect to $\rho_B$ implies convergence with respect to $\rho_A$.
 
-Let $\calF = \set{A \in \calE}{\mu(A) < \infty}$. If a sequence $(f_n)$ in $\measurable(\calE)$ converges to $f \in \measurable(\calE)$ with respect to $\rho_A$ for all $A \in \calF$, then we say that $(f_n)$ \emph{converges locally in $\mu$-measure} to $f$. In other words, local convergence in $\mu$-measure is given by the topology induced by the family $\set{\rho_A}{A \in \calF}$ of pseudometrics.
+% Let $\calF = \set{A \in \calE}{\mu(A) < \infty}$. If a sequence $(f_n)$ in $\measurable(\calE)$ converges to $f \in \measurable(\calE)$ with respect to $\rho_A$ for all $A \in \calF$, then we say that $(f_n)$ \emph{converges locally in $\mu$-measure} to $f$. In other words, local convergence in $\mu$-measure is given by the topology induced by the family $\set{\rho_A}{A \in \calF}$ of pseudometrics.
 
-If $\mu$ is finite, then global and local convergence in $\mu$-measure agree, and convergence is given either by $\rho$ or $\rho_X$.
+% If $\mu$ is finite, then global and local convergence in $\mu$-measure agree, and convergence is given either by $\rho$ or $\rho_X$.
 
 We prove that convergence in $\mu$-measure is complete.
 
 \begin{lemma}
     \label{thm:convergence-in-measure-lemma}
-    Let $(X,\calE,\mu)$ be a measure space, and let $(f_n)_{n\in\naturals}$ be a sequence in $\measurable(\calE)$. If there exists a sequence $(\epsilon_n)_{n\in\naturals}$ of strictly positive numbers such that
+    Let $(X,\calE,\mu)$ be a measure space and $(S,\rho)$ a complete separable metric space, and let $(f_n)_{n\in\naturals}$ be a sequence in $\measurable(\calE,\borel(S))$. If there exists a sequence $(\epsilon_n)_{n\in\naturals}$ of strictly positive numbers such that
     %
     \begin{equation}
         \label{eq:convergence-in-measure-complete-lemma}
         \sum_{n=1}^\infty \epsilon_n < \infty
         \quad \text{and} \quad
-        \sum_{n=1}^\infty \mu \bigl( \{ \abs{f_{n+1} - f_n} > \epsilon_n \} \bigr) < \infty,
+        \sum_{n=1}^\infty \mu \bigl( \{ \rho(f_{n+1},f_n) > \epsilon_n \} \bigr) < \infty,
     \end{equation}
     %
-    then there exists a function $f \in \measurable(\calE)$ such that $(f_n)$ converges to $f$ both $\mu$-a.e. and in $\mu$-measure.
+    then there exists a function $f \in \measurable(\calE,\borel(S))$ such that $(f_n)$ converges to $f$ both $\mu$-a.e. and in $\mu$-measure.
 \end{lemma}
 
 \begin{proof}
-    For $n \in \naturals$, denote the set $\{ \abs{f_{n+1} - f_n} > \epsilon_n \}$ by $E_n$, and define sets $F_k = \bigunion_{n=k}^\infty E_n$ and $F = \bigintersect_{k\in\naturals} F_k$. Notice that $F = \limsup_{n\to\infty} E_n$, so the first Borel--Cantelli lemma implies that $\mu(F) = 0$.
+    For $n \in \naturals$, denote the set $\{ \rho(f_{n+1},f_n) > \epsilon_n \}$ by $E_n$, and define sets $F_k = \bigunion_{n=k}^\infty E_n$ and $F = \bigintersect_{k\in\naturals} F_k$. Notice that $F = \limsup_{n\to\infty} E_n$, so the first Borel--Cantelli lemma implies that $\mu(F) = 0$.
     
     For $m \geq n$ we find that
     %
     \begin{equation}
         \label{eq:convergence-in-measure-Cauchy}
-        \abs{ f_m - f_n }
-            \leq \sum_{i=n}^{m-1} \abs{f_{i+1} - f_i}
-            \leq \sum_{i=n}^\infty \abs{f_{i+1} - f_i}.
+        \rho(f_m,f_n)
+            \leq \sum_{i=n}^{m-1} \rho(f_{i+1},f_i)
+            \leq \sum_{i=n}^\infty \rho(f_{i+1},f_i).
     \end{equation}
     %
     If furthermore $x \in F_k^c$ and $m \geq n \geq k$, then
     %
     \begin{equation*}
-        \abs{ f_m(x) - f_n(x) }
+        \rho(f_m(x), f_n(x))
             \leq \sum_{i=n}^\infty \epsilon_i.
     \end{equation*}
     %
-    The right-hand side converges to zero as $n \to \infty$, which shows that $(f_n(x))$ is a Cauchy sequence in $\reals$ for $x \in F_k^c$, hence for $x \in F^c$. Letting $f = \lim_{n\to\infty} f_n \indicator{F^c}$ we thus find that $(f_n)$ converges to $f \in \measurable(\calE)$ $\mu$-a.e.
+    The right-hand side converges to zero as $n \to \infty$, which shows that $(f_n(x))$ is a Cauchy sequence in $S$ for $x \in F_k^c$, hence for $x \in F^c$. Letting $f = \lim_{n\to\infty} f_n \indicator{F^c}$ we thus find that $(f_n)$ converges to $f \in \measurable(\calE)$ $\mu$-a.e.
 
     Next we show that $f_n \to f$ in $\mu$-measure as $n \to \infty$. Letting $m \to \infty$ in \cref{eq:convergence-in-measure-Cauchy} we find that
     %
     \begin{equation*}
-        \abs{ f_n - f }
-        \leq \sum_{i=n}^\infty \abs{f_{i+1} - f_i}
+        \rho(f_n,f)
+            \leq \sum_{i=n}^\infty \rho(f_{i+1},f_i)
     \end{equation*}
     %
-    $\mu$-a.e. Now let $\epsilon > 0$, and choose an $N \in \naturals$ such that $\sum_{i=N}^\infty \epsilon_i \leq \epsilon$. For $n \geq N$, $\abs{f_n - f} > \epsilon$ then implies that
+    $\mu$-a.e. Now let $\epsilon > 0$, and choose an $N \in \naturals$ such that $\sum_{i=N}^\infty \epsilon_i \leq \epsilon$. For $n \geq N$, $\rho(f_n,f) > \epsilon$ then implies that
     %
     \begin{equation*}
         \sum_{i=n}^\infty \epsilon_i
             \leq \epsilon
-            < \abs{f_n - f}
-            \leq \sum_{i=n}^\infty \abs{f_{i+1} - f_i}
+            < \rho(f_n,f)
+            \leq \sum_{i=n}^\infty \rho(f_{i+1},f_i)
     \end{equation*}
     %
-    $\mu$-a.e., which in turn implies that $\epsilon_i < \abs{f_{i+1} - f_i}$ $\mu$-a.e. for some $i \geq n$. Hence it follows that
+    $\mu$-a.e., which in turn implies that $\epsilon_i < \rho(f_{i+1},f_i)$ $\mu$-a.e. for some $i \geq n$. Hence it follows that
     %
     \begin{equation*}
-        \mu\bigl( \{ \abs{f_n - f} > \epsilon \}\bigr)
+        \mu\bigl( \{ \rho(f_n,f) > \epsilon \}\bigr)
             \leq \mu \Bigl( \bigunion_{i=n}^\infty E_i \Bigr)
             \leq \sum_{i=n}^\infty \mu(E_i),
     \end{equation*}
@@ -3412,33 +3411,18 @@ We prove that convergence in $\mu$-measure is complete.
 
 
 \begin{theorem}[Completeness of convergence in measure]
-    Let $(X,\calE,\mu)$ be a measure space, and let $(f_n)_{n\in\naturals}$ be a sequence in $\measurable(\calE)$ that is Cauchy in $\mu$-measure. Then there exists a function $f \in \measurable(\calE)$ such that $f_n \to f$ in $\mu$-measure. Furthermore, $(f_n)$ has a subsequence that converges to $f$ $\mu$-a.e.
+    Let $(X,\calE,\mu)$ be a measure space and $(S,\rho)$ a complete separable metric space, and let $(f_n)_{n\in\naturals}$ be a sequence in $\measurable(\calE,\borel(S))$ that is Cauchy in $\mu$-measure. Then there exists a function $f \in \measurable(\calE,\borel(S))$ such that $f_n \to f$ in $\mu$-measure. Furthermore, $(f_n)$ has a subsequence that converges to $f$ $\mu$-a.e.
 \end{theorem}
 
 \begin{proof}
-    We prove the following lemma:
-    %
-    \begin{displaytheorem}
-        Let $(X,\calE,\mu)$ be a measure space, and let $(f_n)_{n\in\naturals}$ be a sequence in $\measurable(\calE)$ that is Cauchy in $\mu$-measure. If $(f_n)$ has a subsequence that converges $\mu$-a.e. to function $f \in \measurable(\calE)$, then $(f_n)$ also converges to $f$ in $\mu$-measure.
-    \end{displaytheorem}
-    %
-    Let $(f_{n_k})$ be such a subsequence. For $\epsilon > 0$ we then have
+    Choose a subsequence $(g_k) = (f_{n_k})$ of $(f_n)$ such that
     %
     \begin{equation*}
-        \{ \abs{f_n - f} > \epsilon \}
-            \subseteq \{ \abs{f_n - f_{n_k}} > \epsilon/2 \} \union \{ \abs{f_{n_k} - f} > \epsilon/2 \},
-    \end{equation*}
-    %
-    and the measures of the sets on the right-hand side go to zero as $n \to \infty$ (since $n_k \geq n$). This proves the lemma.
-
-    To prove the theorem, choose a subsequence $(g_k) = (f_{n_k})$ such that
-    %
-    \begin{equation*}
-        \mu \bigl( \{ \abs{g_{k+1} - g_k} > 2^{-k} \} \bigr)
+        \mu \bigl( \{ \rho(g_{k+1}, g_k) > 2^{-k} \} \bigr)
             \leq 2^{-k}.
     \end{equation*}
     %
-    \cref{thm:convergence-in-measure-lemma} then implies the existence of a function $f \in \measurable(\calE)$ such that $g_k \to f$ both $\mu$-a.e. and in $\mu$-measure. The claim then follows from the above lemma.
+    \Cref{thm:convergence-in-measure-lemma} then implies the existence of a function $f \in \measurable(\calE,\borel(S))$ such that $g_k \to f$ in $\mu$-measure. That is, $(f_n)$ is Cauchy and has a subsequence that converges to $f$, to it itself converges to $f$.
 \end{proof}
 
 
@@ -4287,7 +4271,7 @@ Notice that a complex measure is continuous just when its discrete support is em
             = \inf \set[\bigg]{ \sum_{n=1}^\infty \mu(A_n)}{ (A_n)_{n \in \naturals} \subseteq \calJ \text{ and } A \subseteq \bigunion_{n \in \naturals} A_n }
     \end{equation*}
     %
-    defines an outer measure $\mu^*$ on $X$. We say that $\mu^*$ is the outer measure \emph{generated by $\mu$}.
+    defines an outer measure $\mu^*$ on $X$. We say that $\mu^*$ is the outer measure \emph{generated by $\mu$}. We note that $\mu^*(A) \leq \mu(A)$ for all $A \in \calJ$.
 \end{enumerate}
 \end{remarkbreak}
 
@@ -4482,16 +4466,90 @@ Since every content on $\calR$ of course restricts to a content on $\calS$, we m
         \item If $\mu$ is an outer measure, then $\calM(\mu)$ is a $\sigma$-algebra and
         %
         \begin{equation*}
-            \mu \Bigl( E \intersect \bigunion_{n \in \naturals}^n A_n \Bigr)
+            \mu \Bigl( E \intersect \bigunion_{n \in \naturals} A_n \Bigr)
                 = \sum_{n=1}^\infty \mu(E \intersect A_n)
         \end{equation*}
         %
         for every sequence $(A_n)_{n \in \naturals}$ of disjoint sets from $\calM(\mu)$. In particular, $\mu|_{\calM(\mu)}$ is a complete measure.
     \end{enumthm}
 \end{theorem}
+%
+We have stated these results with (as far as we know) minimal assumptions, but we shall only use (iii) and (v) in the sequel, and only for outer measures.
 
 \begin{proof}
-    TODO Folland + Thorbjørnsen
+    (i) Clearly $\calM(\mu)$ contains $X$ and is closed under complements. For $A,B \in \calM(\mu)$ and $E \subseteq X$ we have
+    %
+    \begin{align*}
+        \mu(E)
+            &= \mu(E \intersect A) + \mu(E \intersect A^c) \\
+            &= \mu(E \intersect A) + \mu(E \intersect A^c \intersect B) + \mu(E \intersect A^c \intersect B^c) \\
+            &= \mu(E \intersect (A \union B) \intersect A) + \mu(E \intersect (A \union B) \intersect A^c) + \mu(E \intersect (A \union B)^c) \\
+            &= \mu(E \intersect (A \union B)) + \mu(E \intersect (A \union B)^c),
+    \end{align*}
+    %
+    so $A \union B \in \calM(\mu)$.
+
+    (ii) If $A_1, \ldots, A_n$ are disjoint sets from $\calM(\mu)$ and $E \subseteq X$, then
+    %
+    \begin{align*}
+        \mu \Bigl( E \intersect \bigunion_{i=1}^n A_i \Bigr)
+            &= \mu \Bigl( E \intersect \bigl( \bigunion_{i=1}^n A_i \bigr) \intersect A_n \Bigr) + \mu \Bigl( E \intersect \bigl( \bigunion_{i=1}^n A_i \bigr) \intersect A_n^c \Bigr) \\
+            &= \mu(E \intersect A_n) + \mu \Bigl( E \intersect \bigunion_{i=1}^{n-1} A_i \Bigr).
+    \end{align*}
+    %
+    The desired identity thus follows by induction, and finite additivity of $\mu$ follows by letting $E = X$.
+
+    (iii) This is obvious.
+
+    (iv) If $A \subseteq X$ and $\mu(A) = 0$, then for all $E \subseteq X$ we have
+    %
+    \begin{equation*}
+        \mu(E)
+            \geq \mu(E \intersect A^c)
+            = \mu(E \intersect A) + \mu(E \intersect A^c),
+    \end{equation*}
+    %
+    so it follows from (iii) that $A \in \calM(\mu)$.
+
+    (v) Let $(A_n)$ be a sequence of disjoint sets from $\calM(\mu)$, and let $A = \bigunion_{n \in \naturals} A_n$. The inequality \enquote{$\leq$} simply holds since $\mu$ is subadditive. For the other inequality, for each $N \in \naturals$ we thus have, by (ii), that
+    %
+    \begin{equation*}
+        \mu \Bigl( E \intersect \bigunion_{n \in \naturals} A_n \Bigr)
+            \geq \mu \Bigl( E \intersect \bigunion_{n=1}^N A_n \Bigr)
+            = \sum_{n=1}^N \mu(E \intersect A_n)
+    \end{equation*}
+    %
+    for all $E \subseteq X$, and the inequality \enquote{$\geq$} thus follows by letting $N \to \infty$.
+
+    TODO sigma-algebra???
+\end{proof}
+
+
+\begin{proposition}
+    Let $\calR$ be a ring in a set $X$, and let $\mu$ be a premeasure on $\calR$. Then $\mu^*|_\calR = \mu$ and $\calR \subseteq \calM(\mu^*)$.
+\end{proposition}
+
+\begin{proof}
+    We always have $\mu^*|_\calR \leq \mu$, and for the opposite inequality, let $A \in \calR$ and consider a sequence $(A_n)$ in $\calR$ with $A \subseteq \bigunion_{n \in \naturals} A_n$. Letting $B_n = A \setminus (A_1 \union \cdots \union A_{n-1})$, the $B_n$ are disjoint and their union is $A$, so
+    %
+    \begin{equation*}
+        \mu(A)
+            = \sum_{n=1}^\infty \mu(B_n)
+            \leq \sum_{n=1}^\infty \mu(A_n),
+    \end{equation*}
+    %
+    which implies that $\mu(A) \leq \mu^*(A)$.
+
+    If $A \in \calR$, $E \subseteq X$ and $\epsilon > 0$, then there is a sequence $(A_n)$ in $\calR$ with $E \subseteq \bigunion_{n \in \naturals} A_n$ and $\sum_{n=1}^\infty \mu(A_n) \leq \mu^*(E) + \epsilon$. Hence,
+    %
+    \begin{align*}
+        \mu(E) + \epsilon
+             \geq \sum_{n=1}^\infty \mu(A_n)
+            &= \sum_{n=1}^\infty \mu(A_n \intersect A) + \sum_{n=1}^\infty \mu(A_n \intersect A^c) \\
+            &\geq \mu^*(E \intersect A) + \mu^*(E \intersect A^c),
+    \end{align*}
+    %
+    so $A \in \calM(\mu^*)$ as desired. (Notice here that $A_n \intersect A^c = A_n \setminus A \in \calR$.)
 \end{proof}
 
 
