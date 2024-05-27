@@ -1756,11 +1756,31 @@ Notice that the derivative of $f$ at $a$ is uniquely determined by \cref{lem:uni
 
 \begin{theorem}[Criterion for differentiability]
     \label{thm:continuous-partials-implies-differentiable}
-    Let $A \subseteq \reals^d$, let $a$ be an inner point of $A$, and $f \colon A \to \reals^m$. If $f$ is partially differentiable in a neighbourhood of $a$ and each partial derivative is continuous at $a$, then $f$ is differentiable at $a$.
+    Let $A \subseteq \reals^d$, let $a$ be an inner point of $A$, and $f \colon A \to \reals^m$. If one of the partial derivatives $D_1 f, \ldots, D_d f$ exists at $a$, and the remaining $d-1$ exist in a neighbourhood of $a$ and are continuous at $a$, then $f$ is differentiable at $a$.
 \end{theorem}
 
+\newcommand{\grad}{\nabla}
+
 \begin{proof}
-    We may assume that $m = 1$ by \cref{lem:differentiability-coordinate-functions}. Let $U$ be an open neighbourhood of $a$ on which $f$ is partially differentiable. Let $h = (h_1, \ldots, h_d) \in \reals^d$, and for $k = 1, \ldots, d$ let $h^{(k)} = \sum_{j=1}^k h_j e_j$. Notice that $h^{(d)} = h$. Choose $h$ small enough such that $a + h^{(k)} \in U$ for all $k$. Next let $I_k \subseteq \reals$ be an open interval containing $0$ and $h_k$ such that the map
+    We may assume that $m = 1$ by \cref{lem:differentiability-coordinate-functions}, and we may also assume that the partial derivaties $D_2 f, \ldots, D_d f$ exist in a neighbourhood $U$ of $a$. Let $h = (h_1, \ldots, h_d) \in \reals^d$, and for $k = 1, \ldots, d$ let $h^{(k)} = \sum_{j=1}^k h_j e_j$. Notice that $h^{(d)} = h$. Choose $h$ small enough such that $a + h^{(k)} \in U$ for all $k$.
+    
+    In the case $k = 1$, the existence of $D_1 f(a)$ yields the existence of a function $\delta_a \colon U - a \to \reals$, continuous at $0$, such that
+    %
+    \begin{equation*}
+        f(a + h_1 e_1) - f(a)
+            = D_1 f(a) h_1 + \delta_a(h_1),
+        \quad \text{and} \quad
+        \lim_{h_1 \to 0} \frac{\delta_a(h_1)}{h_1} = 0.
+    \end{equation*}
+    %
+    Defining a function $R_1$ on a neighbourhood of $0$ by $R_1(h) = \delta_a(h_1)/h_1$, we thus have $R_1(h) \to 0$ as $h \to 0$, and
+    %
+    \begin{equation*}
+        f(a + h^{(1)}) - f(a)
+            = D_1 f(a) h_1 + R_1(h) h_1.
+    \end{equation*}
+    
+    Next let $k \geq 2$, and let $I_k \subseteq \reals$ be an open interval containing $0$ and $h_k$ such that the map
     %
     \begin{align*}
         g_k \colon I_k &\to \reals, \\
@@ -1775,26 +1795,24 @@ Notice that the derivative of $f$ at $a$ is uniquely determined by \cref{lem:uni
             = D_k f(a + h^{(k-1)} + s_k e_k) h_k.
     \end{equation*}
     %
-    Next define a map $\phi_a \colon U \to \calL(\reals^d,\reals)$ by
+    By continuity of $D_k$ at $a$, there is a function $R_k$ defined on a neighbourhood of $0$ such that
     %
     \begin{equation*}
-        \phi_a(a+h)x
-            = \sum_{k=1}^d D_k f(a + h^{(k-1)} + s_k e_k) x_k
+        D_k f(a + h^{(k-1)} + s_k e_k)
+            = D_k f(a) + R_k(h).
     \end{equation*}
     %
-    for $h \in U - a$ and $x = (x_1, \ldots, x_d) \in \reals^d$. This is clearly well-defined, and since the partial derivatives of $f$ are continuous at $a$, so is $\phi_a$ (notice that $s_k$ also goes to zero when $h$ goes to zero).
-    
-    Finally notice that
+    In total we thus have
     %
     \begin{align*}
         f(a+h) - f(a)
             &= \sum_{k=1}^d \bigl( f(a + h^{(k)}) - f(a + h^{(k-1)}) \bigr) \\
-            &= \sum_{k=1}^d \bigl( g_k(h_k) - g_k(0)) \bigr) \\
-            &= \sum_{k=1}^d D_k f(a + h^{(k-1)} + s_k e_k) h_k \\
-            &= \phi_a(a+h) h.
+            &= f(a + h^{(1)}) - f(a) + \sum_{k=2}^d \bigl( g_k(h_k) - g_k(0) \bigr) \\
+            &= \sum_{k=1}^d D_k f(a) h_k + \sum_{k=1}^d R_k(h) h_k \\
+            &= \inner{\grad f(a)}{h} + \epsilon_a(h),
     \end{align*}
     %
-    But then $\phi_a$ is an Hadamard function for $f$ at $a$, so $f$ is differentiable at $a$ by \cref{lem:Hadamard-multiD}.
+    where $\epsilon_a(h) = \sum_{k=1}^d R_k(h) h_k$ is $o(h)$ as $h \to 0$. Hence $f$ is differentiable at $a$.
 \end{proof}
 
 
@@ -3090,7 +3108,6 @@ Both \textcite[Theorem~7.37]{apostolanalysis} and \textcite[Lemma~8.41]{folland2
 \section{Line integrals}
 
 \newcommand{\partition}{\mathcal{P}}
-\newcommand{\grad}{\nabla}
 
 \noindent Recall that a \emph{path} in a topological space $X$ is a continuous map $\gamma \colon [a,b] \to X$, and that $\gamma$ is \emph{closed} if $\gamma(a) = \gamma(b)$. A subset $\Gamma \subseteq X$ is called a \emph{curve} in $X$ if there is a path $\alpha$ in $X$ whose image is $\Gamma$. The image of a path $\gamma$ is called its \emph{trace} and is denoted $\gamma^*$.
 
