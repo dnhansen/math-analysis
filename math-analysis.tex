@@ -1988,6 +1988,129 @@ Let $A \subseteq \reals^d$ be an open set, and let $f \colon A \to \reals^d$ be 
 \end{proof}
 
 
+\section{Taylor's formula}
+
+Let $I \subseteq \reals$ be an interval, let $a \in I$, and let $f \colon I \to \complex$ be $k$ times differentiable at $a$. The \emph{Taylor polynomial} of order $k$ of $f$ at $a$ is the function $P_k \colon \reals \to \complex$ given by
+%
+\begin{equation*}
+    P_k(x)
+        = \sum_{j=0}^k \frac{f^{(j)}(a)}{j!} (x-a)^j.
+\end{equation*}
+%
+The $k$th \emph{remainder} is the function $R_k \colon I \to \complex$ given by $R_k(x) = f(x) - P_k(x)$. Notice that $f$ and $P_k$ agree at $a$, and so do their first $k$ derivatives. Furthermore, we have
+%
+\begin{equation*}
+    R_{k-1}(x) - R_k(x)
+        = P_k(x) - P_{k-1}(x)
+        = \frac{f^{(k)}(a)}{k!} (x-a)^k.
+\end{equation*}
+
+
+% https://math.stackexchange.com/questions/2585752/application-of-the-mean-value-theorem-to-a-taylor-series/2586741#2586741
+\begin{proposition}[Peano's form of the remainder]
+    If $f \colon I \to \complex$ is $k \geq 1$ times differentiable at $a \in I$, then
+    %
+    \begin{equation*}
+        \lim_{x \to a} \frac{R_k(x)}{(x-a)^k}
+            = 0.
+    \end{equation*}
+\end{proposition}
+%
+Note that the hypothesis implies that $f$ is $k-1$ times differentiable in a neighbourhood of $a$ in $I$.
+
+\begin{proof}
+    It suffices to prove the claim when $a = 0$. We first prove that if $g \colon I \to \complex$ is such that $g(0) = g'(0) = \cdots = g^{(k)}(0) = 0$, then $g(x)/x^k \to 0$ as $x \to 0$. For $k = 1$ this is just the definition of the derivative, namely
+    %
+    \begin{equation*}
+        0
+            = g'(0)
+            = \lim_{x \to 0} \frac{g(x)}{x},
+    \end{equation*}
+    %
+    since $g(0) = 0$. Assume that $k > 1$ and notice that, by induction, $g'(x)/x^{k-1} \to 0$ as $x \to 0$. If $x \neq 0$, then the mean value theorem furnishes a $\xi$ between $0$ and $x$ such that $g(x) = g'(\xi) x$. It follows that
+    %
+    \begin{equation*}
+        \frac{g(x)}{x^k}
+            = \frac{g'(\xi)}{x^{k-1}}
+            \to 0
+    \end{equation*}
+    %
+    as $x \to 0$, since then also $\xi \to 0$.
+
+    To prove the proposition, simply let $g = R_k$.
+\end{proof}
+
+
+\begin{proposition}[Integral form of the remainder]
+    If $I$ is the closed interval between $a$ and $x$, and if $f \colon I \to \complex$ is $k$ times differentiable on $I$ and $f^{(k)}$ is absolutely continuous, then
+    %
+    \begin{equation*}
+        R_k(x)
+            = \frac{1}{k!} \int_a^x (x-t)^k f^{(k+1)}(t) \dif t.
+    \end{equation*}
+\end{proposition}
+%
+Since $f^{(k)}$ is absolutely continuous, $f^{(k+1)}$ exists almost everywhere on $I$.
+
+\begin{proof}
+    Denote the integral above by $I_k$. First note that
+    %
+    \begin{equation*}
+        R_0(x)
+            = f(x) - P_0(x)
+            = f(x) - f(a)
+            = \int_a^x f'(t) \dif t
+            = I_0.
+    \end{equation*}
+    %
+    For $k > 0$, the formula
+    %
+    \begin{equation*}
+        I_{k-1} - I_k
+            = \frac{f^{(k)}(a)}{k!} (x-a)^k
+    \end{equation*}
+    %
+    easily follows by integration by parts.\footnote{See Folland Exercise~3.35.}
+\end{proof}
+
+
+\begin{proposition}[Mean value form of the remainder]
+    Let $I$ be the closed interval between $x$ and $a$, and let $f \in C^k(I,\complex)$ such that $f^{(k+1)}$ exists on $\interior{I}$. If $\phi \colon I \to \complex$ is continuous and $\phi'$ exists and is nonzero on $\interior{I}$, then there is a $\xi \in \interior{I}$ such that
+    %
+    \begin{equation*}
+        R_k(x)
+            = \frac{f^{(k+1)}(\xi)}{k!} (x-\xi)^k \frac{\phi(x) - \phi(a)}{\phi'(\xi)}.
+    \end{equation*}
+\end{proposition}
+
+\begin{proof}
+    Define a function $g \colon I \to \complex$ by\footnote{Notice that $g(t)$ is just the $k$th remainder of the Taylor expansion of $f$ around $t$ evaluated at $x$.}
+    %
+    \begin{equation*}
+        g(t)
+            = f(x) - \sum_{j=0}^k \frac{f^{(j)}(t)}{j!} (x-t)^j.
+    \end{equation*}
+    %
+    Then $g$ is continuous on $I$ and differentiable on $\interior{I}$, and $g(x) = 0$ and $g(a) = R_k(x)$. Notice that
+    %
+    \begin{equation*}
+        g'(t)
+            = f'(t) - \sum_{j=1}^k \frac{1}{j!} \bigl( f^{(j+1)}(t) (x-t)^j - j f^{(j)}(t) (x-t)^{j-1} \bigr)
+            = - \frac{f^{(j+1)}(t)}{j!} (x-t)^j,
+    \end{equation*}
+    %
+    where the second equality follows since the sum is telescoping. The mean value theorem now furnishes a $\xi \in \interior{I}$ such that
+    %
+    \begin{equation*}
+        - R_k(x)
+            = - g(a)
+            = g(x) - g(a)
+            = \frac{\phi(x) - \phi(a)}{\phi'(\xi)} g'(\xi),
+    \end{equation*}
+    %
+    as desired.
+\end{proof}
+
 
 
 \chapter{Integration}
